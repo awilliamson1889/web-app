@@ -36,7 +36,7 @@ The application must provide:
 + If the entered data is incorrect an authorization error message is displayed.
 + If the entered data is correct, the user is redirected to his profile page.
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/login_page.PNG"  width="600" height="600">
 
 Pic. 3.1 - Sign in page
 
@@ -47,9 +47,13 @@ Pic. 3.1 - Sign in page
 + User is successfully logged in or user clicks the "My Profile" button;
 + Application displays user profile page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/employee_account.PNG"  width="600" height="600">
 
-Pic. 3.2 - User profile page
+Pic. 3.2 - Employee profile page
+
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/manager_account.PNG"  width="600" height="600">
+
+Pic. 3.3 - Manager profile page
 
 ### 3.4 Departments page
 
@@ -58,9 +62,9 @@ Pic. 3.2 - User profile page
 + User clicks the "Departments" button;
 + Application displays departments page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/departments_page.PNG"  width="600" height="600">
 
-Pic. 3.3 - Departments page
+Pic. 3.4 - Departments page
 
 ***Filtering by country:***
 + In the department list view mode, user sets a country filter;
@@ -73,9 +77,9 @@ Pic. 3.3 - Departments page
 + User select the "Department";
 + Application displays department information page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/info_department.PNG"  width="600" height="600">
 
-Pic. 3.4 - Department information page
+Pic. 3.5 - Department information page
 
 ### 3.6 People search page
 
@@ -84,11 +88,11 @@ Pic. 3.4 - Department information page
 + User clicks the "People search" button;
 + Application displays people search page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/people_search.PNG"  width="600" height="600">
 
-Pic. 3.5 - People search page
+Pic. 3.6 - People search page
 
-***Filtering by country:***
+***Filtering by country/skill:***
 + In the people/employees list view mode, user sets a country filter;
 + The application will display a form to view the list of people/employees with updated data.
 + In the people/employees list view mode, user sets a primary skill filter;
@@ -101,42 +105,42 @@ Pic. 3.5 - People search page
 + User clicks the "Managment/Departments" button;
 + Application displays Departments page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/manage_departments.PNG"  width="600" height="600">
 
-Pic. 3.6 - Departments page
+Pic. 3.7 - Departments page
 
 ### 3.8 Managment/Employees page
 
 ***Main scenario:***
 
-+ User clicks the "Managment/Employees" button;
++ User clicks the "Managment/Employees" button or "new" button on Add Employee page;
 + Application displays Employees page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/manage_employees.PNG"  width="600" height="600">
 
-Pic. 3.7 - Employees page
+Pic. 3.8 - Employees page
 
 ### 3.9 Managment/Locations page
 
 ***Main scenario:***
 
-+ User clicks the "Managment/Locations" button;
-+ Application displays Locations page;
++ User clicks the "new" button;
++ Application displays add locations page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/add_location.PNG"  width="600" height="600">
 
-Pic. 3.8 - Locations page
+Pic. 3.9 - Locations page
 
 ### 3.10 Managment/Work address page
 
 ***Main scenario:***
 
-+ User clicks the "Work address" button;
++ User clicks the "new" button;
 + Application displays Work address page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/add_workaddress.PNG"  width="600" height="600">
 
-Pic. 3.9 - Work address page
+Pic. 3.10 - Work address page
 
 ### 3.11 Add department page
 
@@ -145,44 +149,44 @@ Pic. 3.9 - Work address page
 + User clicks the "Add department" button;
 + Application displays add department page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/add_department.PNG"  width="600" height="600">
 
-Pic. 3.10 - Add department page
+Pic. 3.11 - Add department page
 
-### 3.11 Edit department page
+### 3.12 Edit department page
 
 ***Main scenario:***
 
 + User clicks the "Edit" button;
 + Application displays edit department page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/add_department.PNG"  width="600" height="600">
 
-Pic. 3.10 - Edit department page
+Pic. 3.12 - Edit department page
 
-### 3.12 Add Employee page
+### 3.13 Add Employee page
 
 ***Main scenario:***
 
 + User clicks the "Add Employee" button;
 + Application displays add employee page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/add_employee.PNG"  width="600" height="600">
 
-Pic. 3.11 - Edit department page
+Pic. 3.13 - Edit department page
 
-### 3.13 Edit employee page
+### 3.14 Edit employee page
 
 ***Main scenario:***
 
 + User clicks the "Edit" button;
 + Application displays edit employee page;
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/info_department.PNG"  width="600" height="600">
 
-Pic. 3.12 - Edit employee page
+Pic. 3.14 - Edit employee page
 
-### 3.14 Delete employee
+### 3.15 Delete employee
 
 ***Main scenario:***
 
@@ -191,11 +195,11 @@ Pic. 3.12 - Edit employee page
 + If answer "OK", application delete employee from database;
 + If answer "Cancle", application rederect user to Manage/Employees page.
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/delete_employee.PNG"  width="600" height="600">
 
-Pic. 3.13 - Delete department
+Pic. 3.15 - Delete employee
 
-### 3.15 Delete employee
+### 3.16 Delete employee
 
 ***Main scenario:***
 
@@ -204,6 +208,6 @@ Pic. 3.13 - Delete department
 + If answer "OK", application delete department from database;
 + If answer "Cancle", application rederect user to Manage/Departments page.
 
-IMAGE
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/delete_department.PNG"  width="600" height="600">
 
-Pic. 3.14 - Delete employee
+Pic. 3.16 - Delete department
