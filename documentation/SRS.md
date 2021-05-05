@@ -160,7 +160,7 @@ Pic. 3.11 - Add department page
 + User clicks the "Edit" button;
 + Application displays edit department page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/add_department.PNG"  width="600" height="600">
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/edit_department.PNG"  width="600" height="600">
 
 Pic. 3.12 - Edit department page
 
@@ -182,7 +182,7 @@ Pic. 3.13 - Edit department page
 + User clicks the "Edit" button;
 + Application displays edit employee page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/info_department.PNG"  width="600" height="600">
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/edit_employee.PNG"  width="600" height="600">
 
 Pic. 3.14 - Edit employee page
 
