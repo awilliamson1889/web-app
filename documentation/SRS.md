@@ -36,7 +36,7 @@ The application must provide:
 + If the entered data is incorrect an authorization error message is displayed.
 + If the entered data is correct, the user is redirected to his profile page.
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/login_page.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/login_page.PNG">
 
 Pic. 3.1 - Sign in page
 
@@ -47,11 +47,11 @@ Pic. 3.1 - Sign in page
 + User is successfully logged in or user clicks the "My Profile" button;
 + Application displays user profile page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/employee_account.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/employee_account.PNG">
 
 Pic. 3.2 - Employee profile page
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/manager_account.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/manager_account.PNG">
 
 Pic. 3.3 - Manager profile page
 
@@ -62,7 +62,7 @@ Pic. 3.3 - Manager profile page
 + User clicks the "Departments" button;
 + Application displays departments page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/departments_page.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/departments_page.PNG">
 
 Pic. 3.4 - Departments page
 
@@ -77,7 +77,7 @@ Pic. 3.4 - Departments page
 + User select the "Department";
 + Application displays department information page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/info_department.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/info_department.PNG">
 
 Pic. 3.5 - Department information page
 
@@ -88,7 +88,7 @@ Pic. 3.5 - Department information page
 + User clicks the "People search" button;
 + Application displays people search page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/people_search.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/people_search.PNG">
 
 Pic. 3.6 - People search page
 
@@ -105,7 +105,7 @@ Pic. 3.6 - People search page
 + User clicks the "Managment/Departments" button;
 + Application displays Departments page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/manage_departments.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/manage_departments.PNG">
 
 Pic. 3.7 - Departments page
 
@@ -116,7 +116,7 @@ Pic. 3.7 - Departments page
 + User clicks the "Managment/Employees" button or "new" button on Add Employee page;
 + Application displays Employees page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/manage_employees.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/manage_employees.PNG">
 
 Pic. 3.8 - Employees page
 
@@ -127,7 +127,7 @@ Pic. 3.8 - Employees page
 + User clicks the "new" button;
 + Application displays add locations page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/add_location.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/add_location.PNG">
 
 Pic. 3.9 - Locations page
 
@@ -138,7 +138,7 @@ Pic. 3.9 - Locations page
 + User clicks the "new" button;
 + Application displays Work address page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/add_workaddress.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/add_workaddress.PNG">
 
 Pic. 3.10 - Work address page
 
@@ -149,7 +149,7 @@ Pic. 3.10 - Work address page
 + User clicks the "Add department" button;
 + Application displays add department page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/add_department.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/add_department.PNG">
 
 Pic. 3.11 - Add department page
 
@@ -160,7 +160,7 @@ Pic. 3.11 - Add department page
 + User clicks the "Edit" button;
 + Application displays edit department page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/edit_department.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/edit_department.PNG">
 
 Pic. 3.12 - Edit department page
 
@@ -171,7 +171,7 @@ Pic. 3.12 - Edit department page
 + User clicks the "Add Employee" button;
 + Application displays add employee page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/add_employee.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/add_employee.PNG">
 
 Pic. 3.13 - Edit department page
 
@@ -182,7 +182,7 @@ Pic. 3.13 - Edit department page
 + User clicks the "Edit" button;
 + Application displays edit employee page;
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/edit_employee.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/edit_employee.PNG">
 
 Pic. 3.14 - Edit employee page
 
@@ -195,7 +195,7 @@ Pic. 3.14 - Edit employee page
 + If answer "OK", application delete employee from database;
 + If answer "Cancle", application rederect user to Manage/Employees page.
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/delete_employee.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/delete_employee.PNG">
 
 Pic. 3.15 - Delete employee
 
@@ -208,6 +208,6 @@ Pic. 3.15 - Delete employee
 + If answer "OK", application delete department from database;
 + If answer "Cancle", application rederect user to Manage/Departments page.
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/delete_department.PNG">
+<img src="https://github.com/awilliamson1889/web-app/blob/master/documentation/pictures/delete_department.PNG">
 
 Pic. 3.16 - Delete department
