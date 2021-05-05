@@ -36,7 +36,7 @@ The application must provide:
 + If the entered data is incorrect an authorization error message is displayed.
 + If the entered data is correct, the user is redirected to his profile page.
 
-<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/login_page.PNG"  width="600" height="600">
+<img src="https://github.com/awilliamson1889/web-app/blob/main/documentation/pictures/login_page.PNG">
 
 Pic. 3.1 - Sign in page
 
