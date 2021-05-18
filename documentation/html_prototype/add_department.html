@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Manage employees</title>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="navbar">
+                <a href="profile.html">My Profile</a>
+                <a href="departments.html">Departments</a>
+                <a href="people_search.html">People Search</a>
+                <div class="dropdown">
+                <button class="dropbtn">Management
+                    <i class="fa fa-caret-down"></i>
+                </button> 
+                <div class="dropdown-content">
+                    <a href="manage_departments.html">Departments</a>
+                    <a href="manage_employees.html">Employees</a>
+                </div>
+                </div>
+                <!-- Right-aligned links -->
+                <div class="topnav-right">
+                    <a href="login.html">Logout</a>
+                </div>
+            </div>
+
+            <div class="bg-add-employe">
+                <h2>Create Department</h2>
+                <div class="add-employee">
+                    <p>Department</p>
+                    <input type="text" placeholder="Name" name="Department" class="edit"> <br>
+                    <p>Manager</p>
+                    <input type="text" placeholder="Surname" name="Manager" class="edit"> <br>
+                    <p>Total Employees</p>
+                    <input type="number" placeholder="Surname" name="Total Employees" class="edit"> <br>
+                    <p>Date of creation</p>
+                    <input type="date" name="Date of creation" class="edit">
+                    <br>
+                    <a class="my_button" href="manage_departments.html">Cancle</a>
+                    <button type="submit" class="my_button"><i class="save"></i>Save</button>
+            </div>
+
+            <div id="confirm-modal1" class="modalbackground">
+                <div class="modalwindow">
+                    <h3>Please confirm delete employee!</h3>
+                    <a class="my_button" href="#Save">Delete</a>
+                    <a class="my_button" href="manage_departments.html">Cancle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

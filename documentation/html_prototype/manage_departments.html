@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Manage departments</title>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="navbar">
+                <a href="profile.html">My Profile</a>
+                <a href="departments.html">Departments</a>
+                <a href="people_search.html">People Search</a>
+                <div class="dropdown">
+                <button class="dropbtn">Management
+                    <i class="fa fa-caret-down"></i>
+                </button> 
+                <div class="dropdown-content">
+                    <a href="manage_departments.html">Departments</a>
+                    <a href="manage_employees.html">Employees</a>
+                </div>
+                </div>
+                <!-- Right-aligned links -->
+                <div class="topnav-right">
+                    <a href="login.html">Logout</a>
+                </div>
+            </div>
+            <div class="filters"><p>MANAGE DEPARTMENTS</p></div>
+            <div>
+
+                <br>
+                <a class="my_button" href="add_department.html">Add Department</a>
+            </div>
+
+            <div class="table_dark_department">
+                <table>
+                <tr><th>Department</th><th>Manager</th><th>Total Employees</th><th>Date of creation</th><th>Action</th></tr>
+                    <tr><td>Resource Development Lab</td><td>Alexandra Milenski</td><td>15</td><td>05/05/2021</td><td><a href="edit_department.html">Edit</a> | <a href="#confirm-modal2">Delete</a>| <a href="view.html">View</a></td></tr>
+                    <tr><td>Resource Development Lab</td><td>Alexandra Milenski</td><td>15</td><td>05/05/2021</td><td><a href="edit_department.html">Edit</a> | <a href="#confirm-modal2">Delete</a>| <a href="view.html">View</a></td></tr>
+                    <tr><td>Resource Development Lab</td><td>Alexandra Milenski</td><td>15</td><td>05/05/2021</td><td><a href="edit_department.html">Edit</a> | <a href="#confirm-modal2">Delete</a>| <a href="view.html">View</a></td></tr>
+                    <tr><td>Resource Development Lab</td><td>Alexandra Milenski</td><td>15</td><td>05/05/2021</td><td><a href="edit_department.html">Edit</a> | <a href="#confirm-modal2">Delete</a>| <a href="view.html">View</a></td></tr>
+                </table>
+            </div>
+        
+            <div class="pagination">
+                <span class="footer_part-span">Page <span class="first">1</span> of <span class="second">1</span></span>
+            </div>
+        
+        
+            <div id="confirm-modal2" class="modalbackground">
+                <div class="modalwindow">
+                    <h3>Please confirm delete department!</h3>
+                    <br>
+                    <a class="my_button" href="#Save">Delete</a>
+                    <a class="my_button" href="manage_departments.html">Cancle</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
