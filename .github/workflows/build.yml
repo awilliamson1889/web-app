@@ -27,4 +27,4 @@ jobs:
       - name: Run pylint check
         run:
           pylint flask_app/
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
