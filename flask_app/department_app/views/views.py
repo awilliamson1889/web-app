@@ -1,7 +1,8 @@
 """Flask views"""
 from flask import render_template
-from department_app import app
 from flask.views import View
+from department_app import app
+
 
 
 class TestPage(View):
