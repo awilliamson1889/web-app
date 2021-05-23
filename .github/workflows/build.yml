@@ -27,5 +27,10 @@ jobs:
       - name: Run pylint check
         run:
           pylint flask_app/
+      - name: Install dependencies for Coveralls       
+        run:
+          pip install coveralls
+      - name: Coveralls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: coveralls --service=github
