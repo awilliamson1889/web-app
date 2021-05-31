@@ -3,9 +3,9 @@ import datetime
 from department_app import db
 
 
-class Employees(db.Model):
-    """Employee table"""
-    __tablename__ = 'Employees'
+class Employee(db.Model):
+    """Employees table"""
+    __tablename__ = 'Employee'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     surname = db.Column(db.String(50), nullable=False)
@@ -15,10 +15,10 @@ class Employees(db.Model):
     email = db.Column(db.String(50), nullable=False, unique=True)
     date_of_joining = db.Column(db.Date, default=datetime.date.today(), nullable=False)
     department = db.Column(db.Integer, db.ForeignKey('Department.id'), nullable=False)
-    location = db.Column(db.Integer, db.ForeignKey('Locations.id'), nullable=False)
-    work_address = db.Column(db.Integer, db.ForeignKey('Addresses.id'), nullable=False)
-    key_skill = db.Column(db.Integer, db.ForeignKey('Skills.id'), nullable=False)
-    permission = db.Column(db.Integer, db.ForeignKey('Permissions.id'))
+    location = db.Column(db.Integer, db.ForeignKey('Location.id'), nullable=False)
+    work_address = db.Column(db.Integer, db.ForeignKey('Address.id'), nullable=False)
+    key_skill = db.Column(db.Integer, db.ForeignKey('Skill.id'), nullable=False)
+    permission = db.Column(db.Integer, db.ForeignKey('Permission.id'))
 
     def __init__(self, id, name, surname, department, date_of_birth, salary, phone, email, location,
                  work_address, key_skill, date_of_joining, permission):
@@ -41,13 +41,13 @@ class Employees(db.Model):
 
 
 class Department(db.Model):
-    """Department table"""
+    """Departments table"""
     __tablename__ = 'Department'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     manager = db.Column(db.String(100), nullable=False, unique=True)
     date_of_creation = db.Column(db.Date, default=datetime.date.today(), nullable=False)
-    department = db.relationship('Employees', backref='Department',
+    department = db.relationship('Employee', backref='Department',
                                  lazy='dynamic')
 
     def __init__(self, id, name, manager, date_of_creation):
@@ -60,12 +60,12 @@ class Department(db.Model):
         return '<Department: {}>'.format(self.name)
 
 
-class Locations(db.Model):
+class Location(db.Model):
     """Locations table"""
-    __tablename__ = 'Locations'
+    __tablename__ = 'Location'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
-    location = db.relationship('Employees', backref='Locations',
+    location = db.relationship('Employee', backref='Location',
                                lazy='dynamic')
 
     def __init__(self, id, name):
@@ -76,12 +76,12 @@ class Locations(db.Model):
         return '<Location: {}>'.format(self.name)
 
 
-class Addresses(db.Model):
+class Address(db.Model):
     """Addresses table"""
-    __tablename__ = 'Addresses'
+    __tablename__ = 'Address'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
-    address = db.relationship('Employees', backref='Addresses',
+    address = db.relationship('Employee', backref='Address',
                               lazy='dynamic')
 
     def __init__(self, id, name):
@@ -92,12 +92,12 @@ class Addresses(db.Model):
         return '<Address: {}>'.format(self.name)
 
 
-class Skills(db.Model):
+class Skill(db.Model):
     """Skills table"""
-    __tablename__ = 'Skills'
+    __tablename__ = 'Skill'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
-    skill = db.relationship('Employees', backref='Skills',
+    skill = db.relationship('Employee', backref='Skill',
                             lazy='dynamic')
 
     def __init__(self, id, name):
@@ -108,12 +108,12 @@ class Skills(db.Model):
         return '<Skill: {}>'.format(self.name)
 
 
-class Permissions(db.Model):
+class Permission(db.Model):
     """Permissions table"""
-    __tablename__ = 'Permissions'
+    __tablename__ = 'Permission'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
-    permission = db.relationship('Employees', backref='Permissions',
+    permission = db.relationship('Employee', backref='Permission',
                                  lazy='dynamic')
 
     def __init__(self, id, name):

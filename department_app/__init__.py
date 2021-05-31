@@ -17,4 +17,4 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db, directory=MIGRATION_DIR)
 
 import department_app.views.routes
-from department_app.models.app_models import Employees, Department, Permissions, Addresses, Locations, Skills
+from department_app.models.app_models import Employee, Department, Permission, Address, Location, Skill
