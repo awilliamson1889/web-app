@@ -1,3 +1,4 @@
+"""Routes web-app"""
 from department_app import app, db
 from department_app.models.app_models import Employees
 

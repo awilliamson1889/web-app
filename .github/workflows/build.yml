@@ -24,9 +24,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pylint
+          pip install pylint-flask
+          pip install pylint-flask-sqlalchemy
       - name: Run pylint check
         run:
-          pylint department_app/
+          pylint --load-plugins pylint_flask_sqlalchemy department_app
       - name: Install dependencies for Coveralls       
         run:
           pip install coveralls

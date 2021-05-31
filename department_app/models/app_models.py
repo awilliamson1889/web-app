@@ -1,8 +1,10 @@
-from department_app import db
+"""Models for web-app"""
 import datetime
+from department_app import db
 
 
 class Employees(db.Model):
+    """Employee table"""
     __tablename__ = 'Employees'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
@@ -39,6 +41,7 @@ class Employees(db.Model):
 
 
 class Department(db.Model):
+    """Department table"""
     __tablename__ = 'Department'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
@@ -58,6 +61,7 @@ class Department(db.Model):
 
 
 class Locations(db.Model):
+    """Locations table"""
     __tablename__ = 'Locations'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
@@ -73,6 +77,7 @@ class Locations(db.Model):
 
 
 class Addresses(db.Model):
+    """Addresses table"""
     __tablename__ = 'Addresses'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
@@ -88,6 +93,7 @@ class Addresses(db.Model):
 
 
 class Skills(db.Model):
+    """Skills table"""
     __tablename__ = 'Skills'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
@@ -103,6 +109,7 @@ class Skills(db.Model):
 
 
 class Permissions(db.Model):
+    """Permissions table"""
     __tablename__ = 'Permissions'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
