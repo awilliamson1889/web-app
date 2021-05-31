@@ -26,7 +26,7 @@ jobs:
           pip install pylint
       - name: Run pylint check
         run:
-          pylint flask_app/
+          pylint department_app/
       - name: Install dependencies for Coveralls       
         run:
           pip install coveralls

@@ -1,9 +1,8 @@
-"""setup file"""
 from setuptools import setup
 
 setup(
-    name='flask_app',
-    packages=['department_app'],
+    name='web-app',
+    package=['department_app'],
     include_package_data=True,
     install_requires=[
         'flask',
