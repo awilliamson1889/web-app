@@ -1,10 +1,27 @@
 """Models for web-app"""
 import datetime
-from department_app import db
+from dataclasses import dataclass
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 
 
+@dataclass
 class Employee(db.Model):
     """Employees table"""
+    id: int
+    name: str
+    surname: str
+    date_of_birth: str
+    salary: float
+    email: str
+    phone: str
+    date_of_joining: str
+    department: int
+    location: int
+    work_address: int
+    key_skill: int
+    permission: int
+
     __tablename__ = 'Employee'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
@@ -40,12 +57,18 @@ class Employee(db.Model):
         return '<Employee: {}>'.format(self.name)
 
 
+@dataclass
 class Department(db.Model):
     """Departments table"""
+    id: int
+    name: str
+    manager: str
+    date_of_creation: str
+
     __tablename__ = 'Department'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
-    manager = db.Column(db.String(100), nullable=False, unique=True)
+    manager = db.Column(db.String(100), nullable=False)
     date_of_creation = db.Column(db.Date, default=datetime.date.today(), nullable=False)
     department = db.relationship('Employee', backref='Department',
                                  lazy='dynamic')
@@ -60,8 +83,12 @@ class Department(db.Model):
         return '<Department: {}>'.format(self.name)
 
 
+@dataclass
 class Location(db.Model):
     """Locations table"""
+    id: int
+    name: str
+
     __tablename__ = 'Location'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
@@ -76,8 +103,12 @@ class Location(db.Model):
         return '<Location: {}>'.format(self.name)
 
 
+@dataclass
 class Address(db.Model):
     """Addresses table"""
+    id: int
+    name: str
+
     __tablename__ = 'Address'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
@@ -92,8 +123,12 @@ class Address(db.Model):
         return '<Address: {}>'.format(self.name)
 
 
+@dataclass
 class Skill(db.Model):
     """Skills table"""
+    id: int
+    name: str
+
     __tablename__ = 'Skill'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
@@ -108,9 +143,13 @@ class Skill(db.Model):
         return '<Skill: {}>'.format(self.name)
 
 
+@dataclass
 class Permission(db.Model):
     """Permissions table"""
     __tablename__ = 'Permission'
+    id: int
+    name: str
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
     permission = db.relationship('Employee', backref='Permission',

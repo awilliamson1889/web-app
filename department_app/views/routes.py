@@ -1,12 +1,15 @@
 """Routes web-app"""
-from department_app import app, db
-from department_app.models.app_models import Employee
+from flask import Blueprint, jsonify
+from department_app.models.app_models import Employee, Department
 
-with app.app_context():
-    db.create_all()
-    db.session.commit()
+frontend = Blueprint('frontend', __name__)
 
 
-@app.route('/')
+@frontend.route('/')
 def index():
-    return str(Employees.query.all())
+    employees = Employee.query.filter_by(key_skill=1)
+    dep = Department.query.all()
+    emp = Employee.query.all()
+    a = str([x.phone for x in emp])
+    b = str([ix.phone for ix in employees])
+    return str([x.name for x in dep])
