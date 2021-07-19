@@ -1,10 +1,11 @@
 """rest api"""
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
+from pydantic import ValidationError
 from department_app.models.app_models import Permission
 from department_app.models.permission_schema import PermissionModel
 from department_app.models.app_models import db
-from pydantic import ValidationError
+
 
 permission_api = Blueprint('permission_api', __name__)
 
@@ -12,6 +13,7 @@ api = Api(permission_api)
 
 
 class PermissionInfo(Resource):
+    """Rest class"""
     def get(self, permission_id):
         """
         This is the Permission API
@@ -33,7 +35,7 @@ class PermissionInfo(Resource):
             description: Permission information returned
         """
         if not str(permission_id).isdigit():
-            abort(404, message=f"ID must be a number.")
+            abort(404, message="ID must be a number.")
         permission = Permission.query.filter_by(id=permission_id).first()
         if not permission:
             abort(404, message=f"Could not find permission with ID: {permission_id}.")
@@ -71,7 +73,7 @@ class PermissionInfo(Resource):
             description: Permission information successful update
         """
         if not str(permission_id).isdigit():
-            abort(404, message=f"ID must be a number.")
+            abort(404, message="ID must be a number.")
         permission = Permission.query.filter_by(id=permission_id).first()
         if not permission:
             abort(404, message=f"Could not find permission with ID: {permission_id}.")
@@ -80,14 +82,15 @@ class PermissionInfo(Resource):
             permission.name = request.json['name']
         try:
             result = PermissionModel(id=permission.id, name=permission.name)
-        except ValidationError as e:
-            abort(404, message=f"Exception: {e}")
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         db.session.commit()
         return result.dict(), 204
 
 
 class AllPermissionInfo(Resource):
+    """Rest class"""
     def post(self):
         """
         This is the Permission API
@@ -111,12 +114,11 @@ class AllPermissionInfo(Resource):
           201:
             description: The permission was successfully created
         """
-        e = Permission.query.all()
-        permission_data = {'id': len(e)+100, 'name': request.json['name']}
+        permission_data = {'name': request.json['name']}
         try:
             permission = PermissionModel(**permission_data)
-        except ValidationError as e:
-            abort(404, message=f"Exception: {e}")
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         result = Permission(**permission_data)
 
@@ -135,8 +137,8 @@ class AllPermissionInfo(Resource):
           200:
             description: All permissions returned
         """
-        d = Permission.query.all()
-        return make_response(jsonify(d), 200)
+        permissions = Permission.query.all()
+        return make_response(jsonify(permissions), 200)
 
 
 api.add_resource(AllPermissionInfo, '/api/permission')

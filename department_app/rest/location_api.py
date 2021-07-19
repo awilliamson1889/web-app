@@ -1,10 +1,11 @@
 """rest api"""
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
+from pydantic import ValidationError
 from department_app.models.app_models import Location
 from department_app.models.location_schema import LocationModel
 from department_app.models.app_models import db
-from pydantic import ValidationError
+
 
 location_api = Blueprint('location_api', __name__)
 
@@ -12,6 +13,7 @@ api = Api(location_api)
 
 
 class LocationInfo(Resource):
+    """Rest class"""
     def get(self, location_id):
         """
         This is the location API
@@ -33,7 +35,7 @@ class LocationInfo(Resource):
             description: Location information returned
         """
         if not str(location_id).isdigit():
-            abort(404, message=f"ID must be a number.")
+            abort(404, message="ID must be a number.")
         location = Location.query.filter_by(id=location_id).first()
         if not location:
             abort(404, message=f"Could not find location with ID: {location_id}.")
@@ -71,7 +73,7 @@ class LocationInfo(Resource):
             description: Location information successful update
         """
         if not str(location_id).isdigit():
-            abort(404, message=f"ID must be a number.")
+            abort(404, message="ID must be a number.")
         location = Location.query.filter_by(id=location_id).first()
         if not location:
             abort(404, message=f"Could not find location with ID: {location_id}.")
@@ -80,14 +82,15 @@ class LocationInfo(Resource):
             location.name = request.json['name']
         try:
             result = LocationModel(id=location.id, name=location.name)
-        except ValidationError as e:
-            abort(404, message=f"Exception: {e}")
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         db.session.commit()
         return result.dict(), 204
 
 
 class AllLocationInfo(Resource):
+    """Rest class"""
     def post(self):
         """
         This is the location API
@@ -111,12 +114,11 @@ class AllLocationInfo(Resource):
           201:
             description: The location was successfully created
         """
-        e = Location.query.all()
-        location_data = {'id': len(e)+100, 'name': request.json['name']}
+        location_data = {'name': request.json['name']}
         try:
             location = LocationModel(**location_data)
-        except ValidationError as e:
-            abort(404, message=f"Exception: {e}")
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         result = Location(**location_data)
 
@@ -135,8 +137,8 @@ class AllLocationInfo(Resource):
           200:
             description: All location returned
         """
-        d = Location.query.all()
-        return make_response(jsonify(d), 200)
+        locations = Location.query.all()
+        return make_response(jsonify(locations), 200)
 
 
 api.add_resource(AllLocationInfo, '/api/location')

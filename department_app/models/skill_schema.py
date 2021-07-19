@@ -2,7 +2,6 @@ from pydantic import BaseModel, validator
 
 
 class SkillModel(BaseModel):
-    id: int
     name: str
 
     @validator('name')

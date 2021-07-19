@@ -1,46 +1,71 @@
+"""Employee CRUD"""
 from department_app.models.app_models import db
 from department_app.models.app_models import Employee
+from department_app.models.employee_schema import EmployeeModel
+from pydantic import ValidationError
+from flask import request
+from flask_restful import abort
 
 
 class CRUDEmployee:
-    def create(self, name, surname, date_of_birth, salary, email, phone, date_of_joining,
-               department, location, work_address, key_skill, permission):
-        e = Employee.query.all()
-        employee = Employee(id=len(e)+100, name=name, surname=surname, date_of_birth=date_of_birth,
-                            salary=salary, email=email, phone=phone, date_of_joining=date_of_joining,
-                            department=department, location=location, work_address=work_address,
-                            key_skill=key_skill, permission=permission)
+    """Employee CRUD class"""
+    def create_employee(**kwargs):
+        """Create employee func"""
+        form_data = request.form
+        employee = Employee(name=form_data['name'], surname=form_data['surname'],
+                            date_of_birth=form_data['date_of_birth'], salary=form_data['salary'],
+                            email=form_data['email'], phone=form_data['phone'],
+                            date_of_joining=form_data['date_of_joining'], department=form_data['department'],
+                            location=form_data['location'], work_address=form_data['work_address'],
+                            key_skill=form_data['key_skill'], permission=form_data['permission'])
         db.session.add(employee)
         db.session.commit()
 
-    def update(self, employee_id, name, surname, date_of_birth, salary, email, phone, date_of_joining,
-               department, location, work_address, key_skill, permission):
+    @staticmethod
+    def update_employee(employee_id):
+        """Update employee func"""
         employee = Employee.query.filter_by(id=employee_id).first()
+        form_data = request.form
 
-        employee.name = name
-        employee.surname = surname
-        employee.date_of_birth = date_of_birth
-        employee.salary = salary
-        employee.email = email
-        employee.phone = phone
-        employee.date_of_joining = date_of_joining
-        employee.department = department
-        employee.location = location
-        employee.work_address = work_address
-        employee.key_skill = key_skill
-        employee.permission = permission
+        employee_data = {'name': form_data['name'], 'surname': form_data['surname'],
+                         'date_of_birth': form_data['date_of_birth'], 'salary': form_data['salary'],
+                         'email': form_data['email'], 'phone': form_data['phone'],
+                         'date_of_joining': form_data['date_of_joining'], 'department': form_data['department'],
+                         'location': form_data['location'], 'work_address': form_data['work_address'],
+                         'key_skill': form_data['key_skill'], 'permission': form_data['permission']}
 
-    def delete(self, employee_id):
+        try:
+            result = EmployeeModel(**employee_data)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
+
+        employee.name = form_data['name']
+        employee.surname = form_data['surname']
+        employee.date_of_birth = form_data['date_of_birth']
+        employee.salary = form_data['salary']
+        employee.email = form_data['email']
+        employee.phone = form_data['phone']
+        employee.date_of_joining = form_data['date_of_joining']
+        employee.department = form_data['department']
+        employee.location = form_data['location']
+        employee.work_address = form_data['work_address']
+        employee.key_skill = form_data['key_skill']
+        employee.permission = form_data['permission']
+        db.session.commit()
+
+    def delete_employee(self, employee_id):
+        """Delete employee func"""
         employee = Employee.query.filter_by(id=employee_id).first()
         db.session.delete(employee)
         db.session.commit()
 
-    def get_employee(self, employee_id):
+    @staticmethod
+    def get_employee(employee_id):
+        """Get employee func"""
         employee = Employee.query.filter_by(id=employee_id).first()
         return employee
 
     def search_employee(self, emp_primary_skill):
+        """Search employee func"""
         employees = Employee.query.filter_by(primary_skill=emp_primary_skill)
         return employees
-
-

@@ -2,13 +2,14 @@
 import os
 from flask import Flask
 from flask_migrate import Migrate
-from department_app.models.app_models import db
 from flasgger import Swagger
+from department_app.models.app_models import db
 
 MIGRATION_DIR = os.path.join('department_app/migrations')
 
 
 def create_app():
+    "Create app method"
     app = Flask(__name__)
     app.config['SWAGGER'] = {"title": "Swagger-UI", "uiversion": 2}
     app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://flask_admin:admin1111@localhost:5432/flask_app"

@@ -2,7 +2,6 @@ from pydantic import BaseModel, validator
 
 
 class LocationModel(BaseModel):
-    id: int
     name: str
 
     @validator('name')

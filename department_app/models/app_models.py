@@ -37,9 +37,8 @@ class Employee(db.Model):
     key_skill = db.Column(db.Integer, db.ForeignKey('Skill.id'), nullable=False)
     permission = db.Column(db.Integer, db.ForeignKey('Permission.id'))
 
-    def __init__(self, id, name, surname, department, date_of_birth, salary, phone, email, location,
+    def __init__(self, name, surname, department, date_of_birth, salary, phone, email, location,
                  work_address, key_skill, date_of_joining, permission):
-        self.id = id
         self.name = name
         self.surname = surname
         self.department = department
@@ -73,8 +72,7 @@ class Department(db.Model):
     department = db.relationship('Employee', backref='Department',
                                  lazy='dynamic')
 
-    def __init__(self, id, name, manager, date_of_creation):
-        self.id = id
+    def __init__(self, name, manager, date_of_creation):
         self.name = name
         self.manager = manager
         self.date_of_creation = date_of_creation
@@ -96,7 +94,6 @@ class Location(db.Model):
                                lazy='dynamic')
 
     def __init__(self, id, name):
-        self.id = id
         self.name = name
 
     def __repr__(self):
@@ -115,8 +112,7 @@ class Address(db.Model):
     address = db.relationship('Employee', backref='Address',
                               lazy='dynamic')
 
-    def __init__(self, id, name):
-        self.id = id
+    def __init__(self, name):
         self.name = name
 
     def __repr__(self):
@@ -135,8 +131,7 @@ class Skill(db.Model):
     skill = db.relationship('Employee', backref='Skill',
                             lazy='dynamic')
 
-    def __init__(self, id, name):
-        self.id = id
+    def __init__(self, name):
         self.name = name
 
     def __repr__(self):
@@ -155,8 +150,7 @@ class Permission(db.Model):
     permission = db.relationship('Employee', backref='Permission',
                                  lazy='dynamic')
 
-    def __init__(self, id, name):
-        self.id = id
+    def __init__(self, name):
         self.name = name
 
     def __repr__(self):

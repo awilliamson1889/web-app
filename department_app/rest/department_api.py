@@ -1,10 +1,10 @@
 """rest api"""
 from flask import Blueprint, request, jsonify, make_response
-from flask_restful import Resource, Api, abort, reqparse, fields
+from flask_restful import Resource, Api, abort
+from pydantic import ValidationError
 from department_app.models.app_models import Department
 from department_app.models.department_schema import DepartmentModel
 from department_app.models.app_models import db
-from pydantic import ValidationError
 
 department_api = Blueprint('department_api', __name__)
 
@@ -12,6 +12,7 @@ api = Api(department_api)
 
 
 class DepartmentInfo(Resource):
+    """Rest class"""
     def get(self, department_id):
         """
         This is the Department API
@@ -33,7 +34,7 @@ class DepartmentInfo(Resource):
             description: Department information returned
         """
         if not str(department_id).isdigit():
-            abort(404, message=f"ID must be a number.")
+            abort(404, message="ID must be a number.")
         department = Department.query.filter_by(id=department_id).first()
         if not department:
             abort(404, message=f"Could not find department with ID: {department_id}.")
@@ -80,7 +81,7 @@ class DepartmentInfo(Resource):
             description: Department information successful update
         """
         if not str(department_id).isdigit():
-            abort(404, message=f"ID must be a number.")
+            abort(404, message="ID must be a number.")
         department = Department.query.filter_by(id=department_id).first()
         if not department:
             abort(404, message=f"Could not find department with ID: {department_id}.")
@@ -88,9 +89,9 @@ class DepartmentInfo(Resource):
         if 'name' in request.json:
             department.name = request.json['name']
         try:
-            result = DepartmentModel(id=department.id, name=department.name)
-        except ValidationError as e:
-            abort(404, message=f"Exception: {e}")
+            DepartmentModel(name=department.name)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         db.session.commit()
         msg = {"message": "Department information successful update"}
@@ -98,6 +99,7 @@ class DepartmentInfo(Resource):
 
 
 class AllDepartmentInfo(Resource):
+    """Rest class"""
     def post(self):
         """
         This is the Department API
@@ -129,13 +131,12 @@ class AllDepartmentInfo(Resource):
           201:
             description: The department was successfully created
         """
-        e = Department.query.all()
-        department_data = {'id': len(e)+100, 'name': request.json['name'], 'manager': request.json['manager'],
+        department_data = {'name': request.json['name'], 'manager': request.json['manager'],
                            'date_of_creation': request.json['date_of_creation']}
         try:
             department = DepartmentModel(**department_data)
-        except ValidationError as e:
-            abort(404, message=f"Exception: {e}")
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         result = Department(**department_data)
 
@@ -154,8 +155,8 @@ class AllDepartmentInfo(Resource):
           200:
             description: All department returned
         """
-        d = Department.query.all()
-        return make_response(jsonify(d), 200)
+        departments = Department.query.all()
+        return make_response(jsonify(departments), 200)
 
 
 api.add_resource(AllDepartmentInfo, '/api/department')

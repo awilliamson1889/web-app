@@ -1,11 +1,10 @@
 """rest api"""
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
+from pydantic import ValidationError
 from department_app.models.app_models import Address
 from department_app.models.address_schema import AddressModel
 from department_app.models.app_models import db
-from pydantic import ValidationError
-from flasgger import Swagger, swag_from
 
 address_api = Blueprint('address_api', __name__)
 
@@ -13,6 +12,7 @@ api = Api(address_api)
 
 
 class AddressInfo(Resource):
+    """Address API class"""
     def get(self, address_id):
         """
         This is the Address API
@@ -34,7 +34,7 @@ class AddressInfo(Resource):
             description: Address information returned
         """
         if not str(address_id).isdigit():
-            abort(404, message=f"ID must be a number.")
+            abort(404, message="ID must be a number.")
         address = Address.query.filter_by(id=address_id).first()
         if not address:
             abort(404, message=f"Could not find address with ID: {address_id}.")
@@ -72,7 +72,7 @@ class AddressInfo(Resource):
             description: Address information successful update
         """
         if not str(address_id).isdigit():
-            abort(404, message=f"ID must be a number.")
+            abort(404, message="ID must be a number.")
         address = Address.query.filter_by(id=address_id).first()
         if not address:
             abort(404, message=f"Could not find address with ID: {address_id}.")
@@ -80,15 +80,16 @@ class AddressInfo(Resource):
         if 'name' in request.json:
             address.name = request.json['name']
         try:
-            result = AddressModel(id=address.id, name=address.name)
-        except ValidationError as e:
-            abort(404, message=f"Exception: {e}")
+            result = AddressModel(name=address.name)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         db.session.commit()
         return result.dict(), 204
 
 
 class AllAddressInfo(Resource):
+    """Address API"""
     def post(self):
         """
         This is the Address API
@@ -112,12 +113,11 @@ class AllAddressInfo(Resource):
           201:
             description: The address was successfully created
         """
-        e = Address.query.all()
-        address_data = {'id': len(e)+100, 'name': request.json['name']}
+        address_data = {'name': request.json['name']}
         try:
             address = AddressModel(**address_data)
-        except ValidationError as e:
-            abort(404, message=f"Exception: {e}")
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         result = Address(**address_data)
 
@@ -136,8 +136,8 @@ class AllAddressInfo(Resource):
           200:
             description: All addresses returned
         """
-        d = Address.query.all()
-        return make_response(jsonify(d), 200)
+        addresses = Address.query.all()
+        return make_response(jsonify(addresses), 200)
 
 
 api.add_resource(AllAddressInfo, '/api/address')

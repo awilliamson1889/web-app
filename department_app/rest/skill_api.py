@@ -1,10 +1,10 @@
 """rest api"""
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
+from pydantic import ValidationError
 from department_app.models.app_models import Skill
 from department_app.models.skill_schema import SkillModel
 from department_app.models.app_models import db
-from pydantic import ValidationError
 
 skill_api = Blueprint('skill_api', __name__)
 
@@ -12,6 +12,7 @@ api = Api(skill_api)
 
 
 class SkillInfo(Resource):
+    """Rest class"""
     def get(self, skill_id):
         """
         This is the Skill API
@@ -33,7 +34,7 @@ class SkillInfo(Resource):
             description: skill information returned
         """
         if not str(skill_id).isdigit():
-            abort(404, message=f"ID must be a number.")
+            abort(404, message="ID must be a number.")
         skill = Skill.query.filter_by(id=skill_id).first()
         if not skill:
             abort(404, message=f"Could not find skill with ID: {skill_id}.")
@@ -71,7 +72,7 @@ class SkillInfo(Resource):
             description: Skill information successful update
         """
         if not str(skill_id).isdigit():
-            abort(404, message=f"ID must be a number.")
+            abort(404, message="ID must be a number.")
         skill = Skill.query.filter_by(id=skill_id).first()
         if not skill:
             abort(404, message=f"Could not find skill with ID: {skill_id}.")
@@ -79,15 +80,16 @@ class SkillInfo(Resource):
         if 'name' in request.json:
             skill.name = request.json['name']
         try:
-            result = SkillModel(id=skill.id, name=skill.name)
-        except ValidationError as e:
-            abort(404, message=f"Exception: {e}")
+            result = SkillModel(name=skill.name)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         db.session.commit()
         return result.dict(), 204
 
 
 class AllSkillInfo(Resource):
+    """Rest class"""
     def post(self):
         """
         This is the Skill API
@@ -111,12 +113,11 @@ class AllSkillInfo(Resource):
           201:
             description: The skill was successfully created
         """
-        e = Skill.query.all()
-        skill_data = {'id': len(e)+100, 'name': request.json['name']}
+        skill_data = {'name': request.json['name']}
         try:
             permission = SkillModel(**skill_data)
-        except ValidationError as e:
-            abort(404, message=f"Exception: {e}")
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         result = Skill(**skill_data)
 
@@ -135,8 +136,8 @@ class AllSkillInfo(Resource):
           200:
             description: All skill returned
         """
-        d = Skill.query.all()
-        return make_response(jsonify(d), 200)
+        skills = Skill.query.all()
+        return make_response(jsonify(skills), 200)
 
 
 api.add_resource(AllSkillInfo, '/api/skill')

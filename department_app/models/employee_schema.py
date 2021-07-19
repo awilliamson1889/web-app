@@ -1,13 +1,12 @@
 from pydantic import BaseModel, validator
 from flask import request
-from department_app.models.app_models import Employee
+from department_app.models.app_models import Employee, Department, Skill, Address, Permission, Location
 import math
 import datetime
 import re
 
 
 class EmployeeModel(BaseModel):
-    id: int
     name: str
     surname: str
     date_of_birth: str
@@ -68,35 +67,35 @@ class EmployeeModel(BaseModel):
 
     @validator('department')
     def department_check(cls, v):
-        emp = Employee.query.all()
-        if v not in [x.department for x in emp]:
-            raise ValueError('There is no such department! See the list of departments: http://.../api/department')
+        dep = Department.query.all()
+        if v not in [x.id for x in dep]:
+            raise ValueError('There is no such department! See the list of departments: .../swagger/#/Department32API')
         return v
 
     @validator('location')
     def location_check(cls, v):
-        emp = Employee.query.all()
-        if v not in [x.location for x in emp]:
-            raise ValueError('There is no such department! See the list of departments: http://.../api/location')
+        location = Location.query.all()
+        if v not in [x.id for x in location]:
+            raise ValueError('There is no such department! See the list of departments: .../swagger/#/Location32API')
         return v
 
     @validator('work_address')
     def work_address_check(cls, v):
-        emp = Employee.query.all()
-        if v not in [x.work_address for x in emp]:
-            raise ValueError('There is no such department! See the list of departments: http://.../api/work_address')
+        address = Address.query.all()
+        if v not in [x.id for x in address]:
+            raise ValueError('There is no such department! See the list of departments: .../swagger/#/Address32API')
         return v
 
     @validator('key_skill')
     def key_skill_check(cls, v):
-        emp = Employee.query.all()
-        if v not in [x.key_skill for x in emp]:
-            raise ValueError('There is no such department! See the list of departments: http://.../api/key_skill')
+        skill = Skill.query.all()
+        if v not in [x.id for x in skill]:
+            raise ValueError('There is no such department! See the list of departments: .../swagger/#/Skill32API')
         return v
 
     @validator('permission')
     def permission_check(cls, v):
-        emp = Employee.query.all()
-        if v not in [x.permission for x in emp]:
-            raise ValueError('There is no such department! See the list of departments: http://.../api/permission')
+        permission = Permission.query.all()
+        if v not in [x.id for x in permission]:
+            raise ValueError('There is no such department! See the list of departments: .../swagger/#/Permission32API')
         return v
