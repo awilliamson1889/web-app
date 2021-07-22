@@ -14,7 +14,7 @@ def create_app(config_name):
     config_name_str = config_name
     print(config_name_str)
     # app.config.from_object('config.' + config_name)
-    app.config.from_object('config.DevConfig' )
+    app.config.from_object('config.TestConfig')
 
     swagger_config = {
         "headers": [],
