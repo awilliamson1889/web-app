@@ -46,7 +46,11 @@ jobs:
       - name: Run db init
         run:
           flask db init
+      - name: Run db migrate
+        run:
           flask db migrate -m "Initial migration"
+      - name: Run flask
+        run:
           flask run
       - name: Run tests
         run:
