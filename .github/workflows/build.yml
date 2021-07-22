@@ -40,13 +40,17 @@ jobs:
       - name: Run pylint check
         run:
           pylint --load-plugins pylint_flask_sqlalchemy department_app
-      - name: Run tests
+      - name: Run export FLASK_APP=department_app
         run:
           export FLASK_APP=department_app
+      - name: Run db init
+        run:
           flask db init
-          flask db migrate --m "Initial migration"
+          flask db migrate -m "Initial migration"
           flask run
-          coverage run --m unittest
+      - name: Run tests
+        run:
+          coverage run -m unittest
       - name: Install dependencies for Coveralls       
         run:
           pip install coveralls
