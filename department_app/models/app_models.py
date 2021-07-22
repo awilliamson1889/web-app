@@ -93,7 +93,7 @@ class Location(db.Model):
     location = db.relationship('Employee', backref='Location',
                                lazy='dynamic')
 
-    def __init__(self, id, name):
+    def __init__(self, name):
         self.name = name
 
     def __repr__(self):

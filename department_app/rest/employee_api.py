@@ -113,27 +113,9 @@ class EmployeeInfo(Resource):
         responses:
           404:
             description: Could not find employee
-          204:
+          201:
             description: Employee information successful update
         """
-        # if not str(employee_id).isdigit():
-        #     abort(404, message="ID must be a number.")
-        # employee = Employee.query.filter_by(id=employee_id).first()
-        # if not employee:
-        #     abort(404, message=f"Could not find employee with ID: {employee_id}.")
-        #
-        # employee_json = request.json
-        # employee_data = vars(employee)
-        # employee_data.update(employee_json)
-        #
-        # try:
-        #     result = EmployeeModel(**employee_data)
-        # except ValidationError as exception:
-        #     abort(404, message=f"Exception: {exception}")
-        #
-        # db.session.commit()
-        #
-        # return result.dict(), 204
         if not str(employee_id).isdigit():
             abort(404, message="ID must be a number.")
         employee = Employee.query.filter_by(id=employee_id).first()
@@ -168,7 +150,7 @@ class EmployeeInfo(Resource):
         employee.key_skill = employee_data['key_skill']
         employee.permission = employee_data['permission']
         db.session.commit()
-        return result.dict(), 204
+        return make_response(jsonify(employee), 201)
 
     def delete(self, employee_id):
         """
@@ -197,8 +179,7 @@ class EmployeeInfo(Resource):
             abort(404, message=f"Could not find employee with ID: {employee_id}.")
         db.session.delete(employee)
         db.session.commit()
-        return {'message': 'Employee deleted!'}, 204
-
+        return '', 204
 
 
 class AllEmployeeInfo(Resource):

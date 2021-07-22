@@ -1,197 +1,452 @@
 import unittest
 import requests
-import tempfile
+import datetime
 from department_app import create_app
 from department_app.models.app_models import db, Employee
+from employee_factory import EmployeeFactory
 
-app = create_app()
+app = create_app('TestConfig')
 app.app_context().push()
 
 
 class TestApiEmployee(unittest.TestCase):
     """ doc str """
-    # API_URL = "http://127.0.0.1:5000/api"
-    # EMPLOYEES_URL = "{}/employee".format(API_URL)  # All employee URL / create employee URL (NORMAL)
-    # EMPLOYEE1_URL = "{}/employee/1".format(API_URL)  # Employee with id 1 URL (NORMAL)
-    # EMPLOYEE2_URL = "{}/employee/7878".format(API_URL)  # Employee with id 7878 URL (WRONG)
-    # EMPLOYEE3_URL = "{}/employee/sage".format(API_URL)  # Employee with id sage URL (WRONG)
-    #
-    # EMPLOYEE_TEST_DATA1 = {
-    #     "date_of_birth": "1999-12-12",
-    #     "date_of_joining": "2020-12-12",
-    #     "department": 1,
-    #     "email": "TEST_MAIL@TESTMAIL.COM",
-    #     "key_skill": 1,
-    #     "location": 1,
-    #     "name": "TEST_NAME",
-    #     "permission": 1,
-    #     "phone": "111111111111",
-    #     "salary": 9999.9,
-    #     "surname": "TEST_SURNAME",
-    #     "work_address": 1
-    # }
-    #
-    # EMPLOYEE_TEST_DATA2 = {
-    #     "date_of_birth": "1999-12-12",
-    #     "date_of_joining": "2020-12-12",
-    #     "department": 1,
-    #     "email": "TEST_MAIL@TESTMAIL.COM",
-    #     "key_skill": 1,
-    #     "location": 1,
-    #     "name": "VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME "
-    #             "VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME",
-    #     "permission": 1,
-    #     "phone": "111111111111",
-    #     "salary": 9999.9,
-    #     "surname": "TEST_SURNAME",
-    #     "work_address": 1
-    # }
-    #
-    # old_len = len((requests.get(EMPLOYEES_URL).json()))
-    #
-    def SetUp(self):
+    def setUp(self):
         """ doc str """
-        app.config['TESTING'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        app.config['DEBUG'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://flask_admin:admin1111@localhost:5432/flask_app"
         self.app = app.test_client()
-        db.create_all()
-
-    def test_get_employee(self):
-        test_data = {'name': 'test_name', 'surname': 'test_surname', 'date_of_birth': '01-01-1999', 'salary': 0,
-                     'email': 'test_mail@testig.test', 'phone': '00000000000', 'date_of_joining': '01-01-2020',
-                     'department': 1, 'location': 1, 'work_address': 1, 'key_skill': 1, 'permission': 1}
+        test_emp = EmployeeFactory()
+        test_data = {'name': test_emp.name, 'surname': test_emp.surname, 'date_of_birth': test_emp.date_of_birth,
+                     'salary': test_emp.salary, 'email': test_emp.email, 'phone': test_emp.phone,
+                     'date_of_joining': test_emp.date_of_joining, 'department': test_emp.department,
+                     'location': test_emp.location, 'work_address': test_emp.work_address,
+                     'key_skill': test_emp.key_skill, 'permission': test_emp.permission}
         employee = Employee(**test_data)
         db.session.add(employee)
         db.session.commit()
-        url = f"http://127.0.0.1:5000/api/employee/{employee.id}"
+        db.create_all()
+
+    def tearDown(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        db.session.delete(emp[-1])
+        db.session.commit()
+
+    def test_get_employee(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
         response = requests.get(url)
-        try:
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(employee.id, response.json()['id'])
-            self.assertEqual(employee.name, response.json()['name'])
-            self.assertEqual('Fri, 01 Jan 1999 00:00:00 GMT', response.json()['date_of_birth'])
-            self.assertEqual(employee.salary, response.json()['salary'])
-            self.assertEqual(employee.email, response.json()['email'])
-            self.assertEqual(employee.phone, response.json()['phone'])
-            self.assertEqual('Wed, 01 Jan 2020 00:00:00 GMT', response.json()['date_of_joining'])
-            self.assertEqual(employee.department, response.json()['department'])
-            self.assertEqual(employee.work_address, response.json()['work_address'])
-            self.assertEqual(employee.key_skill, response.json()['key_skill'])
-        finally:
-            db.session.delete(employee)
-            db.session.commit()
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(last_emp.id, response.json()['id'])
+        self.assertEqual(last_emp.name, response.json()['name'])
+        self.assertEqual('Fri, 01 Jan 1999 00:00:00 GMT', response.json()['date_of_birth'])
+        self.assertEqual(last_emp.salary, response.json()['salary'])
+        self.assertEqual(last_emp.email, response.json()['email'])
+        self.assertEqual(last_emp.phone, response.json()['phone'])
+        self.assertEqual('Fri, 01 Jan 1999 00:00:00 GMT', response.json()['date_of_joining'])
+        self.assertEqual(last_emp.department, response.json()['department'])
+        self.assertEqual(last_emp.work_address, response.json()['work_address'])
+        self.assertEqual(last_emp.key_skill, response.json()['key_skill'])
 
     def test_get_employee_not_exist(self):
         employee_id = 999999999
         url = f"http://127.0.0.1:5000/api/employee/{employee_id}"
         message = f"Could not find employee with ID: {employee_id}."
         response = requests.get(url)
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json()['message'])
 
-    def test_get_wrong_id_format(self):
+    def test_get_str_id_format(self):
         employee_id = "one"
         message = "ID must be a number."
-
         url = f"http://127.0.0.1:5000/api/employee/{employee_id}"
         response = requests.get(url)
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json()['message'])
 
+    def test_get_negative_num_id_format(self):
         employee_id = -1
+        message = "ID must be a number."
         url = f"http://127.0.0.1:5000/api/employee/{employee_id}"
         response = requests.get(url)
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json()['message'])
 
+    def test_get_str_num_id_format(self):
         employee_id = "1one"
+        message = "ID must be a number."
         url = f"http://127.0.0.1:5000/api/employee/{employee_id}"
         response = requests.get(url)
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json()['message'])
 
+    def test_get_float_num_id_format(self):
         employee_id = 1.0
+        message = "ID must be a number."
         url = f"http://127.0.0.1:5000/api/employee/{employee_id}"
         response = requests.get(url)
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json()['message'])
 
     def test_put_employee(self):
-        test_data = {'name': 'test_name', 'surname': 'test_surname', 'date_of_birth': '01-01-1999', 'salary': 0,
-                     'email': 'test_mail@testig.test', 'phone': '00000000000', 'date_of_joining': '01-01-2020',
-                     'department': 1, 'location': 1, 'work_address': 1, 'key_skill': 1, 'permission': 1}
-        update_test_data = {'name': 'update_test_name', 'surname': 'update_test_surname', 'date_of_birth': '01-01-1999',
-                            'salary': 55555, 'email': 'update_test_mail@testig.test', 'phone': '55555555555',
-                            'date_of_joining': '01-01-2020', 'department': 1, 'location': 1, 'work_address': 1,
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'name': 'update_test_name', 'surname': 'update_test_surname', 'date_of_birth': '1998-01-01',
+                            'salary': 55555.0, 'email': 'update_test_mail@testig.test', 'phone': '55555555555',
+                            'date_of_joining': '2021-01-01', 'department': 1, 'location': 1, 'work_address': 1,
                             'key_skill': 1, 'permission': 1}
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(201, response.status_code)
+        self.assertEqual(last_emp.id, response.json()['id'])
+        self.assertEqual(update_test_data['name'], response.json()['name'])
+        self.assertEqual(update_test_data['surname'], response.json()['surname'])
+        self.assertEqual('Thu, 01 Jan 1998 00:00:00 GMT', response.json()['date_of_birth'])
+        self.assertEqual(update_test_data['salary'], response.json()['salary'])
+        self.assertEqual(update_test_data['email'], response.json()['email'])
+        self.assertEqual(update_test_data['phone'], response.json()['phone'])
+        self.assertEqual('Fri, 01 Jan 2021 00:00:00 GMT', response.json()['date_of_joining'])
+        self.assertEqual(update_test_data['department'], response.json()['department'])
+        self.assertEqual(update_test_data['work_address'], response.json()['work_address'])
+        self.assertEqual(update_test_data['key_skill'], response.json()['key_skill'])
+
+    def test_put_employee_not_exist(self):
+        employee_id = 999999999
+        url = f"http://127.0.0.1:5000/api/employee/{employee_id}"
+        message = f"Could not find employee with ID: {employee_id}."
+        response = requests.put(url)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_str_id_format(self):
+        employee_id = "one"
+        message = "ID must be a number."
+        url = f"http://127.0.0.1:5000/api/employee/{employee_id}"
+        response = requests.put(url)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_negative_num_id_format(self):
+        employee_id = -1
+        message = "ID must be a number."
+        url = f"http://127.0.0.1:5000/api/employee/{employee_id}"
+        response = requests.put(url)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_str_num_id_format(self):
+        employee_id = "1one"
+        message = "ID must be a number."
+        url = f"http://127.0.0.1:5000/api/employee/{employee_id}"
+        response = requests.put(url)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_float_num_id_format(self):
+        employee_id = 1.0
+        message = "ID must be a number."
+        url = f"http://127.0.0.1:5000/api/employee/{employee_id}"
+        response = requests.put(url)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_big_employee_name(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'name': 'test_very_big_name_test_very_big_name_test_very_big_name_test_very_big_name_'
+                                    'test_very_big_name_test_very_big_name_test_very_big_name_test_very_big_name'}
+        message = "Exception: 1 validation error for EmployeeModel\nname\n  Name length too big! (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_big_employee_surname(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'surname': 'test_very_big_surname_test_very_big_surname_test_very_big_surname_'
+                                       'test_very_big_surname_test_very_big_surname_test_very_big_surname'}
+        message = "Exception: 1 validation error for EmployeeModel\nsurname\n  " \
+                  "Surname length too big! (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_wrong_age(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'date_of_birth': str(datetime.date.today())}
+        message = "Exception: 1 validation error for EmployeeModel\n" \
+                  "date_of_birth\n  The employee cannot be under the age of 18! (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_date_of_birth_wrong_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'date_of_birth': "12-12-2002"}
+        message = f"Exception: 1 validation error for EmployeeModel\ndate_of_birth\n  " \
+                  f"time data '{update_test_data['date_of_birth']}' does not match format '%Y-%m-%d' (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_date_of_birth_wrong_str_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'date_of_birth': "01 Jan 1999"}
+        message = f"Exception: 1 validation error for EmployeeModel\ndate_of_birth\n  " \
+                  f"time data '{update_test_data['date_of_birth']}' does not match format '%Y-%m-%d' (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_date_of_birth_wrong_num_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'date_of_birth': 500000}
+        message = f"Exception: 1 validation error for EmployeeModel\ndate_of_birth\n  " \
+                  f"time data '{update_test_data['date_of_birth']}' does not match format '%Y-%m-%d' (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_salary_wrong_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'salary': "zero"}
+        message = "Exception: 1 validation error for EmployeeModel\n" \
+                  "salary\n  value is not a valid float (type=type_error.float)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_email_already_exist(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'email': last_emp.email}
+        message = "Exception: 1 validation error for EmployeeModel\n" \
+                  "email\n  This email is already in use! (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_email_wrong_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'email': "test_mail"}
+        message = "Exception: 1 validation error for EmployeeModel\n" \
+                  "email\n  Check the correctness of the email! (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_phone_wrong_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'phone': "one-two-one"}
+        message = "Exception: 1 validation error for EmployeeModel\n" \
+                  "phone\n  The number must contain only digits! (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_phone_already_exist(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'phone': last_emp.phone}
+        message = "Exception: 1 validation error for EmployeeModel\n" \
+                  "phone\n  This number is already in use! (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_date_of_joining_wrong_str_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'date_of_joining': "01 Jan 1999"}
+        message = f"Exception: 1 validation error for EmployeeModel\ndate_of_joining\n  " \
+                  f"time data '{update_test_data['date_of_joining']}' does not match format '%Y-%m-%d' (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_employee_date_of_joining_wrong_num_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'date_of_joining': 500000}
+        message = f"Exception: 1 validation error for EmployeeModel\ndate_of_joining\n  " \
+                  f"time data '{update_test_data['date_of_joining']}' " \
+                  "does not match format '%Y-%m-%d' (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_department_not_exist(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'department': 999999999}
+        message = "Exception: 1 validation error for EmployeeModel\ndepartment\n  " \
+                  "There is no such department! See the list of departments: " \
+                  ".../swagger/#/Department32API (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_department_wrong_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'department': 'RD Lab'}
+        message = "Exception: 1 validation error for EmployeeModel\ndepartment\n  " \
+                  "value is not a valid integer (type=type_error.integer)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_location_not_exist(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'location': 999999999}
+        message = "Exception: 1 validation error for EmployeeModel\nlocation\n  " \
+                  "There is no such department! See the list of departments: " \
+                  ".../swagger/#/Location32API (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_location_wrong_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'location': 'Brest'}
+        message = "Exception: 1 validation error for EmployeeModel\nlocation\n  " \
+                  "value is not a valid integer (type=type_error.integer)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_work_address_not_exist(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'work_address': 999999999}
+        message = "Exception: 1 validation error for EmployeeModel\nwork_address\n  " \
+                  "There is no such department! See the list of departments: " \
+                  ".../swagger/#/Address32API (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_work_address_wrong_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'work_address': 'Moskovskaja, 348'}
+        message = "Exception: 1 validation error for EmployeeModel\nwork_address\n  " \
+                  "value is not a valid integer (type=type_error.integer)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_key_skill_not_exist(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'key_skill': 999999999}
+        message = "Exception: 1 validation error for EmployeeModel\nkey_skill\n  " \
+                  "There is no such department! See the list of departments: " \
+                  ".../swagger/#/Skill32API (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_key_skill_wrong_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'key_skill': 'Python'}
+        message = "Exception: 1 validation error for EmployeeModel\nkey_skill\n  " \
+                  "value is not a valid integer (type=type_error.integer)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_permission_not_exist(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'permission': 999999999}
+        message = "Exception: 1 validation error for EmployeeModel\npermission\n  " \
+                  "There is no such department! See the list of departments: " \
+                  ".../swagger/#/Permission32API (type=value_error)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_put_permission_wrong_format(self):
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        update_test_data = {'permission': 'Administrator'}
+        message = "Exception: 1 validation error for EmployeeModel\npermission\n  " \
+                  "value is not a valid integer (type=type_error.integer)"
+        url = f"http://127.0.0.1:5000/api/employee/{last_emp.id}"
+        response = requests.put(url, json=update_test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json()['message'])
+
+    def test_delete_employee(self):
+        test_emp = EmployeeFactory()
+        test_data = {'name': test_emp.name, 'surname': test_emp.surname, 'date_of_birth': test_emp.date_of_birth,
+                     'salary': test_emp.salary, 'email': test_emp.email + "test", 'phone': test_emp.phone,
+                     'date_of_joining': test_emp.date_of_joining, 'department': test_emp.department,
+                     'location': test_emp.location, 'work_address': test_emp.work_address,
+                     'key_skill': test_emp.key_skill, 'permission': test_emp.permission}
         employee = Employee(**test_data)
         db.session.add(employee)
         db.session.commit()
         url = f"http://127.0.0.1:5000/api/employee/{employee.id}"
-        response = requests.put(url, json=update_test_data)
-        try:
-            # self.assertEqual(response.status_code, 200)
-            self.assertEqual(employee.id, response.json()['id'])
-            self.assertEqual(update_test_data['name'], response.json()['name'])
-            self.assertEqual('Fri, 01 Jan 1999 00:00:00 GMT', response.json()['date_of_birth'])
-            self.assertEqual(employee.salary, response.json()['salary'])
-            self.assertEqual(employee.email, response.json()['email'])
-            self.assertEqual(employee.phone, response.json()['phone'])
-            self.assertEqual('Wed, 01 Jan 2020 00:00:00 GMT', response.json()['date_of_joining'])
-            self.assertEqual(employee.department, response.json()['department'])
-            self.assertEqual(employee.work_address, response.json()['work_address'])
-            self.assertEqual(employee.key_skill, response.json()['key_skill'])
-        finally:
-            db.session.delete(employee)
-            db.session.commit()
+        response = requests.delete(url)
+        self.assertEqual(response.status_code, 204)
 
+        url_check = f"http://127.0.0.1:5000/api/employee/{employee.id}"
+        message = f"Could not find employee with ID: {employee.id}."
+        response_check = requests.get(url_check)
+        self.assertEqual(response_check.status_code, 404)
+        self.assertEqual(message, response_check.json()['message'])
 
+    def test_post_employee(self):
+        test_emp = EmployeeFactory()
+        test_data = {'name': test_emp.name, 'surname': test_emp.surname, 'date_of_birth': test_emp.date_of_birth,
+                     'salary': test_emp.salary, 'email': test_emp.email + "test", 'phone': test_emp.phone,
+                     'date_of_joining': test_emp.date_of_joining, 'department': test_emp.department,
+                     'location': test_emp.location, 'work_address': test_emp.work_address,
+                     'key_skill': test_emp.key_skill, 'permission': test_emp.permission}
+        url = f"http://127.0.0.1:5000/api/employee"
+        response = requests.post(url, json=test_data)
+        self.assertEqual(response.status_code, 201)
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
+        db.session.delete(last_emp)
+        db.session.commit()
 
-
-    #
-    # # def tearDown(self):
-    # #     db.session.remove()
-    # #     db.drop_all()
-    #
-    # def test_get_all_employee(self):
-    #     """ doc str """
-    #     response = requests.get(TestApiEmployee.EMPLOYEES_URL)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(len(response.json()), len(Employee.query.all()))
-    #
-    # def test_wrong_employee_id(self):
-    #     """ doc str """
-    #     response = requests.get(TestApiEmployee.EMPLOYEE3_URL)
-    #     self.assertEqual(response.status_code, 404)
-    #     self.assertEqual(response.json()['message'], "ID must be a number.")
-    #
-    # def test_employee_not_exist(self):
-    #     """ doc str """
-    #     response = requests.get(TestApiEmployee.EMPLOYEE2_URL)
-    #     self.assertEqual(response.status_code, 404)
-    #     self.assertEqual(response.json()['message'], "Could not find employee with ID: 7878.")
-    #
-    # # def test_create_employee(self):
-    # #     r = requests.post(TestApiEmployee.EMPLOYEES_URL, json=TestApiEmployee.EMPLOYEE_TEST_DATA1)
-    # #     self.assertEqual(TestApiEmployee.old_len + 1, len(Employee.query.all()))
-    # #     self.assertEqual(r.status_code, 201)
-    # #
-    # # def test_delete_employee(self):
-    # #     r = requests.delete(TestApiEmployee.EMPLOYEES_URL+"/109")
-    # #     self.assertEqual(TestApiEmployee.old_len - 1, len(Employee.query.all()))
-    # #     self.assertEqual(r.status_code, 204)
-    #
-    # def test_wrong_employee_name_length_post(self):
-    #     """ doc str """
-    #     response = requests.post(TestApiEmployee.EMPLOYEES_URL, json=TestApiEmployee.EMPLOYEE_TEST_DATA2)
-    #     self.assertEqual(response.status_code, 404)
-    #     self.assertEqual(response.json()['message'], "Exception: 1 validation error for EmployeeModel\n"
-    #                                           "name\n  Name length too big! (type=value_error)")
-    #
-    # def test_wrong_employee_name_length_put(self):
-    #     """ doc str """
-    #     response = requests.put(TestApiEmployee.EMPLOYEE1_URL, json={"name": "VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME "
-    #                                                                   "VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME "
-    #                                                                   "VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME "
-    #                                                                   "VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME "
-    #                                                                   "VERY_BIG_TEST_NAME VERY_BIG_TEST_NAME"})
-    #     self.assertEqual(response.status_code, 404)
-    #     self.assertEqual(response.json()['message'], "Exception: 1 validation error for EmployeeModel\n"
-    #                                           "name\n  Name length too big! (type=value_error)")
+    def test_get_employee_all(self):
+        url = f"http://127.0.0.1:5000/api/employee"
+        response = requests.get(url)
+        employees = Employee.query.order_by(Employee.id).all()
+        self.assertEqual(len(response.json()), len(employees))

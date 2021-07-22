@@ -99,3 +99,8 @@ class EmployeeModel(BaseModel):
         if v not in [x.id for x in permission]:
             raise ValueError('There is no such department! See the list of departments: .../swagger/#/Permission32API')
         return v
+
+    @validator('date_of_joining')
+    def date_of_joining_check(cls, v):
+        datetime.datetime.strptime(str(v), "%Y-%m-%d").date()
+        return v.title()

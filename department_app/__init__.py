@@ -8,12 +8,10 @@ from department_app.models.app_models import db
 MIGRATION_DIR = os.path.join('department_app/migrations')
 
 
-def create_app():
-    "Create app method"
+def create_app(config_name):
+    """Create app method"""
     app = Flask(__name__)
-    app.config['SWAGGER'] = {"title": "Swagger-UI", "uiversion": 2}
-    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://flask_admin:admin1111@localhost:5432/flask_app"
-    app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
+    app.config.from_object('config.' + config_name)
 
     swagger_config = {
         "headers": [],
