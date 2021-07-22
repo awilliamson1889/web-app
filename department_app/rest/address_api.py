@@ -13,7 +13,8 @@ api = Api(address_api)
 
 class AddressInfo(Resource):
     """Address API class"""
-    def get(self, address_id):
+    @staticmethod
+    def get(address_id):
         """
         This is the Address API
         Call this API passing a address_id and get back address information
@@ -40,7 +41,8 @@ class AddressInfo(Resource):
             abort(404, message=f"Could not find address with ID: {address_id}.")
         return make_response(jsonify(address), 200)
 
-    def put(self, address_id):
+    @staticmethod
+    def put(address_id):
         """
         This is the Address API
         Call this API passing a address data and get back updated address information
@@ -90,7 +92,8 @@ class AddressInfo(Resource):
 
 class AllAddressInfo(Resource):
     """Address API"""
-    def post(self):
+    @staticmethod
+    def post():
         """
         This is the Address API
         Call this api passing a address data and create new address
@@ -125,7 +128,8 @@ class AllAddressInfo(Resource):
         db.session.commit()
         return address.dict(), 201
 
-    def get(self):
+    @staticmethod
+    def get():
         """
         This is the Address API
         Call this API and get back all addresses list

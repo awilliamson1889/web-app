@@ -13,7 +13,8 @@ api = Api(department_api)
 
 class DepartmentInfo(Resource):
     """Rest class"""
-    def get(self, department_id):
+    @staticmethod
+    def get(department_id):
         """
         This is the Department API
         Call this API passing a department_id and get back department information
@@ -40,7 +41,8 @@ class DepartmentInfo(Resource):
             abort(404, message=f"Could not find department with ID: {department_id}.")
         return make_response(jsonify(department), 200)
 
-    def put(self, department_id):
+    @staticmethod
+    def put(department_id):
         """
         This is the Department API
         Call this API passing a department data and get back updated department information
@@ -100,7 +102,8 @@ class DepartmentInfo(Resource):
 
 class AllDepartmentInfo(Resource):
     """Rest class"""
-    def post(self):
+    @staticmethod
+    def post():
         """
         This is the Department API
         Call this api passing a department data and create new department
@@ -144,7 +147,8 @@ class AllDepartmentInfo(Resource):
         db.session.commit()
         return department.dict(), 201
 
-    def get(self):
+    @staticmethod
+    def get():
         """
         This is the Department API
         Call this API and get back all departments list

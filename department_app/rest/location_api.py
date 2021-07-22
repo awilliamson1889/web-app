@@ -14,7 +14,8 @@ api = Api(location_api)
 
 class LocationInfo(Resource):
     """Rest class"""
-    def get(self, location_id):
+    @staticmethod
+    def get(location_id):
         """
         This is the location API
         Call this API passing a location_id and get back location information
@@ -41,7 +42,8 @@ class LocationInfo(Resource):
             abort(404, message=f"Could not find location with ID: {location_id}.")
         return make_response(jsonify(location), 200)
 
-    def put(self, location_id):
+    @staticmethod
+    def put(location_id):
         """
         This is the location API
         Call this API passing a location data and get back updated location information
@@ -91,7 +93,8 @@ class LocationInfo(Resource):
 
 class AllLocationInfo(Resource):
     """Rest class"""
-    def post(self):
+    @staticmethod
+    def post():
         """
         This is the location API
         Call this api passing a location data and create new location
@@ -126,7 +129,8 @@ class AllLocationInfo(Resource):
         db.session.commit()
         return location.dict(), 201
 
-    def get(self):
+    @staticmethod
+    def get():
         """
         This is the location API
         Call this API and get back all locations list

@@ -1,13 +1,5 @@
 """Routes web-app"""
-from flask import Blueprint
-from department_app.models.app_models import Employee
-
-
-from flask import Blueprint, request, jsonify, make_response, render_template
-from flask_restful import Resource, Api, abort
-from pydantic import ValidationError
-from department_app.models.app_models import Employee
-from department_app.models.employee_schema import EmployeeModel
+from flask import Blueprint, request, render_template
 from department_app.models.app_models import db
 from department_app.service.employee import CRUDEmployee
 
@@ -24,11 +16,13 @@ def index():
 
 @frontend.route('/form')
 def form():
+    """form function"""
     return render_template('form.html')
 
 
 @frontend.route('/form2')
 def form2():
+    """form function"""
     employee = CRUDEmployee.get_employee(employee_id=1)
     return render_template('form2.html', employee=employee)
 
@@ -37,7 +31,7 @@ def form2():
 def create_employee():
     """Return / page"""
     if request.method == 'GET':
-        return f"The URL /data is accessed directly. Try going to '/form' to submit form"
+        return "The URL /data is accessed directly. Try going to '/form' to submit form"
     if request.method == 'POST':
         CRUDEmployee.create_employee()
         return "DATA ADDED"
@@ -47,7 +41,7 @@ def create_employee():
 def update_employee():
     """Return / page"""
     if request.method == 'GET':
-        return f"The URL /data is accessed directly. Try going to '/form' to submit form"
+        return "The URL /data is accessed directly. Try going to '/form' to submit form"
     if request.method == 'POST':
         CRUDEmployee.update_employee(1)
         return "DATA UPDATED"

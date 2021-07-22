@@ -5,7 +5,6 @@ from pydantic import ValidationError
 from department_app.models.app_models import Employee
 from department_app.models.employee_schema import EmployeeModel
 from department_app.models.app_models import db
-import json
 
 employee_api = Blueprint('employee_api', __name__)
 
@@ -14,7 +13,8 @@ api = Api(employee_api)
 
 class EmployeeInfo(Resource):
     """Rest class"""
-    def get(self, employee_id):
+    @staticmethod
+    def get(employee_id):
         """
         This is the Employee API
         Call this API passing a employee_id and get back employee information
@@ -41,7 +41,8 @@ class EmployeeInfo(Resource):
             abort(404, message=f"Could not find employee with ID: {employee_id}.")
         return make_response(jsonify(employee), 200)
 
-    def put(self, employee_id):
+    @staticmethod
+    def put(employee_id):
         """
         This is the Employee API
         Call this API passing a employee data and get back updated employee information
@@ -133,7 +134,7 @@ class EmployeeInfo(Resource):
         employee_data.update(employee_json)
 
         try:
-            result = EmployeeModel(**employee_data)
+            EmployeeModel(**employee_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
@@ -152,7 +153,8 @@ class EmployeeInfo(Resource):
         db.session.commit()
         return make_response(jsonify(employee), 201)
 
-    def delete(self, employee_id):
+    @staticmethod
+    def delete(employee_id):
         """
         This is the Employee API
         Call this API passing a employee_id and delete this employee
@@ -184,7 +186,8 @@ class EmployeeInfo(Resource):
 
 class AllEmployeeInfo(Resource):
     """Rest class"""
-    def post(self):
+    @staticmethod
+    def post():
         """
         This is the Employee API
         Call this api passing a employee data and create new employee
@@ -268,7 +271,8 @@ class AllEmployeeInfo(Resource):
         db.session.commit()
         return employees.dict(), 201
 
-    def get(self):
+    @staticmethod
+    def get():
         """
         This is the Employee API
         Call this API and get back all employees list

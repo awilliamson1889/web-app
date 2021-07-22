@@ -14,7 +14,8 @@ api = Api(permission_api)
 
 class PermissionInfo(Resource):
     """Rest class"""
-    def get(self, permission_id):
+    @staticmethod
+    def get(permission_id):
         """
         This is the Permission API
         Call this API passing a permission_id and get back permission information
@@ -41,7 +42,8 @@ class PermissionInfo(Resource):
             abort(404, message=f"Could not find permission with ID: {permission_id}.")
         return make_response(jsonify(permission), 200)
 
-    def put(self, permission_id):
+    @staticmethod
+    def put(permission_id):
         """
         This is the Permission API
         Call this API passing a permission data and get back updated permission information
@@ -91,7 +93,8 @@ class PermissionInfo(Resource):
 
 class AllPermissionInfo(Resource):
     """Rest class"""
-    def post(self):
+    @staticmethod
+    def post():
         """
         This is the Permission API
         Call this api passing a permission data and create new permission
@@ -126,7 +129,8 @@ class AllPermissionInfo(Resource):
         db.session.commit()
         return permission.dict(), 201
 
-    def get(self):
+    @staticmethod
+    def get():
         """
         This is the Permission API
         Call this API and get back all permissions list

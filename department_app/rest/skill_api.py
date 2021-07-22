@@ -13,7 +13,8 @@ api = Api(skill_api)
 
 class SkillInfo(Resource):
     """Rest class"""
-    def get(self, skill_id):
+    @staticmethod
+    def get(skill_id):
         """
         This is the Skill API
         Call this API passing a skill_id and get back skill information
@@ -40,7 +41,8 @@ class SkillInfo(Resource):
             abort(404, message=f"Could not find skill with ID: {skill_id}.")
         return make_response(jsonify(skill), 200)
 
-    def put(self, skill_id):
+    @staticmethod
+    def put(skill_id):
         """
         This is the Skill API
         Call this API passing a skill data and get back updated skill information
@@ -90,7 +92,8 @@ class SkillInfo(Resource):
 
 class AllSkillInfo(Resource):
     """Rest class"""
-    def post(self):
+    @staticmethod
+    def post():
         """
         This is the Skill API
         Call this api passing a skill data and create new skill
@@ -115,7 +118,7 @@ class AllSkillInfo(Resource):
         """
         skill_data = {'name': request.json['name']}
         try:
-            permission = SkillModel(**skill_data)
+            skill = SkillModel(**skill_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
@@ -123,9 +126,10 @@ class AllSkillInfo(Resource):
 
         db.session.add(result)
         db.session.commit()
-        return permission.dict(), 201
+        return skill.dict(), 201
 
-    def get(self):
+    @staticmethod
+    def get():
         """
         This is the Skill API
         Call this API and get back all skills list

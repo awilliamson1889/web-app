@@ -1,15 +1,16 @@
 """Employee CRUD"""
-from department_app.models.app_models import db
-from department_app.models.app_models import Employee
-from department_app.models.employee_schema import EmployeeModel
 from pydantic import ValidationError
 from flask import request
 from flask_restful import abort
+from department_app.models.app_models import db
+from department_app.models.app_models import Employee
+from department_app.models.employee_schema import EmployeeModel
 
 
 class CRUDEmployee:
     """Employee CRUD class"""
-    def create_employee(**kwargs):
+    @staticmethod
+    def create_employee():
         """Create employee func"""
         form_data = request.form
         employee = Employee(name=form_data['name'], surname=form_data['surname'],
@@ -35,7 +36,7 @@ class CRUDEmployee:
                          'key_skill': form_data['key_skill'], 'permission': form_data['permission']}
 
         try:
-            result = EmployeeModel(**employee_data)
+            EmployeeModel(**employee_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
@@ -53,7 +54,8 @@ class CRUDEmployee:
         employee.permission = form_data['permission']
         db.session.commit()
 
-    def delete_employee(self, employee_id):
+    @staticmethod
+    def delete_employee(employee_id):
         """Delete employee func"""
         employee = Employee.query.filter_by(id=employee_id).first()
         db.session.delete(employee)
@@ -65,7 +67,8 @@ class CRUDEmployee:
         employee = Employee.query.filter_by(id=employee_id).first()
         return employee
 
-    def search_employee(self, emp_primary_skill):
+    @staticmethod
+    def search_employee(emp_primary_skill):
         """Search employee func"""
         employees = Employee.query.filter_by(primary_skill=emp_primary_skill)
         return employees
