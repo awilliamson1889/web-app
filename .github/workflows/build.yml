@@ -40,7 +40,9 @@ jobs:
         run:
           pylint --load-plugins pylint_flask_sqlalchemy department_app
       - name: Run tests
-        run: coverage run -m unittest department_app/tests/test_rest_employee.py
+        run:
+          export FLASK_APP=department_app:create_app('TestCongig')
+          coverage run --source=-m unittest department_app/tests/test_rest_employee.py
       - name: Install dependencies for Coveralls       
         run:
           pip install coveralls
