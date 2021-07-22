@@ -12,6 +12,7 @@ def create_app(config_name):
     """Create app method"""
     app = Flask(__name__)
     a = config_name
+    print(a)
     # app.config.from_object('config.' + config_name)
     app.config.from_object('config.DevConfig' )
 
