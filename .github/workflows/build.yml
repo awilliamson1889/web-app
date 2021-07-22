@@ -41,9 +41,10 @@ jobs:
           pylint --load-plugins pylint_flask_sqlalchemy department_app
       - name: Run tests
         run:
+          export FLASK_APP=department_app
           flask db init
           flask db migrate -m "Initial migration."
-          export FLASK_APP=department_app:create_app("TestCongig")
+          flask run
           coverage run --source=-m unittest department_app/tests/test_rest_employee.py
       - name: Install dependencies for Coveralls       
         run:
