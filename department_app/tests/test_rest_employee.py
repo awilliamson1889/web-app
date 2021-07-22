@@ -3,7 +3,7 @@ import requests
 import datetime
 from department_app import create_app
 from department_app.models.app_models import db, Employee
-from employee_factory import EmployeeFactory
+from department_app.models.employee_factory import EmployeeFactory
 
 app = create_app('TestConfig')
 app.app_context().push()
