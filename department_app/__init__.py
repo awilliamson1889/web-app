@@ -10,6 +10,7 @@ MIGRATION_DIR = os.path.join('department_app/migrations')
 
 def create_app(config_name):
     """Create app method"""
+    config_name = "TestConfig"
     app = Flask(__name__)
     app.config.from_object('config.' + config_name)
 

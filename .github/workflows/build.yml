@@ -43,7 +43,7 @@ jobs:
           pylint --load-plugins pylint_flask_sqlalchemy department_app
       - name: Flask Tests
         run: |
-          export FLASK_APP=department_app:create_app("TestConfig")
+          export FLASK_APP=department_app
           flask run
       - name: Install dependencies for Coveralls       
         run:
