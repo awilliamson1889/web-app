@@ -44,9 +44,9 @@ jobs:
         run:
           export FLASK_APP=department_app
           flask db init
-          flask db migrate -m "Initial migration."
+          flask db migrate --m "Initial migration"
           flask run
-          coverage run -m unittest
+          coverage run --m unittest
       - name: Install dependencies for Coveralls       
         run:
           pip install coveralls
