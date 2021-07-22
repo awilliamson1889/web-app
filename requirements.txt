@@ -8,3 +8,4 @@ flasgger
 pydantic
 requests
 factory_boy
+flask_script
