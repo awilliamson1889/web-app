@@ -8,8 +8,9 @@ from department_app.models.app_models import db
 MIGRATION_DIR = os.path.join('department_app/migrations')
 
 
-def create_app(test_config=None):
+def create_app():
     """Create app method"""
+
     app = Flask(__name__)
     app.config['SWAGGER'] = {"title": "DevSwagger-UI", "uiversion": 2}
     app.config['DEVELOPMENT'] = True
