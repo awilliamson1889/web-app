@@ -6,6 +6,7 @@ from department_app.models.factoryes.address_factory import AddressFactory
 
 app = create_app()
 app.app_context().push()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/flask_app_test'
 
 
 class TestApiAddress(unittest.TestCase):
