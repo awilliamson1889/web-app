@@ -4,7 +4,7 @@ from department_app import create_app
 from department_app.models.app_models import db, Employee
 from department_app.models.factoryes.employee_factory import EmployeeFactory
 
-app = create_app('TestConfig')
+app = create_app()
 app.app_context().push()
 
 
