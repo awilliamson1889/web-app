@@ -1,6 +1,5 @@
 """Routes web-app"""
 from flask import Blueprint, request, render_template
-from department_app.models.app_models import db
 from department_app.service.employee import CRUDEmployee
 
 
@@ -10,7 +9,6 @@ frontend = Blueprint('frontend', __name__)
 @frontend.route('/')
 def index():
     """Return / page"""
-    db.session.commit()
     return str("R")
 
 

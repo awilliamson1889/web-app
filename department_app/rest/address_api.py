@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
 from department_app.models.app_models import Address
-from department_app.models.address_schema import AddressModel
+from department_app.models.schemas.address_schema import AddressModel
 from department_app.models.app_models import db
 
 address_api = Blueprint('address_api', __name__)
@@ -79,15 +79,22 @@ class AddressInfo(Resource):
         if not address:
             abort(404, message=f"Could not find address with ID: {address_id}.")
 
-        if 'name' in request.json:
-            address.name = request.json['name']
+        address_data = {'name': address.name}
+
+        address_json = request.json
+        address_data.update(address_json)
+
+        # if 'name' in request.json:
+        #     address.name = request.json['name']
         try:
-            result = AddressModel(name=address.name)
+            AddressModel(**address_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
+        address.name = address_data['name']
+
         db.session.commit()
-        return result.dict(), 204
+        return make_response(jsonify(address), 201)
 
 
 class AllAddressInfo(Resource):

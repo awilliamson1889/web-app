@@ -4,7 +4,7 @@ from flask import request
 from flask_restful import abort
 from department_app.models.app_models import db
 from department_app.models.app_models import Employee
-from department_app.models.employee_schema import EmployeeModel
+from department_app.models.schemas.employee_schema import EmployeeModel
 
 
 class CRUDEmployee:

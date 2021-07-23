@@ -44,7 +44,7 @@ class EmployeeModel(BaseModel):
             (datetime.date.today() - datetime.datetime.strptime(str(v), "%Y-%m-%d").date()).days / 365))
         if age < 18 and 'date_of_birth' in request.json:
             raise ValueError('The employee cannot be under the age of 18!')
-        return v.title()
+        return str(v).title()
 
     @validator('phone')
     def phone_check(cls, v):
@@ -104,3 +104,9 @@ class EmployeeModel(BaseModel):
     def date_of_joining_check(cls, v):
         datetime.datetime.strptime(str(v), "%Y-%m-%d").date()
         return v.title()
+
+    @validator('salary')
+    def salary_check(cls, v):
+        if v < 0:
+            raise ValueError('Salary less then 0!')
+        return v
