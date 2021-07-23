@@ -5,6 +5,11 @@ from department_app.models.app_models import db, Employee
 from department_app.models.factoryes.employee_factory import EmployeeFactory
 
 app = create_app()
+app.config.update(
+    TESTING=True,
+    SQLALCHEMY_DATABASE_URI='postgresql://postgres:postgres@localhost:5432/flask_app_test',
+    SECRET_KEY=b'_5#y2L"F4Q8z\n\xec]/'
+)
 app.app_context().push()
 
 
