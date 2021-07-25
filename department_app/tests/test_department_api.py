@@ -200,15 +200,15 @@ class TestApiDepartment(unittest.TestCase):
         department = Department.query.order_by(Department.id).all()
         self.assertEqual(len(response.json), len(department))
 
-    def test_put_date_of_creation_date_of_birth_wrong_format(self):
-        department = Department.query.order_by(Department.id).all()
-        client = app.test_client()
-        last_department = department[-1]
-        update_test_data = {'date_of_creation': "12-12-2002"}
-        message = f"Exception: 1 validation error for DepartmentModel\ndate_of_creation\n  " \
-                  f"time data '{update_test_data['date_of_creation']}' does not match format " \
-                  f"'%Y-%m-%d' (type=value_error)"
-        url = f"/api/department/{last_department.id}"
-        response = client.put(url, json=update_test_data)
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(message, response.json['message'])
+    # def test_put_date_of_creation_date_of_birth_wrong_format(self):
+    #     department = Department.query.order_by(Department.id).all()
+    #     client = app.test_client()
+    #     last_department = department[-1]
+    #     update_test_data = {'date_of_creation': "12-12-2002"}
+    #     message = f"Exception: 1 validation error for DepartmentModel\ndate_of_creation\n  " \
+    #               f"time data '{update_test_data['date_of_creation']}' does not match format " \
+    #               f"'%Y-%m-%d' (type=value_error)"
+    #     url = f"/api/department/{last_department.id}"
+    #     response = client.put(url, json=update_test_data)
+    #     self.assertEqual(response.status_code, 404)
+    #     self.assertEqual(message, response.json['message'])
