@@ -6,15 +6,15 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:11
+        image: postgres:12
         env:
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: flask_test.db
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+
         ports:
           - 5432:5432
         options:
@@ -33,6 +33,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install postgresql
+        run:
+          sudo apt install postgresql
+          su - postgres
+          psql
+          CREATE DATABASE flask_test;
       - name: Install dependencies
         run:
           python -m pip install --upgrade pip
