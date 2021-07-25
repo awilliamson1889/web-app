@@ -80,15 +80,20 @@ class PermissionInfo(Resource):
         if not permission:
             abort(404, message=f"Could not find permission with ID: {permission_id}.")
 
-        if 'name' in request.json:
-            permission.name = request.json['name']
+        permission_data = {'name': permission.name}
+
+        permission_json = request.json
+        permission_data.update(permission_json)
+
         try:
-            result = PermissionModel(id=permission.id, name=permission.name)
+            PermissionModel(**permission_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
+        permission.name = permission_data['name']
+
         db.session.commit()
-        return result.dict(), 204
+        return make_response(jsonify(permission), 201)
 
 
 class AllPermissionInfo(Resource):

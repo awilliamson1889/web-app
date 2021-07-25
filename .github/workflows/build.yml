@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:11
+        image: postgres:12
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: flask_app_test
+          POSTGRES_DB: flask_test
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -23,6 +23,8 @@ jobs:
         python-version: [3.7, 3.8, 3.9]
 
     steps:
+      - name: Run migrations
+        run: make migrateup
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}

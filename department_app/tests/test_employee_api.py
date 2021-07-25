@@ -1,15 +1,12 @@
 import unittest
 import datetime
 from department_app import create_app
-from department_app.models.app_models import db, Employee
+from flask_migrate import Migrate
+from department_app.models.app_models import db, Employee, Department, Permission, Address, Location, Skill
 from department_app.models.factoryes.employee_factory import EmployeeFactory
+import os
 
-app = create_app()
-app.config.update(
-    TESTING=True,
-    SQLALCHEMY_DATABASE_URI='postgresql://postgres:postgres@localhost:5432/flask_app_test',
-    SECRET_KEY=b'_5#y2L"F4Q8z\n\xec]/'
-)
+app = create_app('Test')
 app.app_context().push()
 
 
@@ -105,7 +102,7 @@ class TestApiEmployee(unittest.TestCase):
         update_test_data = {'name': 'update_test_name', 'surname': 'update_test_surname', 'date_of_birth': '1998-01-01',
                             'salary': 55555.0, 'email': 'update_test_mail@testig.test', 'phone': '55555555555',
                             'date_of_joining': '2021-01-01', 'department': 1, 'location': 1, 'work_address': 1,
-                            'key_skill': 1, 'permission': 1}
+                            'key_skill': 138, 'permission': 36}
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(201, response.status_code)
@@ -496,7 +493,7 @@ class TestApiEmployee(unittest.TestCase):
     def test_employee_api_put_wrong_salary_format(self):
         test_data = {'salary': -10000}
         client = app.test_client()
-        employee_id = 1
+        employee_id = 44
         url = f'/api/employee/{employee_id}'
         message = "Exception: 1 validation error for EmployeeModel\n" \
                   "salary\n  Salary less then 0! (type=value_error)"

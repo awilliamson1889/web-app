@@ -80,15 +80,20 @@ class LocationInfo(Resource):
         if not location:
             abort(404, message=f"Could not find location with ID: {location_id}.")
 
-        if 'name' in request.json:
-            location.name = request.json['name']
+        location_data = {'name': location.name}
+
+        location_json = request.json
+        location_data.update(location_json)
+
         try:
-            result = LocationModel(id=location.id, name=location.name)
+            LocationModel(**location_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
+        location.name = location_data['name']
+
         db.session.commit()
-        return result.dict(), 204
+        return make_response(jsonify(location), 201)
 
 
 class AllLocationInfo(Resource):

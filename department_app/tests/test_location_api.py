@@ -1,180 +1,180 @@
 import unittest
 from department_app import create_app
-from department_app.models.app_models import db, Address
-from department_app.models.factoryes.address_factory import AddressFactory
+from department_app.models.app_models import db, Location
+from department_app.models.factoryes.location_factory import LocationFactory
 
-app = create_app()
+app = create_app('Test')
 app.app_context().push()
 
 
-class TestApiAddress(unittest.TestCase):
+class TestApiLocation(unittest.TestCase):
     """ doc str """
     def setUp(self):
         """ doc str """
         self.app = app.test_client()
-        test_address = AddressFactory()
-        test_data = {'name': test_address.name}
-        address = Address(**test_data)
-        db.session.add(address)
+        test_location = LocationFactory()
+        test_data = {'name': test_location.name}
+        location = Location(**test_data)
+        db.session.add(location)
         db.session.commit()
         db.create_all()
 
     def tearDown(self):
-        emp = Address.query.order_by(Address.id).all()
-        db.session.delete(emp[-1])
+        location = Location.query.order_by(Location.id).all()
+        db.session.delete(location[-1])
         db.session.commit()
 
-    def test_get_address(self):
-        emp = Address.query.order_by(Address.id).all()
-        last_address = emp[-1]
-        url = f"/api/address/{last_address.id}"
+    def test_get_location(self):
+        location = Location.query.order_by(Location.id).all()
+        last_location = location[-1]
+        url = f"/api/location/{last_location.id}"
         client = app.test_client()
         response = client.get(url)
 
         self.assertEqual(200, response.status_code)
-        self.assertEqual(last_address.id, response.json['id'])
-        self.assertEqual(last_address.name, response.json['name'])
+        self.assertEqual(last_location.id, response.json['id'])
+        self.assertEqual(last_location.name, response.json['name'])
 
-    def test_get_address_not_exist(self):
-        address_id = 999999999
+    def test_get_location_not_exist(self):
+        location_id = 999999999
         client = app.test_client()
-        url = f"/api/address/{address_id}"
-        message = f"Could not find address with ID: {address_id}."
+        url = f"/api/location/{location_id}"
+        message = f"Could not find location with ID: {location_id}."
         response = client.get(url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
     def test_get_str_id_format(self):
-        address_id = "one"
+        location_id = "one"
         client = app.test_client()
         message = "ID must be a number."
-        url = f"/api/address/{address_id}"
+        url = f"/api/location/{location_id}"
         response = client.get(url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
     def test_get_negative_num_id_format(self):
-        address_id = -1
+        location_id = -1
         client = app.test_client()
         message = "ID must be a number."
-        url = f"/api/address/{address_id}"
+        url = f"/api/location/{location_id}"
         response = client.get(url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
     def test_get_str_num_id_format(self):
-        address_id = "1one"
+        location_id = "1one"
         client = app.test_client()
         message = "ID must be a number."
-        url = f"/api/address/{address_id}"
+        url = f"/api/location/{location_id}"
         response = client.get(url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
     def test_get_float_num_id_format(self):
-        address_id = 1.0
+        location_id = 1.0
         client = app.test_client()
         message = "ID must be a number."
-        url = f"/api/address/{address_id}"
+        url = f"/api/location/{location_id}"
         response = client.get(url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
-    def test_put_address(self):
-        address = Address.query.order_by(Address.id).all()
+    def test_put_location(self):
+        location = Location.query.order_by(Location.id).all()
         client = app.test_client()
-        last_address = address[-1]
-        update_test_data = {'name': 'update_test_address'}
-        url = f"/api/address/{last_address.id}"
+        last_location = location[-1]
+        update_test_data = {'name': 'update_test_location'}
+        url = f"/api/location/{last_location.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(201, response.status_code)
-        self.assertEqual(last_address.id, response.json['id'])
+        self.assertEqual(last_location.id, response.json['id'])
         self.assertEqual(update_test_data['name'], response.json['name'])
 
-    def test_put_address_not_exist(self):
-        address_id = 999999999
+    def test_put_location_not_exist(self):
+        location_id = 999999999
         client = app.test_client()
-        url = f"/api/address/{address_id}"
-        message = f"Could not find address with ID: {address_id}."
+        url = f"/api/location/{location_id}"
+        message = f"Could not find location with ID: {location_id}."
         response = client.put(url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
     def test_put_str_id_format(self):
-        address_id = "one"
+        location_id = "one"
         client = app.test_client()
         message = "ID must be a number."
-        url = f"/api/address/{address_id}"
+        url = f"/api/location/{location_id}"
         response = client.put(url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
     def test_put_negative_num_id_format(self):
-        address_id = -1
+        location_id = -1
         client = app.test_client()
         message = "ID must be a number."
-        url = f"/api/address/{address_id}"
+        url = f"/api/location/{location_id}"
         response = client.put(url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
     def test_put_str_num_id_format(self):
-        address_id = "1one"
+        location_id = "1one"
         client = app.test_client()
         message = "ID must be a number."
-        url = f"/api/address/{address_id}"
+        url = f"/api/location/{location_id}"
         response = client.put(url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
     def test_put_float_num_id_format(self):
-        address_id = 1.0
+        location_id = 1.0
         client = app.test_client()
         message = "ID must be a number."
-        url = f"/api/address/{address_id}"
+        url = f"/api/location/{location_id}"
         response = client.put(url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
-    def test_put_big_address_name(self):
-        address = Address.query.order_by(Address.id).all()
-        last_emp = address[-1]
+    def test_put_big_location_name(self):
+        location = Location.query.order_by(Location.id).all()
+        last_emp = location[-1]
         client = app.test_client()
-        update_test_data = {'name': 'test_very_big_address_name_test_very_big_address_name_test_very_big_address_name_'
-                                    'test_very_big_address_name_test_very_big_address_name_test_very_big_address_name'}
-        message = "Exception: 1 validation error for AddressModel\nname\n  Name length too big! (type=value_error)"
-        url = f"/api/address/{last_emp.id}"
+        update_test_data = {'name': 'test_very_big_location_name_test_very_big_location_name_very_big_location_name_'
+                                    'test_very_big_location_name_test_very_big_location_name_test_very_big_name'}
+        message = "Exception: 1 validation error for LocationModel\nname\n  Name length too big! (type=value_error)"
+        url = f"/api/location/{last_emp.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
-    def test_put_address_already_exist(self):
-        address = Address.query.order_by(Address.id).all()
+    def test_put_location_already_exist(self):
+        location = Location.query.order_by(Location.id).all()
         client = app.test_client()
-        last_address = address[-1]
-        update_test_data = {'name': last_address.name}
-        message = "Exception: 1 validation error for AddressModel\n" \
-                  "name\n  This address is already in use! (type=value_error)"
-        url = f"/api/address/{last_address.id}"
+        last_location = location[-1]
+        update_test_data = {'name': last_location.name}
+        message = "Exception: 1 validation error for LocationModel\n" \
+                  "name\n  This location is already in use! (type=value_error)"
+        url = f"/api/location/{last_location.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(message, response.json['message'])
 
-    def test_post_address(self):
-        test_address = AddressFactory()
+    def test_post_location(self):
+        test_location = LocationFactory()
         client = app.test_client()
-        test_data = {'name': test_address.name}
-        url = f"/api/address"
+        test_data = {'name': test_location.name}
+        url = f"/api/location"
         response = client.post(url, json=test_data)
         self.assertEqual(response.status_code, 201)
-        emp = Address.query.order_by(Address.id).all()
+        emp = Location.query.order_by(Location.id).all()
         last_emp = emp[-1]
         db.session.delete(last_emp)
         db.session.commit()
 
-    def test_get_address_all(self):
-        url = f"/api/address"
+    def test_get_location_all(self):
+        url = f"/api/location"
         client = app.test_client()
         response = client.get(url)
-        address = Address.query.order_by(Address.id).all()
-        self.assertEqual(len(response.json), len(address))
+        location = Location.query.order_by(Location.id).all()
+        self.assertEqual(len(response.json), len(location))

@@ -68,7 +68,7 @@ class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     manager = db.Column(db.String(100), nullable=False)
-    date_of_creation = db.Column(db.Date, default=datetime.date.today(), nullable=False)
+    date_of_creation = db.Column(db.Date, default=datetime.date.today())
     department = db.relationship('Employee', backref='Department',
                                  lazy='dynamic')
 

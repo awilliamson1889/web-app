@@ -79,15 +79,20 @@ class SkillInfo(Resource):
         if not skill:
             abort(404, message=f"Could not find skill with ID: {skill_id}.")
 
-        if 'name' in request.json:
-            skill.name = request.json['name']
+        skill_data = {'name': skill.name}
+
+        skill_json = request.json
+        skill_data.update(skill_json)
+
         try:
-            result = SkillModel(name=skill.name)
+            SkillModel(**skill_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
+        skill.name = skill_data['name']
+
         db.session.commit()
-        return result.dict(), 204
+        return make_response(jsonify(skill), 201)
 
 
 class AllSkillInfo(Resource):

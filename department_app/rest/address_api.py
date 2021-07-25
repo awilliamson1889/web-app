@@ -84,8 +84,6 @@ class AddressInfo(Resource):
         address_json = request.json
         address_data.update(address_json)
 
-        # if 'name' in request.json:
-        #     address.name = request.json['name']
         try:
             AddressModel(**address_data)
         except ValidationError as exception:

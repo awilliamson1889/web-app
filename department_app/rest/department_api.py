@@ -88,16 +88,23 @@ class DepartmentInfo(Resource):
         if not department:
             abort(404, message=f"Could not find department with ID: {department_id}.")
 
-        if 'name' in request.json:
-            department.name = request.json['name']
+        department_data = {'name': department.name, 'date_of_creation': department.date_of_creation,
+                           'manager': department.manager}
+
+        department_json = request.json
+        department_data.update(department_json)
+
         try:
-            DepartmentModel(name=department.name)
+            DepartmentModel(**department_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
+        department.name = department_data['name']
+        department.manager = department_data['manager']
+        department.date_of_creation = department_data['date_of_creation']
+
         db.session.commit()
-        msg = {"message": "Department information successful update"}
-        return msg, 204
+        return make_response(jsonify(department), 201)
 
 
 class AllDepartmentInfo(Resource):
