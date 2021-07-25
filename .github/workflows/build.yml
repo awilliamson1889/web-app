@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install postgresql
-        run:
+        run: |
           sudo apt install postgresql
           sudo -i -u postgres
           psql
