@@ -3,7 +3,7 @@ from department_app import create_app
 from department_app.models.app_models import db, Address
 from department_app.models.factoryes.address_factory import AddressFactory
 
-app = create_app()
+app = create_app('Test')
 app.app_context().push()
 
 

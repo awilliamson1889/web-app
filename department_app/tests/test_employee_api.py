@@ -1,10 +1,8 @@
 import unittest
 import datetime
 from department_app import create_app
-from flask_migrate import Migrate
 from department_app.models.app_models import db, Employee, Department, Permission, Address, Location, Skill
 from department_app.models.factoryes.employee_factory import EmployeeFactory
-import os
 
 app = create_app('Test')
 app.app_context().push()
