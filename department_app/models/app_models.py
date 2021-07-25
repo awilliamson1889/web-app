@@ -26,11 +26,11 @@ class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     surname = db.Column(db.String(50), nullable=False)
-    date_of_birth = db.Column(db.Date, default=datetime.date.today())
+    date_of_birth = db.Column(db.String(50), default=datetime.date.today())
     salary = db.Column(db.Float, nullable=False)
     phone = db.Column(db.String(13), nullable=False, unique=True)
     email = db.Column(db.String(50), nullable=False, unique=True)
-    date_of_joining = db.Column(db.Date, default=datetime.date.today(), nullable=False)
+    date_of_joining = db.Column(db.String(50), default=datetime.date.today(), nullable=False)
     department = db.Column(db.Integer, db.ForeignKey('Department.id'), nullable=False)
     location = db.Column(db.Integer, db.ForeignKey('Location.id'), nullable=False)
     work_address = db.Column(db.Integer, db.ForeignKey('Address.id'), nullable=False)
@@ -68,7 +68,7 @@ class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     manager = db.Column(db.String(100), nullable=False)
-    date_of_creation = db.Column(db.Date, default=datetime.date.today())
+    date_of_creation = db.Column(db.String(50), default=datetime.date.today())
     department = db.relationship('Employee', backref='Department',
                                  lazy='dynamic')
 

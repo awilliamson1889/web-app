@@ -39,11 +39,11 @@ class TestApiEmployee(unittest.TestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(last_emp.id, response.json['id'])
         self.assertEqual(last_emp.name, response.json['name'])
-        self.assertEqual('Fri, 01 Jan 1999 00:00:00 GMT', response.json['date_of_birth'])
+        self.assertEqual(last_emp.date_of_birth, response.json['date_of_birth'])
         self.assertEqual(last_emp.salary, response.json['salary'])
         self.assertEqual(last_emp.email, response.json['email'])
         self.assertEqual(last_emp.phone, response.json['phone'])
-        self.assertEqual('Fri, 01 Jan 1999 00:00:00 GMT', response.json['date_of_joining'])
+        self.assertEqual(last_emp.date_of_joining, response.json['date_of_joining'])
         self.assertEqual(last_emp.department, response.json['department'])
         self.assertEqual(last_emp.work_address, response.json['work_address'])
         self.assertEqual(last_emp.key_skill, response.json['key_skill'])
@@ -95,23 +95,25 @@ class TestApiEmployee(unittest.TestCase):
 
     def test_put_employee(self):
         emp = Employee.query.order_by(Employee.id).all()
+        test_emp = EmployeeFactory()
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'name': 'update_test_name', 'surname': 'update_test_surname', 'date_of_birth': '1998-01-01',
                             'salary': 55555.0, 'email': 'update_test_mail@testig.test', 'phone': '55555555555',
-                            'date_of_joining': '2021-01-01', 'department': 1, 'location': 1, 'work_address': 1,
-                            'key_skill': 138, 'permission': 36}
+                            'date_of_joining': '2021-01-01', 'department': test_emp.department,
+                            'location': test_emp.location, 'work_address': test_emp.work_address,
+                            'key_skill': test_emp.key_skill, 'permission': test_emp.permission}
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(201, response.status_code)
         self.assertEqual(last_emp.id, response.json['id'])
         self.assertEqual(update_test_data['name'], response.json['name'])
         self.assertEqual(update_test_data['surname'], response.json['surname'])
-        self.assertEqual('Thu, 01 Jan 1998 00:00:00 GMT', response.json['date_of_birth'])
+        self.assertEqual(update_test_data['date_of_birth'], response.json['date_of_birth'])
         self.assertEqual(update_test_data['salary'], response.json['salary'])
         self.assertEqual(update_test_data['email'], response.json['email'])
         self.assertEqual(update_test_data['phone'], response.json['phone'])
-        self.assertEqual('Fri, 01 Jan 2021 00:00:00 GMT', response.json['date_of_joining'])
+        self.assertEqual(update_test_data['date_of_joining'], response.json['date_of_joining'])
         self.assertEqual(update_test_data['department'], response.json['department'])
         self.assertEqual(update_test_data['work_address'], response.json['work_address'])
         self.assertEqual(update_test_data['key_skill'], response.json['key_skill'])
@@ -490,9 +492,10 @@ class TestApiEmployee(unittest.TestCase):
 
     def test_employee_api_put_wrong_salary_format(self):
         test_data = {'salary': -10000}
+        emp = Employee.query.order_by(Employee.id).all()
+        last_emp = emp[-1]
         client = app.test_client()
-        employee_id = 44
-        url = f'/api/employee/{employee_id}'
+        url = f'/api/employee/{last_emp.id}'
         message = "Exception: 1 validation error for EmployeeModel\n" \
                   "salary\n  Salary less then 0! (type=value_error)"
         response = client.put(url, json=test_data)
