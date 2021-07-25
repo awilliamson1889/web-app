@@ -35,11 +35,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install postgresql
         run: |
-          sudo apt install postgresql
-          sudo -i -u postgres
-          psql
-          CREATE DATABASE flask_test;
-          \q
+          sudo service postgresql start
+          sudo -u postgres psql
+          CREATE DATABASE test_flask;
       - name: Install dependencies
         run:
           python -m pip install --upgrade pip
