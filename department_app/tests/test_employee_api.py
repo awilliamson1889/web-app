@@ -471,7 +471,7 @@ class TestApiEmployee(unittest.TestCase):
         test_emp = EmployeeFactory()
         client = app.test_client()
         test_data = {'name': test_emp.name, 'surname': test_emp.surname, 'date_of_birth': test_emp.date_of_birth,
-                     'salary': test_emp.salary, 'email': test_emp.email + "test", 'phone': test_emp.phone,
+                     'salary': test_emp.salary, 'email': test_emp.email, 'phone': test_emp.phone,
                      'date_of_joining': test_emp.date_of_joining, 'department': test_emp.department,
                      'location': test_emp.location, 'work_address': test_emp.work_address,
                      'key_skill': test_emp.key_skill, 'permission': test_emp.permission}

@@ -30,7 +30,7 @@ class EmployeeFactory(factory.Factory):
     surname = factory.Faker('last_name')
     date_of_birth = '1999-01-01'
     salary = factory.Faker('pyint')
-    email = factory.Faker('ascii_email') + surname
+    email = factory.Faker('ascii_email')
     phone = factory.Faker('msisdn')
     date_of_joining = '1999-01-01'
     department = random.choice(department_list)
