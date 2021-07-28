@@ -477,9 +477,11 @@ class TestApiEmployee(unittest.TestCase):
                      'key_skill': test_emp.key_skill, 'permission': test_emp.permission}
         url = f"/api/employee"
         response = client.post(url, json=test_data)
-        self.assertEqual(response.status_code, 201)
+
         emp = Employee.query.order_by(Employee.id).all()
         last_emp = emp[-1]
+        self.assertEqual(last_emp.name, response.json['name'])
+        self.assertEqual(response.status_code, 201)
         db.session.delete(last_emp)
         db.session.commit()
 
