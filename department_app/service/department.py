@@ -6,6 +6,12 @@ from department_app.models.app_models import db, Department, Employee
 class CRUDDepartment:
     """Employee CRUD class"""
     @staticmethod
+    def delete_department(department_id):
+        """Delete department func"""
+        Department.query.filter_by(id=department_id).delete()
+        db.session.commit()
+
+    @staticmethod
     def create_department():
         """Create department func"""
         form_data = request.form
@@ -33,12 +39,15 @@ class CRUDDepartment:
     def get_department(department_id):
         """Get department func"""
         department_query = Department.query.filter_by(id=department_id).all()
-        for department in department_query:
-            department_info = {'name': department.name, 'manager': department.manager,
-                               'date_of_creation': department.date_of_creation,
-                               'emp_count': len(Employee.query.filter_by(department=department.id).all()),
-                               'dep_id': department.id}
-        return department_info
+        if len(list(department_query)) != 0:
+            for department in department_query:
+                department_info = {'name': department.name, 'manager': department.manager,
+                                   'date_of_creation': department.date_of_creation,
+                                   'emp_count': len(Employee.query.filter_by(department=department.id).all()),
+                                   'dep_id': department.id}
+            return department_info
+        else:
+            return False
 
     @staticmethod
     def update_department(department_id):

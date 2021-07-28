@@ -1,6 +1,14 @@
 """Employee CRUD"""
 from flask import request
+from datetime import date, timedelta, datetime
 from department_app.models.app_models import db, Department, Permission, Address, Location, Skill, Employee
+
+
+def date_in_range(date1, date2):
+    date_1 = datetime.strptime(str(date1), "%Y-%m-%d").date()
+    date_2 = datetime.strptime(str(date2), "%Y-%m-%d").date()
+    delta = date_2 - date_1
+    return[str(date_1 + timedelta(i)) for i in range(delta.days + 1)]
 
 
 class CRUDEmployee:
@@ -71,15 +79,23 @@ class CRUDEmployee:
         return employees
 
     @staticmethod
-    def get_all_employee(department_id=None):
+    def get_all_employee(department_id='No', date1='', date2=''):
         """Get employee func"""
         employee_list = []
-        if department_id is None:
+        if date1 and date2 != '' and department_id == 'No':
             employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).all()
-        else:
+                .join(Permission).join(Address).join(Location).join(Skill). \
+                filter(Employee.date_of_birth.between(date1, date2)).all()
+        elif department_id != 'No' and (date1 and date2 != ''):
+            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
+                .join(Permission).join(Address).join(Location).join(Skill).\
+                filter(Department.id == department_id, Employee.date_of_birth.between(date1, date2)).all()
+        elif department_id != 'No' and (date1 == date2 == ''):
             employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
                 .join(Permission).join(Address).join(Location).join(Skill).filter(Department.id == department_id).all()
+        else:
+            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
+                .join(Permission).join(Address).join(Location).join(Skill).all()
         for employee, department, permission, address, location, skill in employees:
             user_info = {'name': employee.name, 'surname': employee.surname, 'date_of_birth': employee.date_of_birth,
                          'salary': employee.salary, 'email': employee.email, 'phone': employee.phone,

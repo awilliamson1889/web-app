@@ -40,7 +40,7 @@
                 <table>
                     <thead><tr><th>Department</th><th>Manager</th><th>Total Employees</th><th>Date of creation</th><th>Avg salary</th><th>Action</th></tr></thead>
                     {% for department in departments_data%}
-                    <tr><td>{{department.name}}</td><td>{{department.manager}}</td><td>{{department.emp_count}}</td><td>{{department.date_of_creation}}</td><td>{%if department.emp_count == 0%} 0 {%else%} {{department.dep_salary / department.emp_count}}{%endif%}</td><td><a href="/update/department/{{department.dep_id}}">Edit</a> | <a href="#confirm-modal2">Delete</a>| <a href="/department/{{department.dep_id}}">View</a></td></tr>
+                    <tr><td>{{department.name}}</td><td>{{department.manager}}</td><td>{{department.emp_count}}</td><td>{{department.date_of_creation}}</td><td>{%if department.emp_count == 0%} 0 {%else%} {{department.dep_salary / department.emp_count}}{%endif%}</td><td><a href="/update/department/{{department.dep_id}}">Edit</a> | <a href="/department/{{department.dep_id}}">View</a></td></tr>
                     {% endfor %}
                 </table>
             </div>
@@ -48,17 +48,6 @@
             <div class="pagination">
                 <span class="footer_part-span">Page <span class="first">1</span> of <span class="second">1</span></span>
             </div>
-        
-        
-            <div id="confirm-modal2" class="modalbackground">
-                <div class="modalwindow">
-                    <h3>Please confirm delete department!</h3>
-                    <br>
-                    <a class="my_button" href="#Save">Delete</a>
-                    <a class="my_button" href="manage_departments.html">Cancle</a>
-                </div>
-            </div>
-
         </div>
     </div>
 </body>

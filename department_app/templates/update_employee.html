@@ -23,7 +23,6 @@
                     <a href="/manage/employee">Employees</a>
                 </div>
                 </div>
-                <!-- Right-aligned links -->
                 <div class="topnav-right">
                     <a href="login.html">Logout</a>
                 </div>
@@ -46,7 +45,7 @@
                         </select>
                         <a href="/add/department">New</a> <br>
                         <p>Date of Birth</p>
-                        <input type="text" name="date_of_birth" class="edit" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="yyyy-mm-dd" value="{{employee_data.date_of_birth}}">
+                        <input type="date" name="date_of_birth" class="edit" required value="{{employee_data.date_of_birth}}">
                         <p>Salary</p>
                         <input type="text" placeholder="Salary" name="salary" class="edit" value="{{employee_data.salary}}"> <br>
                         <p>Work phone</p>
@@ -83,7 +82,7 @@
                         </select>
                         <a href="/add/skill">New</a> <br>
                         <p>Date of joining</p>
-                        <input type="text" name="date_of_joining" class="edit" placeholder="yyyy-mm-dd" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" value="{{employee_data.date_of_joining}}">
+                        <input type="date" name="date_of_joining" class="edit" value="{{employee_data.date_of_joining}}">
                         <p>Permission</p>
                         <select class="select-css" name="permission">
                             <option value="{{employee_data.permission_id}}" selected hidden>{{employee_data.permission}}</option>
@@ -94,15 +93,6 @@
                         <a href="/add/permission">New</a> <br>
                 </div>
                 </form>
-            </div>
-
-
-            <div id="confirm-modal1" class="modalbackground">
-                <div class="modalwindow">
-                    <h3>Please confirm delete employee!</h3>
-                    <a class="my_button" href="#Save">Delete</a>
-                    <a class="my_button" href="manage_employees.html">Cancle</a>
-                </div>
             </div>
         </div>
     </div>

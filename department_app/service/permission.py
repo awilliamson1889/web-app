@@ -19,6 +19,6 @@ class CRUDPermission:
     def create_permission():
         """Create department func"""
         form_data = request.form
-        permission = Address(name=form_data['name'])
+        permission = Permission(name=form_data['name'])
         db.session.add(permission)
         db.session.commit()

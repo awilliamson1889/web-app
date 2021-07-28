@@ -275,7 +275,6 @@
 }
 
 .user{
-  background: rgba(76, 22, 204, 0.5);
   width: 665px;
   height: 200px;
 }
@@ -364,7 +363,7 @@
 
 
 .prof-info-cont-u{
-  /*background-image: url(pattern2.png);*/
+  background-image: url(../img/pattern2.png);
   height: 100%;
 }
 
@@ -616,10 +615,8 @@ a.my_button:hover:not(:active) {
   bottom:0;
   left:0;
   right:0;
-  background: rgba(0,0,0,0.5); /* полупрозрачный цвет фона */
+  background: rgba(0,0,0,0.85); /* полупрозрачный цвет фона */
   z-index:100; /* выводим фон поверх всех слоев на странице браузера */
-  opacity:0; /* Делаем невидимым */
-  pointer-events: none; /* элемент невидим для событий мыши */
   }
   
   /* при отображении модального окно - именно здесь начинается магия */

@@ -1,5 +1,5 @@
 """Routes web-app"""
-from flask import Blueprint, request, render_template, abort
+from flask import Blueprint, request, render_template, redirect, url_for
 from department_app.service.employee import CRUDEmployee
 from department_app.service.department import CRUDDepartment
 from department_app.service.address import CRUDAddress
@@ -25,7 +25,11 @@ def user_page(employee_id):
 @frontend.route('/department/<string:department_id>')
 def department_page(department_id):
     """Return / page"""
+    if not str(department_id).isdigit():
+        return "ID must be a number.", 404
     department = CRUDDepartment.get_department(department_id)
+    if not department:
+        return f"Could not find department with ID: {department_id}.", 404
     employees = CRUDEmployee.get_all_employee(department_id)
     return render_template('department.html', department_data=department, employees_data=employees)
 
@@ -44,11 +48,19 @@ def search_employee_page():
     return render_template('people_search.html', employees_data=employees)
 
 
-@frontend.route('/manage/employee')
+@frontend.route('/manage/employee', methods=['POST', 'GET'])
 def manage_employee_page():
     """Return / page"""
-    employees = CRUDEmployee.get_all_employee()
-    return render_template('manage_employees.html', employees_data=employees)
+    if request.method == 'GET':
+        employees = CRUDEmployee.get_all_employee()
+        departments = CRUDDepartment.get_all_department()
+        return render_template('manage_employees.html', employees_data=employees, departments_data=departments)
+    if request.method == 'POST':
+        form_data = request.form
+        employees = CRUDEmployee.get_all_employee(department_id=form_data['department'], date1=form_data['date1'],
+                                                  date2=form_data['date2'])
+        departments = CRUDDepartment.get_all_department()
+        return render_template('manage_employees.html', employees_data=employees, departments_data=departments)
 
 
 @frontend.route('/manage/department')
@@ -75,29 +87,6 @@ def add_department_page():
     """Return / page"""
     return render_template('add_department.html')
 
-@frontend.route('/form')
-def form():
-    """form function"""
-    form_data = request.form
-    return render_template('form.html', form_data=form_data)
-
-
-@frontend.route('/form2')
-def form2():
-    """form function"""
-    employee = CRUDEmployee.get_employee(employee_id=1)
-    return render_template('form2.html', employee=employee)
-
-
-@frontend.route('/create/employee', methods=['POST', 'GET'])
-def create_employee():
-    """Return / page"""
-    if request.method == 'GET':
-        return "The URL /data is accessed directly. Try going to '/form' to submit form"
-    if request.method == 'POST':
-        CRUDEmployee.create_employee()
-        return "DATA ADDED"
-
 
 @frontend.route('/create/new/employee', methods=['POST', 'GET'])
 def create_new_employee():
@@ -106,7 +95,7 @@ def create_new_employee():
         return "The URL /create/new/employee is accessed directly. Try going to '/add/employee' to submit form"
     if request.method == 'POST':
         CRUDEmployee.create_employee()
-        return "DATA ADDED"
+        return redirect(url_for('frontend.manage_employee_page'))
 
 
 @frontend.route('/create/new/department', methods=['POST', 'GET'])
@@ -116,35 +105,36 @@ def create_new_department():
         return "The URL /create/new/department is accessed directly. Try going to '/add/department' to submit form"
     if request.method == 'POST':
         CRUDDepartment.create_department()
-        return "DATA ADDED"
+        return redirect(url_for('frontend.manage_department_page'))
 
 
 @frontend.route('/update/employee/data/<string:employee_id>', methods=['POST', 'GET'])
 def update_employee(employee_id):
     """Return / page"""
     if request.method == 'GET':
-        return "aaaaaaaaaaaaaaaaaaaaaaa"
+        return "The URL /update/employee/data/<employee_id> is accessed directly. Try going to " \
+               "'/update/department/<employee_id>' to submit form"
     if request.method == 'POST':
         CRUDEmployee.update_employee(employee_id)
-        return "DATA UPDATED"
+        return redirect(url_for('frontend.manage_employee_page'))
 
 
 @frontend.route('/update/department/data/<string:department_id>', methods=['POST', 'GET'])
 def update_department(department_id):
     """Return / page"""
     if request.method == 'GET':
-        return "aaaaaaaaaaaaaaaaaaaaaaa"
+        return "The URL /update/department/data/<department_id> is accessed directly. Try going to " \
+               "'/update/department/<department_id>' to submit form"
     if request.method == 'POST':
         CRUDDepartment.update_department(department_id)
-        return "DATA UPDATED"
+        return redirect(url_for('frontend.manage_department_page'))
 
 
 @frontend.route('/update/department/<string:department_id>', methods=['POST', 'GET'])
 def update_department_page(department_id):
     """Return / page"""
     department = CRUDDepartment.get_department(department_id)
-    text = "ffffffffffffff"
-    return render_template('update_department.html', department_data=department, text=text)
+    return render_template('update_department.html', department_data=department)
 
 
 @frontend.route('/update/employee/<string:employee_id>', methods=['POST', 'GET'])
@@ -197,7 +187,7 @@ def create_new_skill():
         return "The URL /create/new/department is accessed directly. Try going to '/add/department' to submit form"
     if request.method == 'POST':
         CRUDSkill.create_skill()
-        return "DATA ADDED"
+        return redirect(url_for('frontend.add_employee_page'))
 
 
 @frontend.route('/create/new/address', methods=['POST', 'GET'])
@@ -207,7 +197,7 @@ def create_new_address():
         return "The URL /create/new/department is accessed directly. Try going to '/add/department' to submit form"
     if request.method == 'POST':
         CRUDAddress.create_address()
-        return "DATA ADDED"
+        return redirect(url_for('frontend.add_employee_page'))
 
 
 @frontend.route('/create/new/location', methods=['POST', 'GET'])
@@ -217,7 +207,7 @@ def create_new_location():
         return "The URL /create/new/department is accessed directly. Try going to '/add/department' to submit form"
     if request.method == 'POST':
         CRUDLocation.create_location()
-        return "DATA ADDED"
+        return redirect(url_for('frontend.add_employee_page'))
 
 
 @frontend.route('/create/new/permission', methods=['POST', 'GET'])
@@ -227,4 +217,25 @@ def create_new_permission():
         return "The URL /create/new/department is accessed directly. Try going to '/add/department' to submit form"
     if request.method == 'POST':
         CRUDPermission.create_permission()
-        return "DATA ADDED"
+        return redirect(url_for('frontend.add_employee_page'))
+
+
+@frontend.route('/delete-employee/<string:employee_id>')
+def confirm_delete_employee(employee_id):
+    """Return / page"""
+    emp_id = employee_id
+    return render_template('delete_employee.html', emp_id=emp_id)
+
+
+@frontend.route('/delete-department/<string:department_id>')
+def confirm_delete_department(department_id):
+    """Return / page"""
+    dep_id = department_id
+    return render_template('delete_department.html', dep_id=dep_id)
+
+
+@frontend.route('/delete/department/<string:department_id>', methods=['POST', 'GET'])
+def delete_department(department_id):
+    """Return / page"""
+    CRUDDepartment.delete_department(int(department_id))
+    return redirect(url_for('frontend.manage_department_page'))
