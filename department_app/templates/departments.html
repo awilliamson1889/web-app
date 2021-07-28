@@ -4,23 +4,23 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
     <title>Departments list</title>
 </head>
 <body>
     <div class="container">
         <div class="content">
             <div class="navbar">
-                <a href="profile.html">My Profile</a>
-                <a href="departments.html" class="active">Departments</a>
-                <a href="people_search.html">People Search</a>
+                <a href="/employee/1">My Profile</a>
+                <a href="/departments" class="active">Departments</a>
+                <a href="/employee/search">People Search</a>
                 <div class="dropdown">
                 <button class="dropbtn">Management
                     <i class="fa fa-caret-down"></i>
                 </button> 
                 <div class="dropdown-content">
-                    <a href="manage_departments.html">Departments</a>
-                    <a href="manage_employees.html">Employees</a>
+                    <a href="/manage/department">Departments</a>
+                    <a href="/manage/employee">Employees</a>
                 </div>
                 </div>
                 <!-- Right-aligned links -->
@@ -38,45 +38,32 @@
  
             </div>
             <div class="profile-line"></div>
-            <div class="filters-left-depart">
+            <!---<div class="filters-left-depart">
                 <p>Country</p>
                 <select class="select-css">
                     <option value="0">Belarus</option>
                     <option value="1">Russia</option>
                     <option value="2">Ukraine</option>
                 </select>
-            </div>
-            <div class="department-info-cont-u730">
+            </div>!--->
+            <div class="prof-info-cont-u">
                 <ul>
+                    {% for department in departments_data %}
                     <li>
                         <div class="department">
                             <div class="department-info-image">
-                                <img src="image1.jpg" width="150" height="150" class="image" id="img">
+                                <img src="static/img/image1.jpg" width="150" height="150" class="image" id="img">
                                     
                             </div>
                             <div class="department-info">
-                                <p>RD Lab, Brest</p>
-                                <p>Total emploees 15</p>
-                                <p>Belarus, Brest, Moskovskaya, 206</p>
+                                <p><a href="/department/{{department.dep_id}}">{{ department.name }}</a></p>
+                                <p>Total employees {{ department.emp_count }}</p>
+                                <p>Manager {{ department.manager }}</p>
                                 <br>
                             </div>
                         </div>
                     </li>
-
-                    <li>
-                        <div class="department">
-                            <div class="department-info-image">
-                                <img src="image1.jpg" width="150" height="150" class="image" id="img">
-                                    
-                            </div>
-                            <div class="user-info">
-                                <p>RD Lab, Gomel</p>
-                                <p>Total emploees 56</p>
-                                <p>Belarus, Gomel, ....</p>
-                                <br>
-                            </div>
-                        </div>
-                    </li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>

@@ -17,7 +17,7 @@
                 <div class="dropdown">
                 <button class="dropbtn">Management
                     <i class="fa fa-caret-down"></i>
-                </button> 
+                </button>
                 <div class="dropdown-content">
                     <a href="/manage/department">Departments</a>
                     <a href="/manage/employee">Employees</a>
@@ -30,17 +30,12 @@
             </div>
 
             <div class="bg-add-employe">
-                <h2>Create Department</h2>
+                <h2>Create Skill</h2>
                 <div class="add-employee">
-                    <form action="/create/new/department" method = "POST">
-                        <p>Department</p>
-                        <input type="text" placeholder="Name" name="name" class="edit"> <br>
-                        <p>Manager</p>
-                        <input type="text" placeholder="Surname" name="manager" class="edit"> <br>
-                        <p>Date of creation</p>
-                        <input type="date" name="date_of_creation" class="edit">
-                        <br>
-                        <a class="my_button" href="/manage/department">Cancle</a>
+                    <form action="/create/new/skill" method = "POST">
+                        <p>Skill</p>
+                        <input type="text" placeholder="Skill" name="name" class="edit"> <br>
+                        <a class="my_button" href="/add/employee">Cancle</a>
                         <button type="submit" class="my_button"><i class="save"></i>Save</button>
                     </form>
             </div>

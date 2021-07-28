@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
     <title>Manage employees</title>
 </head>
 <body>
@@ -17,7 +17,7 @@
                 <div class="dropdown">
                 <button class="dropbtn">Management
                     <i class="fa fa-caret-down"></i>
-                </button> 
+                </button>
                 <div class="dropdown-content">
                     <a href="/manage/department">Departments</a>
                     <a href="/manage/employee">Employees</a>
@@ -30,37 +30,37 @@
             </div>
 
             <div class="bg-add-employe">
-                <h2>Create Employee</h2>
-                <form action="/create/new/employee" method = "POST">
+                <h2>Update Employee</h2>
+                <form action="/update/employee/data/{{employee_data.emp_id}}" method="POST">
                 <div class="add-employee">
                         <p>Name</p>
-                        <input type="text" placeholder="Name" name="name" class="edit"> <br>
+                        <input type="text" placeholder="Name" name="name" class="edit" value="{{employee_data.name}}"> <br>
                         <p>Surname</p>
-                        <input type="text" placeholder="Surname" name="surname" class="edit"> <br>
+                        <input type="text" placeholder="Surname" name="surname" class="edit" value="{{employee_data.surname}}"> <br>
                         <p>Department</p>
                         <select class="select-css" name="department">
-                            <option value="0"></option>
+                            <option value="{{employee_data.department_id}}" selected hidden>{{employee_data.department}}</option>
                             {% for department in departments_data%}
                             <option value="{{department.dep_id}}">{{department.name}}</option>
                             {% endfor%}
                         </select>
                         <a href="/add/department">New</a> <br>
                         <p>Date of Birth</p>
-                        <input type="text" name="date_of_birth" class="edit" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="yyyy-mm-dd">
+                        <input type="text" name="date_of_birth" class="edit" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="yyyy-mm-dd" value="{{employee_data.date_of_birth}}">
                         <p>Salary</p>
-                        <input type="text" placeholder="Salary" name="salary" class="edit"> <br>
+                        <input type="text" placeholder="Salary" name="salary" class="edit" value="{{employee_data.salary}}"> <br>
                         <p>Work phone</p>
-                        <input type="text" placeholder="Work phone" name="phone" class="edit"><br>
+                        <input type="text" placeholder="Work phone" name="phone" class="edit" value="{{employee_data.phone}}"><br>
                         <br>
                         <a class="my_button" href="/manage/employee">Cancle</a>
                         <button type="submit" class="my_button"><i class="save"></i>Save</button>
                     </div>
                     <div class="add-employee">
                         <p>Email</p>
-                        <input type="email" placeholder="Email" name="email" class="edit" > <br>
+                        <input type="email" placeholder="Email" name="email" class="edit" value="{{employee_data.email}}"> <br>
                         <p>Location</p>
                         <select class="select-css" name="location">
-                            <option value="0"></option>
+                            <option value="{{employee_data.location_id}}" selected hidden>{{employee_data.location}}</option>
                             {% for location in locations_data %}
                             <option value="{{location.location_id}}">{{location.name}}</option>
                             {% endfor%}
@@ -68,7 +68,7 @@
                         <a href="/add/location">New</a> <br>
                         <p>Work address</p>
                         <select class="select-css" name="work_address">
-                            <option value="0"></option>
+                            <option value="{{employee_data.address_id}}" selected hidden>{{employee_data.work_address}}</option>
                             {% for address in addresses_data %}
                             <option value="{{address.address_id}}">{{address.name}}</option>
                             {% endfor %}
@@ -76,17 +76,17 @@
                         <a href="/add/address">New</a> <br>
                         <p>Key skill</p>
                         <select class="select-css" name="key_skill">
-                            <option value="0"></option>
+                            <option value="{{employee_data.skill_id}}" selected hidden>{{employee_data.key_skill}}</option>
                             {% for skill in skills_data %}
                             <option value="{{skill.skill_id}}">{{skill.name}}</option>
                             {% endfor%}
                         </select>
                         <a href="/add/skill">New</a> <br>
                         <p>Date of joining</p>
-                        <input type="text" name="date_of_joining" class="edit" placeholder="yyyy-mm-dd" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+                        <input type="text" name="date_of_joining" class="edit" placeholder="yyyy-mm-dd" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" value="{{employee_data.date_of_joining}}">
                         <p>Permission</p>
                         <select class="select-css" name="permission">
-                            <option value="0"></option>
+                            <option value="{{employee_data.permission_id}}" selected hidden>{{employee_data.permission}}</option>
                             {% for permission in permissions_data %}
                             <option value="{{permission.permission_id}}">{{permission.name}}</option>
                             {% endfor%}
