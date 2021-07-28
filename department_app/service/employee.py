@@ -1,14 +1,6 @@
 """Employee CRUD"""
 from flask import request
-from datetime import date, timedelta, datetime
 from department_app.models.app_models import db, Department, Permission, Address, Location, Skill, Employee
-
-
-def date_in_range(date1, date2):
-    date_1 = datetime.strptime(str(date1), "%Y-%m-%d").date()
-    date_2 = datetime.strptime(str(date2), "%Y-%m-%d").date()
-    delta = date_2 - date_1
-    return[str(date_1 + timedelta(i)) for i in range(delta.days + 1)]
 
 
 class CRUDEmployee:

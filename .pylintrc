@@ -15,6 +15,8 @@ ignore=CVS,
       manage.py,
       asgi.py,
       mypy.py,
+      schemas,
+      tests,
       test_employee_api.py,
       test_address_api.py,
       test_department_api.py,
@@ -23,7 +25,7 @@ ignore=CVS,
       test_skill_api.py,
       models,
       department_app/__init__.py,
-      employee_factory.py,
+
       routes.py
 
 

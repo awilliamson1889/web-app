@@ -1,7 +1,7 @@
 import unittest
 from department_app import create_app
 from department_app.models.app_models import db, Permission
-from department_app.models.factoryes.permission_factory import PermissionFactory
+from department_app.tests.factoryes.permission_factory import PermissionFactory
 
 app = create_app('Test')
 app.app_context().push()

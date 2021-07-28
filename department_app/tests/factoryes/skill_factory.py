@@ -7,5 +7,3 @@ class SkillFactory(factory.Factory):
         model = Skill
 
     name = factory.Faker('first_name')
-
-

@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
 from department_app.models.app_models import Address
-from department_app.models.schemas.address_schema import AddressModel
+from department_app.schemas.address_schema import AddressModel
 from department_app.models.app_models import db
 
 address_api = Blueprint('address_api', __name__)

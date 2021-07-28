@@ -46,8 +46,7 @@ class CRUDDepartment:
                                    'emp_count': len(Employee.query.filter_by(department=department.id).all()),
                                    'dep_id': department.id}
             return department_info
-        else:
-            return False
+        return False
 
     @staticmethod
     def update_department(department_id):
