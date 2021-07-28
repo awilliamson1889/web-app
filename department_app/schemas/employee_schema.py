@@ -57,7 +57,7 @@ class EmployeeModel(BaseModel):
 
     @validator('email')
     def email_check(cls, v):
-        regex = r'\b[\w.-]+?@\w+?\.\w+?\b'
+        regex = r'^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$'
         emp = Employee.query.all()
         if v.lower() in [x.email.lower() for x in emp] and 'email' in request.json:
             raise ValueError('This email is already in use!')

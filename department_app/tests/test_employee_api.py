@@ -480,7 +480,8 @@ class TestApiEmployee(unittest.TestCase):
 
         emp = Employee.query.order_by(Employee.id).all()
         last_emp = emp[-1]
-        self.assertEqual(last_emp.name, response.json['name'])
+        print(test_emp.email)
+        self.assertEqual(last_emp.name, response.json['message'])
         self.assertEqual(response.status_code, 201)
         db.session.delete(last_emp)
         db.session.commit()
