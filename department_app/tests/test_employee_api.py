@@ -98,9 +98,9 @@ class TestApiEmployee(unittest.TestCase):
         test_emp = EmployeeFactory()
         client = app.test_client()
         last_emp = emp[-1]
-        update_test_data = {'name': 'update_test_name', 'surname': 'update_test_surname', 'date_of_birth': '1998-01-01',
+        update_test_data = {'name': 'update_test_name', 'surname': 'update_test_surname', 'date_of_birth': '01-01-1998',
                             'salary': 55555.0, 'email': 'update_test_mail@testig.test', 'phone': '55555555555',
-                            'date_of_joining': '2021-01-01', 'department': test_emp.department,
+                            'date_of_joining': '01-01-2021', 'department': test_emp.department,
                             'location': test_emp.location, 'work_address': test_emp.work_address,
                             'key_skill': test_emp.key_skill, 'permission': test_emp.permission}
         url = f"/api/employee/{last_emp.id}"
@@ -192,7 +192,7 @@ class TestApiEmployee(unittest.TestCase):
         emp = Employee.query.order_by(Employee.id).all()
         client = app.test_client()
         last_emp = emp[-1]
-        update_test_data = {'date_of_birth': str(datetime.date.today())}
+        update_test_data = {'date_of_birth': datetime.datetime.today().strftime('%d-%m-%Y')}
         message = "Exception: 1 validation error for EmployeeModel\n" \
                   "date_of_birth\n  The employee cannot be under the age of 18! (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
@@ -204,9 +204,9 @@ class TestApiEmployee(unittest.TestCase):
         emp = Employee.query.order_by(Employee.id).all()
         client = app.test_client()
         last_emp = emp[-1]
-        update_test_data = {'date_of_birth': "12-12-2002"}
+        update_test_data = {'date_of_birth': "2002-12-12"}
         message = f"Exception: 1 validation error for EmployeeModel\ndate_of_birth\n  " \
-                  f"time data '{update_test_data['date_of_birth']}' does not match format '%Y-%m-%d' (type=value_error)"
+                  f"time data '{update_test_data['date_of_birth']}' does not match format '%d-%m-%Y' (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
@@ -218,7 +218,7 @@ class TestApiEmployee(unittest.TestCase):
         last_emp = emp[-1]
         update_test_data = {'date_of_birth': "01 Jan 1999"}
         message = f"Exception: 1 validation error for EmployeeModel\ndate_of_birth\n  " \
-                  f"time data '{update_test_data['date_of_birth']}' does not match format '%Y-%m-%d' (type=value_error)"
+                  f"time data '{update_test_data['date_of_birth']}' does not match format '%d-%m-%Y' (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
@@ -230,7 +230,7 @@ class TestApiEmployee(unittest.TestCase):
         last_emp = emp[-1]
         update_test_data = {'date_of_birth': 500000}
         message = f"Exception: 1 validation error for EmployeeModel\ndate_of_birth\n  " \
-                  f"time data '{update_test_data['date_of_birth']}' does not match format '%Y-%m-%d' (type=value_error)"
+                  f"time data '{update_test_data['date_of_birth']}' does not match format '%d-%m-%Y' (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
@@ -302,7 +302,8 @@ class TestApiEmployee(unittest.TestCase):
         last_emp = emp[-1]
         update_test_data = {'date_of_joining': "01 Jan 1999"}
         message = f"Exception: 1 validation error for EmployeeModel\ndate_of_joining\n  " \
-                  f"time data '{update_test_data['date_of_joining']}' does not match format '%Y-%m-%d' (type=value_error)"
+                  f"time data '{update_test_data['date_of_joining']}' " \
+                  f"does not match format '%d-%m-%Y' (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
@@ -315,7 +316,7 @@ class TestApiEmployee(unittest.TestCase):
         update_test_data = {'date_of_joining': 500000}
         message = f"Exception: 1 validation error for EmployeeModel\ndate_of_joining\n  " \
                   f"time data '{update_test_data['date_of_joining']}' " \
-                  "does not match format '%Y-%m-%d' (type=value_error)"
+                  "does not match format '%d-%m-%Y' (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)

@@ -178,3 +178,14 @@ class TestApiLocation(unittest.TestCase):
         response = client.get(url)
         location = Location.query.order_by(Location.id).all()
         self.assertEqual(len(response.json), len(location))
+
+    def test_post_location_very_long_name(self):
+        client = app.test_client()
+        test_data = {'name': 'test_very_big_location_name_test_very_big_location_name_very_big_location_name_'
+                             'test_very_big_location_name_test_very_big_location_name_test_very_big_name'}
+        message = "Exception: 1 validation error for LocationModel\nname\n  Name length too big! (type=value_error)"
+        url = f"/api/location"
+        response = client.post(url, json=test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json['message'])
+

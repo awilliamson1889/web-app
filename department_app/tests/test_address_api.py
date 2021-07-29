@@ -188,6 +188,17 @@ class TestApiAddress(unittest.TestCase):
         db.session.delete(last_address)
         db.session.commit()
 
+    def test_post_address_very_long_name(self):
+        """Api should create new address"""
+        client = app.test_client()
+        test_data = {'name': 'test_very_big_address_name_test_very_big_address_name_test_very_big_address_name_'
+                             'test_very_big_address_name_test_very_big_address_name_test_very_big_address_name'}
+        message = "Exception: 1 validation error for AddressModel\nname\n  Name length too big! (type=value_error)"
+        url = f"/api/address"
+        response = client.post(url, json=test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json['message'])
+
     def test_get_address_all(self):
         """Api should return all address information"""
         url = f"/api/address"

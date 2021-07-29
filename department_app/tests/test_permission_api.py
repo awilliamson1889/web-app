@@ -178,3 +178,14 @@ class TestApiPermission(unittest.TestCase):
         response = client.get(url)
         permission = Permission.query.order_by(Permission.id).all()
         self.assertEqual(len(response.json), len(permission))
+
+    def test_post_permission_very_long_name(self):
+        client = app.test_client()
+        test_data = {'name': 'test_very_big_permission_name_test_very_big_permission_name_'
+                             'test_very_big_permission_name_test_very_big_permission_name_'
+                             'test_very_big_permission_name_test_very_big_permission_name_'}
+        message = "Exception: 1 validation error for PermissionModel\nname\n  Name length too big! (type=value_error)"
+        url = f"/api/permission"
+        response = client.post(url, json=test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json['message'])

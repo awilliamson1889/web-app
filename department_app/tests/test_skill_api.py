@@ -178,3 +178,13 @@ class TestApiSkill(unittest.TestCase):
         response = client.get(url)
         skill = Skill.query.order_by(Skill.id).all()
         self.assertEqual(len(response.json), len(skill))
+
+    def test_post_skill_very_big_name(self):
+        client = app.test_client()
+        test_data = {'name': 'test_very_big_skill_test_very_big_skill_test_very_big_skill_test_very_big_skill_'
+                             'test_very_big_skill_test_very_big_skill_test_very_big_skill_test_very_big_skill'}
+        message = "Exception: 1 validation error for SkillModel\nname\n  Name length too big! (type=value_error)"
+        url = f"/api/skill"
+        response = client.post(url, json=test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json['message'])

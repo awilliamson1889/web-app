@@ -8,4 +8,4 @@ class DepartmentFactory(factory.Factory):
 
     name = factory.Faker('job')
     manager = factory.Faker('first_name')
-    date_of_creation = '2021-01-01'
+    date_of_creation = '01-01-2021'

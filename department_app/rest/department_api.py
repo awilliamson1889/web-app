@@ -66,7 +66,7 @@ class DepartmentInfo(Resource):
                 date_of_creation:
                   type: "string"
                   format: "string"
-                  example : "2021-12-12"
+                  example : "12-12-2021"
                 manager:
                   type: "string"
                   format: "string"
@@ -128,7 +128,7 @@ class AllDepartmentInfo(Resource):
                 date_of_creation:
                   type: "string"
                   format: "string"
-                  example : "2021-12-12"
+                  example : "12-12-2021"
                 manager:
                   type: "string"
                   format: "string"

@@ -9,7 +9,7 @@ class DepartmentModel(BaseModel):
     """Department schema class"""
     name: str
     manager: str
-    # date_of_creation: str
+    date_of_creation: str
 
     @validator('name')
     def name_length(cls, v):
@@ -21,11 +21,11 @@ class DepartmentModel(BaseModel):
             raise ValueError('This department is already in use!')
         return v.title()
 
-    # @validator('date_of_creation')
-    # def date_of_creation_check(cls, v):
-    #     """Date of creation validator"""
-    #     datetime.datetime.strptime(str(v), "%Y-%m-%d").date()
-    #     return str(v).title()
+    @validator('date_of_creation')
+    def date_of_creation_check(cls, v):
+        """Date of creation validator"""
+        datetime.datetime.strptime(str(v), "%d-%m-%Y").date()
+        return str(v).title()
 
     @validator('manager')
     def department_manager_name_check(cls, v):

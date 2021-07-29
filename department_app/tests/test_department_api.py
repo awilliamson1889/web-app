@@ -88,14 +88,14 @@ class TestApiDepartment(unittest.TestCase):
         client = app.test_client()
         last_department = department[-1]
         update_test_data = {'name': 'update_test_department', 'manager': 'update_manager',
-                            'date_of_creation': '2022-01-01'}
+                            'date_of_creation': '01-01-2022'}
         url = f"/api/department/{last_department.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(201, response.status_code)
         self.assertEqual(last_department.id, response.json['id'])
         self.assertEqual(update_test_data['name'], response.json['name'])
         self.assertEqual(update_test_data['manager'], response.json['manager'])
-        # self.assertEqual(update_test_data['date_of_creation'], response.json['date_of_creation'])  # !!!
+        self.assertEqual(update_test_data['date_of_creation'], response.json['date_of_creation'])  # !!!
 
     def test_put_department_not_exist(self):
         department_id = 999999999
@@ -200,15 +200,29 @@ class TestApiDepartment(unittest.TestCase):
         department = Department.query.order_by(Department.id).all()
         self.assertEqual(len(response.json), len(department))
 
-    # def test_put_date_of_creation_date_of_birth_wrong_format(self):
-    #     department = Department.query.order_by(Department.id).all()
-    #     client = app.test_client()
-    #     last_department = department[-1]
-    #     update_test_data = {'date_of_creation': "12-12-2002"}
-    #     message = f"Exception: 1 validation error for DepartmentModel\ndate_of_creation\n  " \
-    #               f"time data '{update_test_data['date_of_creation']}' does not match format " \
-    #               f"'%Y-%m-%d' (type=value_error)"
-    #     url = f"/api/department/{last_department.id}"
-    #     response = client.put(url, json=update_test_data)
-    #     self.assertEqual(response.status_code, 404)
-    #     self.assertEqual(message, response.json['message'])
+    def test_post_department_very_long_name(self):
+        test_department = DepartmentFactory()
+        client = app.test_client()
+        test_data = {'name': 'test_very_big_department_test_very_big_department_test_very_big_department_'
+                             'test_very_big_department_test_very_big_department_test_very_big_department',
+                     'manager': test_department.manager,
+                     'date_of_creation': test_department.date_of_creation}
+        message = "Exception: 1 validation error for DepartmentModel\nname\n  Name length too big! (type=value_error)"
+        url = f"/api/department"
+        response = client.post(url, json=test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json['message'])
+
+    def test_post_department_very_long_manager_name(self):
+        test_department = DepartmentFactory()
+        client = app.test_client()
+        test_data = {'name': test_department.name,
+                     'manager': 'test_very_big_manager_name_test_very_big_manager_name_test_very_big_manager_name_'
+                                'test_very_big_manager_name_test_very_big_manager_name_test_very_big_manager_name',
+                     'date_of_creation': test_department.date_of_creation}
+        message = "Exception: 1 validation error for DepartmentModel\nmanager\n" \
+                  "  Manager name length too big! (type=value_error)"
+        url = f"/api/department"
+        response = client.post(url, json=test_data)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(message, response.json['message'])
