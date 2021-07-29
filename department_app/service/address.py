@@ -10,15 +10,17 @@ class CRUDAddress:
         """Get address func"""
         address_list = []
         addresses = Address.query.all()
-        for address in addresses:
-            address_info = {'name': address.name, 'address_id': address.id}
-            address_list.append(address_info)
+        if len(addresses) > 0:
+            for address in addresses:
+                address_info = {'name': address.name, 'address_id': address.id}
+                address_list.append(address_info)
         return tuple(address_list)
 
     @staticmethod
     def create_address():
-        """Create department func"""
+        """Create address func"""
         form_data = request.form
         address = Address(name=form_data['name'])
         db.session.add(address)
         db.session.commit()
+        return address
