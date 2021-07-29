@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <title>Department</title>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="navbar">
+                <a href="/employee/1">My Profile</a>
+                <a href="/departments" class="active">Departments</a>
+                <a href="/employee/search">People Search</a>
+                <div class="dropdown">
+                <button class="dropbtn">Management
+                    <i class="fa fa-caret-down"></i>
+                </button> 
+                <div class="dropdown-content">
+                    <a href="/manage/department">Departments</a>
+                    <a href="/manage/employee">Employees</a>
+                </div>
+                </div>
+                <!-- Right-aligned links -->
+                <div class="topnav-right">
+                    <a href="login.html">Logout</a>
+                </div>
+            </div>
+
+            <div class="profile-background">
+                <div class="profile-right">
+                    <h3>{{department_data.name}}</h3>
+                    <br>
+                    <h3>TOTAL EMPLOYEES: {{department_data.emp_count}}</h3>
+                    <h4>Date of creation: {{department_data.date_of_creation}}</h4>
+                </div>
+            </div>
+            <div class="profile-line"></div>
+            <div class="prof-info-cont-u">
+                <ul>
+                    {% for employee in employees_data %}
+                    <li>
+                        <div class="user">
+                            <div class="user-info-image">
+                                <img src="../static/img/image1.jpg" width="150" height="150" class="image" id="img">
+                            </div>
+
+                            <div class="user-info">
+                                <p>{{employee.name}} {{employee.surname}}</p>
+                                <p>{{employee.key_skill}}</p>
+                                <p>{{employee.location}} {{employee.work_address}}</p>
+                                <p>{{employee.email}}</p>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,739 @@
+.class container{
+    max-width: 1500px;
+    margin: 0 auto
+}
+
+.content {
+    position: relative;
+    margin: 0 auto;
+    right: 0;
+    background: rgba(255,181,53);
+    color: #f1f1f1;
+    width: 100%;
+    height: 100%;
+
+}
+
+/* Style the video: 100% width and height to cover the entire window */
+#myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+
+/* Add some content at the bottom of the video/page */
+.content-login {
+    position: fixed;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+    width: 25%;
+    height: 92%;
+    padding: 30px;
+}
+
+.loggin__input{
+    width: 50%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #17171a;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    color: #f1f1f1;
+}
+
+.loggin__btn{
+    width: 40%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #17171a;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    color: #f1f1f1;
+}
+
+
+/* MENU */
+
+
+/* Navbar container */
+.navbar {
+    height: 60px;
+    overflow: hidden;
+    background-color: rgba(0,64,43);
+    font-family: Arial;
+  }
+  
+  /* Links inside the navbar */
+  .navbar a {
+    height: 18px;
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 22px 16px;
+    text-decoration: none;
+  }
+  
+  /* The dropdown container */
+  .dropdown {
+    text-align: center;
+    padding: 1px;
+    font-size: 16px;
+    float: left;
+    overflow: hidden;
+  }
+  
+  /* Dropdown button */
+  .dropdown .dropbtn {
+    cursor: pointer;
+    width: 124px;
+    height: 60px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 10px 1px;
+    background-color: inherit;
+    font-family: inherit; /* Important for vertical align on mobile phones */
+    margin: 0; /* Important for vertical align on mobile phones */
+  }
+  
+  /* Add a red background color to navbar links on hover */
+  .navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+  
+  /* Dropdown content (hidden by default) */
+  .dropdown-content {
+    width: 125px;
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  /* Add a color to the active/current link */
+  .navbar a.active {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    float: none;
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+  
+  /* Add a grey background color to dropdown links on hover */
+  .dropdown-content a:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+/* Right-aligned section inside the top navigation */
+.topnav-right {
+    float: right;
+  }
+
+  /* Responsive navigation menu - display links on top of each other instead of next to each other (for mobile devices) */
+@media screen and (max-width: 680px) {
+    .navbar a, .topnav-right,.dropdown, .dropbtn {
+      float: none;
+      display: block;
+    }
+
+    .navbar {
+      height: 300px;
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0.5);
+      font-family: Arial;
+    }
+
+.dropdown-content a {
+    width: 100%;
+    float: none;
+    color: white;
+    padding: 12px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+  }
+
+  .dropdown .dropbtn {
+    width: 100%;
+  }
+
+  .dropdown-content {
+    width: 100%;
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+    text-align: center;
+  }
+}
+
+.profile-background{
+    border: 4px solid rgba(235,145,0);
+    height: 300px;
+    background-image: url(../img/pattern1.png);
+}
+
+.search-panel{
+  border: 4px solid rgb(235, 145, 0);
+  height: 100px;
+  background-image: url(../img/pattern1.png);
+}
+
+.profile-center {
+
+    border: 1px solid rgba(152,45,27, 0.5);
+    background: rgba(0,18,30, 0.85);
+    padding: 15px;
+    margin: 0 auto;
+    width: 245px;
+    height: 245px;
+    text-align: center;
+
+    margin-top: 13px;
+}
+
+.search-center {
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0,18,30, 0.85);
+  padding: 15px;
+  margin: 0 auto;
+  width: 800px;
+  height: 40px;
+  text-align: center;
+
+  margin-top: 13px;
+}
+
+.profile-center p {
+    font-size: 18px;
+    color:white;
+    padding: -1px;
+
+}
+
+#img{
+    border: 1px solid rgba(255, 255, 255, 0.20);
+}
+
+.profile-right{
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    margin: 5px;
+    background: rgba(0,18,30, 0.85);
+    float: right;
+    width: 250px;
+    height: 275px;
+    margin-top: 13px;
+    color:white;
+    padding-left: 25px;
+}
+
+.profile-left-image{
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  float: left;
+  width: 250px;
+  height: 250px;
+  margin-top: 13px;
+  color:white;
+  padding-left: 25px;
+}
+
+.user-info-image{
+  flex-direction: column;
+  border-radius: 2px;
+  font-size: 18px;
+  padding: 15px;
+  background: rgba(255, 0, 0, 0.5);
+  margin: 5px;
+  display: inline-block;
+  text-align: left;
+  width: 150px;
+  color:white;
+}
+
+.user{
+  width: 665px;
+  height: 200px;
+}
+
+.user-info{
+  flex-direction: column;
+  border-radius: 2px;
+  font-size: 18px;
+  padding: 15px;
+  background: rgba(255,150,14);
+  margin: 5px;
+  display: inline-block;
+  text-align: left;
+  width: 430px;
+  height: 155px;
+  color:white;
+}
+
+
+.profile-left{
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 5px;
+  background: rgba(255,150,14);
+  float: left;
+  width: 250px;
+  height: 275px;
+  margin-top: 13px;
+  color:white;
+  padding-left: 25px;
+}
+
+
+.profile-right a{
+  color:white;
+}
+
+
+.profile-line{
+    background: rgba(0,64,43);
+    text-align: left;
+    width: 99.9%;
+    height: 20px;
+    padding-left: 25px;
+    padding: 1px;
+}
+
+.profile-information {
+    flex-direction: column;
+    border-radius: 2px;
+    box-shadow: rgb(0 0 0 / 11%) 0px 1px 3px;
+    font-size: 18px;
+    padding: 15px;
+    background: rgba(255,150,14);
+    margin: 5px;
+    display: inline-block;
+    text-align: left;
+    width: 25%;
+    height: 280px;
+    color:white;
+}
+
+.add-employee {
+  flex-direction: column;
+  border-radius: 2px;
+  box-shadow: rgb(0 0 0 / 11%) 0px 1px 3px;
+  font-size: 18px;
+  padding: 15px;
+  background: rgba(255,150,14);
+  text-align: left;
+  width: 500px;
+  float: left;
+  margin-top: 5px;
+  color:white;
+
+  color:white;
+}
+
+.prof-info-cont{
+    /*background-image: url(pattern2.png);*/
+    height: 575px;
+}
+
+.bg-add-employe{
+  height: 880px;
+}
+
+
+.prof-info-cont-u{
+  background-image: url(../img/pattern2.png);
+  height: 100%;
+}
+
+.prof-info-cont-u ul{
+  list-style-type: none;
+  -moz-column-count: 2; /* Firefox */
+  -webkit-column-count: 2; /* Safari and Chrome */
+  column-count: 2;
+}
+
+.department-info-image{
+  flex-direction: column;
+  border-radius: 2px;
+  font-size: 18px;
+  padding: 15px;
+  background: rgba(255,150,14);
+  margin: 5px;
+  display: inline-block;
+  text-align: left;
+  width: 150px;
+  color:white;
+}
+
+.department{
+  /*background: rgba(76, 22, 204, 0.5);*/
+  width: 1100px;
+  height: 200px;
+}
+
+.department-info{
+  flex-direction: column;
+  border-radius: 2px;
+  font-size: 18px;
+  padding: 15px;
+  background: rgba(255,150,14);
+  margin: 5px;
+  display: inline-block;
+  text-align: left;
+  width: 430px;
+  height: 155px;
+  color:white;
+}
+
+
+.department-info-cont-u{
+  /*background-image: url(pattern2.png);*/
+  height: 575px;
+}
+
+.department-info-cont-u730{
+  /*background-image: url(pattern2.png);*/
+  height: 100%;
+}
+
+.department-info-cont-u730 ul{
+  list-style-type: none;
+  -moz-column-count: 2; /* Firefox */
+  -webkit-column-count: 2; /* Safari and Chrome */
+  column-count: 2;
+}
+
+.filters-left{
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 5px;
+  background: rgba(255,150,14);
+  float: left;
+  width: 250px;
+  height: 600px;
+  margin-top: 13px;
+  color:white;
+  padding-left: 25px;
+}
+
+.filters-left-people{
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 5px;
+  background: rgba(255,150,14);
+  float: left;
+  width: 280px;
+  height: 730px;
+  margin-top: 5px;
+  color:white;
+}
+
+.filters-left-depart{
+  border: 1px solid rgba(255, 255, 255, 0.15);
+margin: 5px;
+background: rgba(255,150,14);
+float: left;
+width: 280px;
+height: 730px;
+margin-top: 5px;
+color:white;
+}
+
+.filters-left-depart p{
+  margin: 10px;
+}
+
+.filters-left-people p {
+  margin: 10px;
+}
+
+
+/* ------------------------------ */
+.filters p {
+  margin: 10px;
+  font-size: 26px;
+}
+/* ------------------------------ */
+.table_dark {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  font-size: 12px;
+  text-align: left;
+  border-collapse: collapse;
+  background: rgba(45,96,56);
+  margin: 10px;
+}
+.table_dark th {
+  color: white;
+  border-bottom: 1px solid rgb(250, 144, 32);
+  padding: 12px 17px;
+}
+.table_dark td {
+  color: white;
+  border-bottom: 1px solid rgb(250, 144, 32);
+  border-right:1px solid rgb(250, 144, 32);
+  padding: 7px 17px;
+}
+.table_dark tr:last-child td {
+  border-bottom: none;
+}
+.table_dark td:last-child {
+  border-right: none;
+}
+.table_dark tr:hover td {
+  text-decoration: underline;
+}
+
+.table_dark a{
+    color: #CAD4D6; /* Цвет ссылок */
+}
+
+.table_dark a:visited{
+    color: #CAD4D6; /* Цвет посещенных ссылок */
+}
+
+.table_dark a:active{
+    color: #CAD4D6; /* Цвет активных ссылок */
+}
+
+
+/* ----------------------- */
+.table_dark_department {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  font-size: 14px;
+  width: 1330px;
+  text-align: left;
+  border-collapse: collapse;
+  background: rgba(45,96,56);
+  margin: 10px;
+}
+.table_dark_department th {
+  color: white;
+  border-bottom: 1px solid rgb(250, 144, 32);
+  padding: 12px 80px;
+}
+.table_dark_department td {
+  color: white;
+  border-bottom: 1px solid rgb(250, 144, 32);
+  border-right:1px solid rgb(250, 144, 32);
+  padding: 7px 17px;
+}
+.table_dark_department tr:last-child td {
+  border-bottom: none;
+}
+.table_dark_department td:last-child {
+  border-right: none;
+}
+.table_dark_department tr:hover td {
+  text-decoration: underline;
+}
+
+.table_dark_department a{
+    color: #CAD4D6; /* Цвет ссылок */
+}
+
+.table_dark_department a:visited{
+    color: #CAD4D6; /* Цвет посещенных ссылок */
+}
+
+.table_dark_department a:active{
+    color: #CAD4D6; /* Цвет активных ссылок */
+}
+
+
+/* ----------------------- */
+a.my_button {
+  margin: 10px;
+  display: inline-block;
+  font-family: arial,sans-serif;
+  font-size: 15px;
+  color: #CAD4D6;
+  text-decoration: none;
+  user-select: none;
+  line-height: 2em;
+  padding: 1px 1.2em;
+  outline: none;
+  border: 1px solid rgba(206,118,26);
+  border-radius: 3px;
+  background: rgba(206,118,26);
+  box-shadow:
+   inset 0 1px rgba(143,44,26),
+   inset 0 0 1px rgba(140,150,170,.8),
+   0 1px rgb(83,94,104),
+   0 0 1px rgb(86,96,106);
+}
+a.my_button:active {
+  box-shadow:
+   inset 0 1px 3px rgba(0,10,20,.5),
+   0 1px rgb(83,94,104),
+   0 0 1px rgb(86,96,106);
+}
+a.my_button:focus:not(:active) {
+  border: 1px solid rgb(22,32,43);
+  border-bottom: 1px solid rgb(25,34,45);
+  background: rgb(53,61,71);
+  box-shadow:
+   inset 0 1px 3px rgba(0,10,20,.5),
+   0 1px rgb(83,94,104),
+   0 0 1px rgb(86,96,106);
+  pointer-events: none;
+}
+a.my_button:hover:not(:active) {
+  box-shadow:
+   0 0 3px rgba(0,0,0,0) inset,
+   0 1px 1px 1px rgba(143,44,26),
+   0 -1px 1px 1px rgba(143,44,26);
+}
+
+
+/***************************************/
+
+.modalbackground {
+  margin: 0; /* убираем отступы */
+  padding: 0; /* убираем отступы */
+  position: fixed; /* фиксируем положение */
+  top:0; /* растягиваем блок по всему экрану */
+  bottom:0;
+  left:0;
+  right:0;
+  background: rgba(0,0,0,0.85); /* полупрозрачный цвет фона */
+  z-index:100; /* выводим фон поверх всех слоев на странице браузера */
+  }
+  
+  /* при отображении модального окно - именно здесь начинается магия */
+  .modalbackground:target {
+      opacity: 1; /* делаем окно видимым */
+      pointer-events: auto; /* элемент видим для событий мыши */
+  }
+  
+  /* ширина диалогового окна и его отступы от экрана */
+  .modalwindow {
+      width: 100%;
+      max-width: 400px;
+      margin: 10% auto;
+      padding: 2%;
+      background: #fff;
+      border-radius: 3px;
+  }
+  
+  /* настройка заголовка */
+  .modalwindow h3 {
+    text-align: center;
+    color: black;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* оформление сообщение */
+  .modalwindow p {
+  padding: 0;
+  margin: 4% 0 8% 0;
+  }
+  
+  .modalwindow a {
+      display: block;
+      color: #fff;
+      padding: 2%;
+      margin: 0 auto;
+      width: 50%;
+      border-radius: 3px;
+      text-align: center;
+      text-decoration: none;
+  }
+  
+
+  .edit {
+    margin: 10px;
+    width: 228px;
+    height: 32px;
+}
+
+.searchhh {
+  width: 600px;
+  height: 32px;
+}
+
+.select-css {
+  margin: 10px;
+  width: 245px;
+  height: 35px;
+}
+
+.add_empl p{
+  margin: 10px;
+}
+
+h2{
+  margin: 10px;
+}
+
+
+button.my_button{
+  width: 87.7167px;
+  display: inline-block;
+  font-family: arial,sans-serif;
+  font-size: 15px;
+  color: #CAD4D6;
+  text-decoration: none;
+  user-select: none;
+  line-height: 2em;
+  padding: 1px 1.2em;
+  outline: none;
+  border: 1px solid rgba(206,118,26);
+  border-radius: 3px;
+  background: rgba(206,118,26);
+  box-shadow:
+   inset 0 1px rgba(143,44,26),
+   inset 0 0 1px rgba(140,150,170,.8),
+   0 1px rgb(83,94,104),
+   0 0 1px rgb(86,96,106);
+}
+
+button.my_button:active {
+  box-shadow:
+   inset 0 1px 3px rgba(0,10,20,.5),
+   0 1px rgb(83,94,104),
+   0 0 1px rgb(86,96,106);
+}
+button.my_button:focus:not(:active) {
+  border: 1px solid rgb(22,32,43);
+  border-bottom: 1px solid rgb(25,34,45);
+  background: rgb(53,61,71);
+  box-shadow:
+   inset 0 1px 3px rgba(0,10,20,.5),
+   0 1px rgb(83,94,104),
+   0 0 1px rgb(86,96,106);
+  pointer-events: none;
+}
+button.my_button:hover:not(:active) {
+  box-shadow:
+   0 0 3px rgba(0,0,0,0) inset,
+   0 1px 1px 1px rgba(143,44,26),
+   0 -1px 1px 1px rgba(143,44,26);
+}
+
+.pagination{
+  margin: 10px;
+}
+
+
+/*(32,35,32)*/
