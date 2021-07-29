@@ -7,13 +7,12 @@ app = create_app('Test')
 app.app_context().push()
 
 
-class TestApiSkill(unittest.TestCase):
+class TestAddressService(unittest.TestCase):
     """ doc str """
     def test_get_all_address_method(self):
         addresses_query = Address.query.all()
         addresses = CRUDAddress.get_all_address()
         addresses_len = len(addresses_query)
-        print(addresses)
 
         self.assertEqual(addresses_len, len(addresses))
 
