@@ -1,5 +1,4 @@
 """Location CRUD"""
-from flask import request
 from department_app.models.app_models import db, Location
 
 
@@ -16,9 +15,8 @@ class CRUDLocation:
         return tuple(location_list)
 
     @staticmethod
-    def create_location():
+    def create_location(form):
         """Create department func"""
-        form_data = request.form
-        location = Location(name=form_data['name'])
+        location = Location(name=form.name.data)
         db.session.add(location)
         db.session.commit()

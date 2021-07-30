@@ -25,6 +25,7 @@ ignore=CVS,
       test_skill_api.py,
       models,
       department_app/__init__.py,
+      app_form.py,
 
       routes.py
 

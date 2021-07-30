@@ -12,11 +12,6 @@ def create_app(test_config=None):
     """Create app method"""
 
     app = Flask(__name__)
-    # app.config['SWAGGER'] = {"title": "DevSwagger-UI", "uiversion": 2}
-    # app.config['DEVELOPMENT'] = True
-    # app.config['DEBUG'] = True
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/flask_app'
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flask_app.db'
     if test_config is None or test_config == 'Dev':
         app.config.from_object("config.DevelopmentConfig")
     elif test_config == 'Prod':

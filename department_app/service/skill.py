@@ -1,5 +1,4 @@
 """Skill CRUD"""
-from flask import request
 from department_app.models.app_models import db, Skill
 
 
@@ -16,9 +15,8 @@ class CRUDSkill:
         return tuple(skill_list)
 
     @staticmethod
-    def create_skill():
+    def create_skill(form):
         """Create department func"""
-        form_data = request.form
-        skill = Skill(name=form_data['name'])
+        skill = Skill(name=form.name.data)
         db.session.add(skill)
         db.session.commit()

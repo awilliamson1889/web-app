@@ -1,6 +1,7 @@
 """Department CRUD"""
 from flask import request
 from department_app.models.app_models import db, Department, Employee
+from department_app.views.forms.app_form import AddDepartmentForm
 
 
 class CRUDDepartment:
@@ -12,11 +13,10 @@ class CRUDDepartment:
         db.session.commit()
 
     @staticmethod
-    def create_department():
+    def create_department(form):
         """Create department func"""
-        form_data = request.form
-        employee = Department(name=form_data['name'], date_of_creation=form_data['date_of_creation'],
-                              manager=form_data['manager'])
+        employee = Department(name=form.name.data, date_of_creation=form.date_of_creation.data,
+                              manager=form.manager.data)
         db.session.add(employee)
         db.session.commit()
 

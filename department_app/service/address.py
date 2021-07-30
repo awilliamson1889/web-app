@@ -1,5 +1,4 @@
 """Address CRUD"""
-from flask import request
 from department_app.models.app_models import db, Address
 
 
@@ -17,10 +16,9 @@ class CRUDAddress:
         return tuple(address_list)
 
     @staticmethod
-    def create_address():
+    def create_address(form):
         """Create address func"""
-        form_data = request.form
-        address = Address(name=form_data['name'])
+        address = Address(name=form.name.data)
         db.session.add(address)
         db.session.commit()
         return address

@@ -1,6 +1,5 @@
 """Permission CRUD"""
-from flask import request
-from department_app.models.app_models import db, Permission, Address
+from department_app.models.app_models import db, Permission
 
 
 class CRUDPermission:
@@ -16,9 +15,8 @@ class CRUDPermission:
         return tuple(permission_list)
 
     @staticmethod
-    def create_permission():
+    def create_permission(form):
         """Create department func"""
-        form_data = request.form
-        permission = Permission(name=form_data['name'])
+        permission = Permission(name=form.name.data)
         db.session.add(permission)
         db.session.commit()
