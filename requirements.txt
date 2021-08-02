@@ -11,3 +11,5 @@ factory_boy
 flask_script
 gunicorn
 wtforms
+flask-login
+email_validator

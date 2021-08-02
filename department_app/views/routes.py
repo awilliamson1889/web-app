@@ -9,7 +9,7 @@ from department_app.service.location import CRUDLocation
 from department_app.service.skill import CRUDSkill
 from department_app.service.permission import CRUDPermission
 from department_app.views.forms.app_form import AddDepartmentForm, AddSkillForm, AddAddressForm, AddLocationForm, \
-    AddPermissionForm
+    AddPermissionForm, AddEmployeeForm
 
 
 file_log = logging.FileHandler('department_app.log')
@@ -52,20 +52,35 @@ def department_page(department_id):
     return render_template('department.html', department_data=department, employees_data=employees)
 
 
-@frontend.route('/departments')
+@frontend.route('/departments', methods=['POST', 'GET'])
 def all_department_page():
     """Return / page"""
+    form = request.form
+    if request.method == 'POST':
+        departments = CRUDDepartment.get_all_department(form['search'])
+        logger.info(f'Page successful loaded!')
+        return render_template('departments.html', departments_data=departments)
     departments = CRUDDepartment.get_all_department()
     logger.info(f'Page successful loaded!')
     return render_template('departments.html', departments_data=departments)
 
 
-@frontend.route('/employee/search')
+@frontend.route('/employee/search', methods=['POST', 'GET'])
 def search_employee_page():
     """Return / page"""
+    form = request.form
+    locations = CRUDLocation.get_all_location()
+    skills = CRUDSkill.get_all_skill()
+    if request.method == 'POST':
+        employees = CRUDEmployee.get_all_employee(skill=form['key_skill'], location=form['location'],
+                                                  name=form['search'])
+        logger.info(f'Page successful loaded!')
+        return render_template('people_search.html', employees_data=employees, locations_data=locations,
+                               skills_data=skills)
     employees = CRUDEmployee.get_all_employee()
     logger.info(f'Page successful loaded!')
-    return render_template('people_search.html', employees_data=employees)
+    return render_template('people_search.html', employees_data=employees, locations_data=locations,
+                           skills_data=skills)
 
 
 @frontend.route('/manage/employee', methods=['POST', 'GET'])
@@ -96,14 +111,18 @@ def manage_department_page():
 @frontend.route('/add/employee', methods=['POST', 'GET'])
 def add_employee_page():
     """Return / page"""
-    departments = CRUDDepartment.get_all_department()
-    addresses = CRUDAddress.get_all_address()
-    locations = CRUDLocation.get_all_location()
-    skills = CRUDSkill.get_all_skill()
-    permissions = CRUDPermission.get_all_permission()
+    form = AddEmployeeForm(request.form)
+    form.work_address.choices = [(address['address_id'], address['name']) for address in CRUDAddress.get_all_address()]
+    form.department.choices = [(dep['dep_id'], dep['name']) for dep in CRUDDepartment.get_all_department()]
+    form.location.choices = [(loc['location_id'], loc['name']) for loc in CRUDLocation.get_all_location()]
+    form.key_skill.choices = [(skill['skill_id'], skill['name']) for skill in CRUDSkill.get_all_skill()]
+    form.permission.choices = [(perm['permission_id'], perm['name']) for perm in CRUDPermission.get_all_permission()]
+    if request.method == 'POST' and form.validate():
+        CRUDEmployee.create_employee(form)
+        logger.info(f'New employee created!')
+        return redirect(url_for('frontend.manage_employee_page'))
     logger.info(f'Page successful loaded!')
-    return render_template('add_employee.html', departments_data=departments, addresses_data=addresses,
-                           locations_data=locations, skills_data=skills, permissions_data=permissions)
+    return render_template('add_employee.html', form=form)
 
 
 @frontend.route('/add/department', methods=['POST', 'GET'])
@@ -115,17 +134,6 @@ def add_department_page():
         return redirect(url_for('frontend.manage_department_page'))
     logger.info(f'Page successful loaded!')
     return render_template('add_department.html', form=form)
-
-
-@frontend.route('/create/new/employee', methods=['POST', 'GET'])
-def create_new_employee():
-    """Return / page"""
-    if request.method == 'GET':
-        return "The URL /create/new/employee is accessed directly. Try going to '/add/employee' to submit form"
-    if request.method == 'POST':
-        CRUDEmployee.create_employee()
-        logger.info(f'New employee created!')
-        return redirect(url_for('frontend.manage_employee_page'))
 
 
 @frontend.route('/update/employee/data/<string:employee_id>', methods=['POST', 'GET'])
@@ -234,3 +242,10 @@ def confirm_delete_employee(employee_id):
     emp_id = employee_id
     logger.info(f'Page successful loaded!')
     return render_template('delete_employee.html', emp_id=emp_id)
+
+
+@frontend.route('/delete/employee/<string:employee_id>', methods=['POST', 'GET'])
+def delete_employee(employee_id):
+    """Return / page"""
+    CRUDEmployee.delete_employee(int(employee_id))
+    return redirect(url_for('frontend.manage_employee_page'))

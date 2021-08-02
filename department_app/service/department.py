@@ -1,7 +1,6 @@
 """Department CRUD"""
 from flask import request
 from department_app.models.app_models import db, Department, Employee
-from department_app.views.forms.app_form import AddDepartmentForm
 
 
 class CRUDDepartment:
@@ -21,10 +20,13 @@ class CRUDDepartment:
         db.session.commit()
 
     @staticmethod
-    def get_all_department():
+    def get_all_department(dep_filter=''):
         """Get department func"""
         department_list = []
-        departments = Department.query.all()
+        if dep_filter == '':
+            departments = Department.query.all()
+        else:
+            departments = Department.query.filter(Department.name.like(str('%' + dep_filter + '%')))
         for department in departments:
             employee = Employee.query.filter_by(department=department.id).all()
             department_info = {'name': department.name, 'manager': department.manager,

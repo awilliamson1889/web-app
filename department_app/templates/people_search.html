@@ -24,15 +24,15 @@
                 </div>
                 </div>
                 <!-- Right-aligned links -->
-                <div class="topnav-right">
-                    <a href="login.html">Logout</a>
-                </div>
+<!--                <div class="topnav-right">-->
+<!--                    <a href="login.html">Logout</a>-->
+<!--                </div>-->
             </div>
-
+            <form method="POST">
             <div class="search-panel">
 
                 <div class="search-center">
-                    <input type="text" placeholder="Search people" name="search" class="searchhh">
+                    <input type="text" placeholder="Search employee by surname" name="search" class="searchhh">
                     <button type="submit" class="my_button"><i class="search"  ></i>Search</button>
                 </div>
 
@@ -40,22 +40,24 @@
             <div class="profile-line"></div>
             <div class="department-info-cont-u730">
                 <div class="filters-left-people">
-                    <p>Country</p>
-                    <select class="select-css">
-                        <option value="0">Belarus</option>
-                        <option value="1">Russia</option>
-                        <option value="2">Ukraine</option>
-                    </select>
-                    <p>Primary Skill</p>
-                    <select class="select-css">
-                        <option value="0">Python</option>
-                        <option value="1">Java</option>
-                        <option value="2">JavaScript</option>
-                        <option value="3">.NET</option>
-                        <option value="4">C++</option>
-                    </select>
+                    <p>Location</p>
+                <select class="select-css" name="location">
+                    <option value="" selected hidden>Select location</option>
+                    {% for location in locations_data%}
+                    <option value="{{location.location_id}}">{{location.name}}</option>
+                    {% endfor %}
+                </select>
+                    <p>Skill</p>
+                <select class="select-css" name="key_skill">
+                    <option value="" selected hidden>Select skill</option>
+                    {% for skill in skills_data%}
+                    <option value="{{skill.skill_id}}">{{skill.name}}</option>
+                    {% endfor %}
+                </select>
                 </div>
-
+            </div>
+            </form>
+                <div class="department-info-cont-u730">
                 <ul>
                     {% for employee in employees_data%}
                     <li>

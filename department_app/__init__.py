@@ -44,20 +44,25 @@ def create_app(test_config=None):
     migrate = Migrate(app, db, directory=MIGRATION_DIR)
 
     import department_app.views.routes
-    import department_app.rest.employee_api
-    import department_app.rest.department_api
-    import department_app.rest.location_api
-    import department_app.rest.permission_api
-    import department_app.rest.skill_api
-    import department_app.rest.address_api
-    from department_app.models.app_models import Employee, Department, Permission, Address, Location, Skill
-
     app.register_blueprint(department_app.views.routes.frontend)
+
+    import department_app.rest.employee_api
     app.register_blueprint(department_app.rest.employee_api.employee_api)
+
+    import department_app.rest.department_api
     app.register_blueprint(department_app.rest.department_api.department_api)
+
+    import department_app.rest.location_api
     app.register_blueprint(department_app.rest.location_api.location_api)
+
+    import department_app.rest.permission_api
     app.register_blueprint(department_app.rest.permission_api.permission_api)
+
+    import department_app.rest.skill_api
     app.register_blueprint(department_app.rest.skill_api.skill_api)
+
+    import department_app.rest.address_api
     app.register_blueprint(department_app.rest.address_api.address_api)
+    from department_app.models.app_models import Employee, Department, Permission, Address, Location, Skill
 
     return app
