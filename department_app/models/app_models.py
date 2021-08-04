@@ -1,12 +1,13 @@
 """Models for web-app"""
 import datetime
+from werkzeug.security import generate_password_hash
 from dataclasses import dataclass
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
+from flask_login import UserMixin
+from department_app import db, manager
 
 
 @dataclass
-class Employee(db.Model):
+class Employee(db.Model, UserMixin):
     """Employees table"""
     id: int
     name: str
@@ -36,6 +37,7 @@ class Employee(db.Model):
     work_address = db.Column(db.Integer, db.ForeignKey('Address.id'), nullable=False)
     key_skill = db.Column(db.Integer, db.ForeignKey('Skill.id'), nullable=False)
     permission = db.Column(db.Integer, db.ForeignKey('Permission.id'))
+    password = db.Column(db.String(255), nullable=True)
 
     def __init__(self, name, surname, department, date_of_birth, salary, phone, email, location,
                  work_address, key_skill, date_of_joining, permission):
@@ -51,6 +53,10 @@ class Employee(db.Model):
         self.key_skill = key_skill
         self.date_of_joining = date_of_joining
         self.permission = permission
+        self.password = generate_password_hash('1111', method='sha256')
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password, method='sha256')
 
     def __repr__(self):
         return '<Employee: {}>'.format(self.name)
@@ -155,3 +161,8 @@ class Permission(db.Model):
 
     def __repr__(self):
         return '<Permission: {}>'.format(self.name)
+
+
+@manager.user_loader
+def load_user(user_id):
+    return Employee.query.get(user_id)

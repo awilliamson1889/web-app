@@ -45,6 +45,7 @@ class AddPermissionForm(Form):
 
 
 class AddEmployeeForm(Form):
+    emp_id = 1
     name = StringField('Name', validators=[Length(min=2, max=50, message='Name length must be between '
                                                                          '%(min)d and %(max)d characters'),
                                            DataRequired()])
@@ -71,14 +72,16 @@ class AddEmployeeForm(Form):
 
     def validate_phone(self, phone):
         emp = Employee.query.all()
-        if self.phone.data in [x.phone for x in emp]:
+        this_emp = Employee.query.filter(Employee.id == self.emp_id).all()
+        if self.phone.data in [employee.phone for employee in emp] and this_emp[0].phone != self.phone.data:
             raise ValidationError(
                 f"This phone already taken")
 
     def validate_email(self, email):
         regex = r'^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$'
         emp = Employee.query.all()
-        if self.email.data.lower() in [email.email.lower() for email in emp]:
+        this_emp = Employee.query.filter(Employee.id == self.emp_id).all()
+        if self.email.data.lower() in [email.email.lower() for email in emp] and this_emp[0].email != self.email.data:
             raise ValidationError(
                 f"This email already taken")
         if not re.match(regex, self.email.data.lower()):

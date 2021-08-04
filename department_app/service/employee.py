@@ -66,53 +66,33 @@ class CRUDEmployee:
     @staticmethod
     def get_all_employee(department_id='No', date1='', date2='', skill='', name='', location=''):
         """Get employee func"""
+        query_join = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department)\
+            .join(Permission).join(Address).join(Location).join(Skill)
         employee_list = []
         if date1 and date2 != '' and department_id == 'No':
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill). \
-                filter(Employee.date_of_birth.between(date1, date2)).all()
+            employees = query_join.filter(Employee.date_of_birth.between(date1, date2)).all()
         elif department_id != 'No' and (date1 and date2 != ''):
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).\
-                filter(Department.id == department_id, Employee.date_of_birth.between(date1, date2)).all()
+            employees = query_join.filter(Department.id == department_id, Employee.date_of_birth.
+                                          between(date1, date2)).all()
         elif department_id != 'No' and (date1 == date2 == ''):
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).filter(Department.id == department_id).all()
+            employees = query_join.filter(Department.id == department_id).all()
         elif skill != '' and (name == location == ''):
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).filter(Skill.id == skill).all()
+            employees = query_join.filter(Skill.id == skill).all()
         elif location != '' and (name == skill == ''):
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).filter(Location.id == location).all()
+            employees = query_join.filter(Location.id == location).all()
         elif ((skill and location) != '') and name == '':
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).filter(Skill.id == skill,
-                                                                                  Location.id == location).all()
+            employees = query_join.filter(Skill.id == skill, Location.id == location).all()
         elif (skill and location and name) != '':
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).filter(Skill.id == skill,
-                                                                                  Location.id == location,
-                                                                                  Employee.surname
-                                                                                  .like(str('%' + name + '%'))).all()
+            employees = query_join.filter(Skill.id == skill, Location.id == location,
+                                          Employee.surname.like(str('%' + name + '%'))).all()
         elif ((location and name) != '') and skill == '':
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).filter(Location.id == location,
-                                                                                  Employee.surname
-                                                                                  .like(str('%' + name + '%'))
-                                                                                  ).all()
+            employees = query_join.filter(Location.id == location, Employee.surname.like(str('%' + name + '%'))).all()
         elif ((skill and name) != '') and location == '':
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).filter(Skill.id == skill,
-                                                                                  Employee.surname
-                                                                                  .like(str('%' + name + '%'))
-                                                                                  ).all()
+            employees = query_join.filter(Skill.id == skill, Employee.surname.like(str('%' + name + '%'))).all()
         elif name != '' and (skill == location == ''):
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).filter(Employee.surname
-                                                                                  .like(str('%' + name + '%'))).all()
+            employees = query_join.filter(Employee.surname.like(str('%' + name + '%'))).all()
         else:
-            employees = db.session.query(Employee, Department, Permission, Address, Location, Skill).join(Department) \
-                .join(Permission).join(Address).join(Location).join(Skill).all()
+            employees = query_join.all()
         for employee, department, permission, address, location_inf, skill_inf in employees:
             user_info = {'name': employee.name, 'surname': employee.surname, 'date_of_birth': employee.date_of_birth,
                          'salary': employee.salary, 'email': employee.email, 'phone': employee.phone,

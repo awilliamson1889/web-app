@@ -2,16 +2,23 @@
 import os
 from flask import Flask
 from flask_migrate import Migrate
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
 from flasgger import Swagger
-from department_app.models.app_models import db
+
 
 MIGRATION_DIR = os.path.join('department_app/migrations')
+manager = LoginManager()
+db = SQLAlchemy()
 
 
 def create_app(test_config=None):
     """Create app method"""
 
     app = Flask(__name__)
+
+    manager.init_app(app)
+
     if test_config is None or test_config == 'Dev':
         app.config.from_object("config.DevelopmentConfig")
     elif test_config == 'Prod':

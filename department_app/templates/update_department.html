@@ -24,23 +24,31 @@
                 </div>
                 </div>
 <!--                <div class="topnav-right">-->
-<!--                    <a href="login.html">Logout</a>-->
-<!--                </div>-->
+                <div class="topnav-right">
+                    <a href="/logout">Logout</a>
+                </div>
             </div>
 
             <div class="bg-add-employe">
                 <h2>Update Department</h2>
                 <div class="add-employee">
-                    <form action="/update/department/data/{{department_data.dep_id}}" method = "POST">
-                        <p>Department</p>
-                        <input type="text" placeholder="Name" name="name" class="edit" value="{{department_data.name}}"> <br>
-                        <p>Manager</p>
-                        <input type="text" placeholder="Surname" name="manager" class="edit"  value="{{department_data.manager}}"> <br>
-                        <p>Date of creation</p>
-                        <input type="date" name="date_of_creation" class="edit"  value="{{department_data.date_of_creation}}">
+                    <form method = "POST">
+                        <p>{{ form.name.label }}</p>
+                        {{ form.name(class="edit", value=department_data.name) }}
+                        <p>{{ form.manager.label }}</p>
+                        {{ form.manager(class="edit", value=department_data.manager) }}
+                        <p>{{ form.date_of_creation.label }}</p>
+                        {{ form.date_of_creation(class="edit", value=department_data.date_of_creation) }}
                         <br>
                         <a class="my_button" href="/manage/department">Cancle</a>
                         <button type="submit" class="my_button"><i class="save"></i>Save</button>
+                        <p> </p>
+                        {% for field, errors in form.errors.items() %}
+                        <small class="form-text text-muted ">
+                            {{ ', '.join(errors) }}
+                            <br>
+                        </small>
+                        {% endfor %}
                     </form>
             </div>
         </div>

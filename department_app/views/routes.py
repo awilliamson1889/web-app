@@ -1,7 +1,10 @@
 """Routes web-app"""
 import logging
+from werkzeug.security import check_password_hash
 from werkzeug.local import LocalProxy
-from flask import Blueprint, request, render_template, redirect, url_for, current_app
+from department_app.models.app_models import Employee
+from flask_login import login_user, logout_user, login_required
+from flask import Blueprint, request, render_template, redirect, url_for, current_app, flash
 from department_app.service.employee import CRUDEmployee
 from department_app.service.department import CRUDDepartment
 from department_app.service.address import CRUDAddress
@@ -24,6 +27,7 @@ frontend = Blueprint('frontend', __name__)
 
 
 @frontend.route('/employee/<string:employee_id>')
+@login_required
 def user_page(employee_id):
     """Return / page"""
     if not str(employee_id).isdigit():
@@ -38,6 +42,7 @@ def user_page(employee_id):
 
 
 @frontend.route('/department/<string:department_id>')
+@login_required
 def department_page(department_id):
     """Return / page"""
     if not str(department_id).isdigit():
@@ -53,6 +58,7 @@ def department_page(department_id):
 
 
 @frontend.route('/departments', methods=['POST', 'GET'])
+@login_required
 def all_department_page():
     """Return / page"""
     form = request.form
@@ -66,6 +72,7 @@ def all_department_page():
 
 
 @frontend.route('/employee/search', methods=['POST', 'GET'])
+@login_required
 def search_employee_page():
     """Return / page"""
     form = request.form
@@ -84,6 +91,7 @@ def search_employee_page():
 
 
 @frontend.route('/manage/employee', methods=['POST', 'GET'])
+@login_required
 def manage_employee_page():
     """Return / page"""
     if request.method == 'GET':
@@ -101,6 +109,7 @@ def manage_employee_page():
 
 
 @frontend.route('/manage/department')
+@login_required
 def manage_department_page():
     """Return / page"""
     departments = CRUDDepartment.get_all_department()
@@ -109,6 +118,7 @@ def manage_department_page():
 
 
 @frontend.route('/add/employee', methods=['POST', 'GET'])
+@login_required
 def add_employee_page():
     """Return / page"""
     form = AddEmployeeForm(request.form)
@@ -126,6 +136,7 @@ def add_employee_page():
 
 
 @frontend.route('/add/department', methods=['POST', 'GET'])
+@login_required
 def add_department_page():
     """Return / page"""
     form = AddDepartmentForm(request.form)
@@ -136,41 +147,32 @@ def add_department_page():
     return render_template('add_department.html', form=form)
 
 
-@frontend.route('/update/employee/data/<string:employee_id>', methods=['POST', 'GET'])
-def update_employee(employee_id):
-    """Return / page"""
-    if request.method == 'GET':
-        return "The URL /update/employee/data/<employee_id> is accessed directly. Try going to " \
-               "'/update/department/<employee_id>' to submit form"
-    if request.method == 'POST':
-        CRUDEmployee.update_employee(employee_id)
-        logger.info(f'Employee successful updated')
-        return redirect(url_for('frontend.manage_employee_page'))
-
-
-@frontend.route('/update/department/data/<string:department_id>', methods=['POST', 'GET'])
-def update_department(department_id):
-    """Return / page"""
-    if request.method == 'GET':
-        return "The URL /update/department/data/<department_id> is accessed directly. Try going to " \
-               "'/update/department/<department_id>' to submit form"
-    if request.method == 'POST':
+@frontend.route('/update/department/<string:department_id>', methods=['POST', 'GET'])
+@login_required
+def update_department_page(department_id):
+    form = AddDepartmentForm(request.form)
+    if request.method == 'POST' and form.validate():
         CRUDDepartment.update_department(department_id)
         logger.info(f'Department successful updated!')
         return redirect(url_for('frontend.manage_department_page'))
-
-
-@frontend.route('/update/department/<string:department_id>', methods=['POST', 'GET'])
-def update_department_page(department_id):
     """Return / page"""
     department = CRUDDepartment.get_department(department_id)
     logger.info(f'Page successful loaded!')
-    return render_template('update_department.html', department_data=department)
+    return render_template('update_department.html', department_data=department, form=form)
 
 
 @frontend.route('/update/employee/<string:employee_id>', methods=['POST', 'GET'])
+@login_required
 def update_employee_page(employee_id):
     """Return / page"""
+    form = AddEmployeeForm(request.form)
+    form.emp_id = employee_id
+    form.work_address.choices = [(address['address_id'], address['name']) for address in CRUDAddress.get_all_address()]
+    form.department.choices = [(dep['dep_id'], dep['name']) for dep in CRUDDepartment.get_all_department()]
+    form.location.choices = [(loc['location_id'], loc['name']) for loc in CRUDLocation.get_all_location()]
+    form.key_skill.choices = [(skill['skill_id'], skill['name']) for skill in CRUDSkill.get_all_skill()]
+    form.permission.choices = [(perm['permission_id'], perm['name']) for perm in CRUDPermission.get_all_permission()]
+
     departments = CRUDDepartment.get_all_department()
     addresses = CRUDAddress.get_all_address()
     locations = CRUDLocation.get_all_location()
@@ -182,13 +184,18 @@ def update_employee_page(employee_id):
     employee = CRUDEmployee.get_employee(employee_id)
     if not employee:
         return f"Could not find employee with ID: {employee_id}.", 404
+    if request.method == 'POST' and form.validate():
+        CRUDEmployee.update_employee(employee_id)
+        logger.info(f'Employee successful updated')
+        return redirect(url_for('frontend.manage_employee_page'))
     logger.info(f'Page successful loaded!')
     return render_template('update_employee.html', employee_data=employee, departments_data=departments,
                            addresses_data=addresses, locations_data=locations, skills_data=skills,
-                           permissions_data=permissions)
+                           permissions_data=permissions, form=form)
 
 
 @frontend.route('/add/skill', methods=['POST', 'GET'])
+@login_required
 def add_skill_page():
     """Return / page"""
     form = AddSkillForm(request.form)
@@ -201,6 +208,7 @@ def add_skill_page():
 
 
 @frontend.route('/add/address', methods=['POST', 'GET'])
+@login_required
 def add_address_page():
     """Return / page"""
     form = AddAddressForm(request.form)
@@ -213,6 +221,7 @@ def add_address_page():
 
 
 @frontend.route('/add/location', methods=['POST', 'GET'])
+@login_required
 def add_location_page():
     """Return / page"""
     form = AddLocationForm(request.form)
@@ -225,6 +234,7 @@ def add_location_page():
 
 
 @frontend.route('/add/permission', methods=['POST', 'GET'])
+@login_required
 def add_permission_page():
     """Return / page"""
     form = AddPermissionForm(request.form)
@@ -237,6 +247,7 @@ def add_permission_page():
 
 
 @frontend.route('/delete-employee/<string:employee_id>')
+@login_required
 def confirm_delete_employee(employee_id):
     """Return / page"""
     emp_id = employee_id
@@ -245,7 +256,48 @@ def confirm_delete_employee(employee_id):
 
 
 @frontend.route('/delete/employee/<string:employee_id>', methods=['POST', 'GET'])
+@login_required
 def delete_employee(employee_id):
     """Return / page"""
     CRUDEmployee.delete_employee(int(employee_id))
     return redirect(url_for('frontend.manage_employee_page'))
+
+###############################################################################################################
+
+
+@frontend.route('/login', methods=['POST', 'GET'])
+def login_page():
+    login = request.form.get('login')
+    password = request.form.get('password')
+
+    if login and password:
+        employee = Employee.query.filter_by(email=login).first()
+
+        if employee and check_password_hash(employee.password, password):
+            login_user(employee)
+
+            return redirect(url_for('frontend.user_page', employee_id=employee.id))
+        else:
+            flash('Login or password not correct')
+    else:
+        flash('Please fill login and password fields')
+    return render_template('login.html')
+
+
+@frontend.route('/register', methods=['POST', 'GET'])
+def register():
+    pass
+
+
+@frontend.route('/logout', methods=['POST', 'GET'])
+def logout():
+    logout_user()
+    return redirect(url_for('frontend.login_page'))
+
+
+@frontend.after_request
+def redirect_to_login(response):
+    if response.status_code == 401:
+        return redirect(url_for('frontend.login_page'))
+
+    return response

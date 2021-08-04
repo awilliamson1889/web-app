@@ -4,21 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
     <title>HRM login</title>
 </head>
 <body>
     <div class="container">
         <!-- The video -->
         <video autoplay muted loop id="myVideo">
-            <source src="background1.mp4" type="video/mp4">
+            <source src="../static/img/background1.mp4" type="video/mp4">
         </video>
 
         <!-- Optional: some overlay text to describe the video -->
         <div class="content-login">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <h1>Sing in</h1>
-            <form action="profile.html" method="POST">
-                <input class="loggin__input" required type="text" placeholder="E-mail" name="email">
+            <form method="POST">
+                <input class="loggin__input" required type="text" placeholder="E-mail" name="login">
                 <br>
                 <input class="loggin__input" required type="password" placeholder="Password" name="password">
                 <br>
