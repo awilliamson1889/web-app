@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <title>Departments list</title>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="navbar">
+                <a href="/employee/1">My Profile</a>
+                <a href="/departments">Departments</a>
+                <a href="/employee/search" class="active">People Search</a>
+                <div class="dropdown">
+                <button class="dropbtn">Management
+                    <i class="fa fa-caret-down"></i>
+                </button> 
+                <div class="dropdown-content">
+                    <a href="/manage/department">Departments</a>
+                    <a href="/manage/employee">Employees</a>
+                </div>
+                </div>
+                <!-- Right-aligned links -->
+                <div class="topnav-right">
+                    <a href="login.html">Logout</a>
+                </div>
+            </div>
+
+            <div class="search-panel">
+
+                <div class="search-center">
+                    <input type="text" placeholder="Search people" name="search" class="searchhh">
+                    <button type="submit" class="my_button"><i class="search"  ></i>Search</button>
+                </div>
+
+            </div>
+            <div class="profile-line"></div>
+            <div class="department-info-cont-u730">
+                <div class="filters-left-people">
+                    <p>Country</p>
+                    <select class="select-css">
+                        <option value="0">Belarus</option>
+                        <option value="1">Russia</option>
+                        <option value="2">Ukraine</option>
+                    </select>
+                    <p>Primary Skill</p>
+                    <select class="select-css">
+                        <option value="0">Python</option>
+                        <option value="1">Java</option>
+                        <option value="2">JavaScript</option>
+                        <option value="3">.NET</option>
+                        <option value="4">C++</option>
+                    </select>
+                </div>
+
+                <ul>
+                    {% for employee in employees_data%}
+                    <li>
+                        <div class="department">
+                            <div class="department-info-image">
+                                <img src="../static/img/image1.jpg" width="150" height="150" class="image" id="img">
+                                    
+                            </div>
+                            <div class="user-info">
+                                <p><a href="/employee/{{employee.emp_id}}">{{employee.name}} {{employee.surname}} </a>| {{employee.location}}</p>
+                                <p>{{employee.department}}</p>
+                                <p>{{employee.email}} | {{employee.phone}}</p>
+                                <br>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,3 @@
+[run]
+omit =
+    flask_app/setup.py

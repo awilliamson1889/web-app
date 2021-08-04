@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Manage employees</title>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="navbar">
+                <a href="profile.html">My Profile</a>
+                <a href="departments.html">Departments</a>
+                <a href="people_search.html">People Search</a>
+                <div class="dropdown">
+                <button class="dropbtn">Management
+                    <i class="fa fa-caret-down"></i>
+                </button> 
+                <div class="dropdown-content">
+                    <a href="manage_departments.html">Departments</a>
+                    <a href="manage_employees.html">Employees</a>
+                </div>
+                </div>
+                <!-- Right-aligned links -->
+                <div class="topnav-right">
+                    <a href="login.html">Logout</a>
+                </div>
+            </div>
+
+            <div class="bg-add-employe">
+                <h2>Create Employee</h2>
+                <div class="add-employee">
+                    <p>Name</p>
+                    <input type="text" placeholder="Name" name="Name" class="edit"> <br>
+                    <p>Surname</p>
+                    <input type="text" placeholder="Surname" name="Surname" class="edit"> <br>
+                    <p>Department</p>
+                    <select class="select-css">
+                        <option value="0">All</option>
+                        <option value="1">Art</option>
+                        <option value="2">Data Science</option>
+                        <option value="3">Game Design</option>
+                        <option value="4">Product Design</option>
+                    </select>
+                    <a href="add_department.html">New</a> <br>
+                    <p>Date of Birth</p>
+                    <input type="date" name="date" class="edit">
+                    <p>Salary</p>
+                    <input type="text" placeholder="Salary" name="Salary" class="edit"> <br>
+                    <p>Work phone</p>
+                    <input type="text" placeholder="Work phone" name="Salary" class="edit"> <br>
+                    <a href="add_department.html">New</a> <br>
+                    <br>
+                    <a class="my_button" href="manage_employees.html">Cancle</a>
+                    <button type="submit" class="my_button"><i class="save"></i>Save</button>
+                </div>
+                <div class="add-employee">
+                    <p>Location</p>
+                    <select class="select-css">
+                        <option value="0">All</option>
+                        <option value="1">Brest, Belarus</option>
+                        <option value="2">Minsk, Belarus</option>
+                    </select>
+                    <p>Work address</p>
+                    <select class="select-css">
+                        <option value="0">All</option>
+                        <option value="1">Belarus, Brest, Moskovskaya 206</option>
+                    </select>
+                    <a href="add_department.html">New</a> <br>
+                    <p>Key skill</p>
+                    <input type="text" placeholder="Key skill" name="Salary" class="edit"> <br>
+                    <p>Date of joining</p>
+                    <input type="date" name="Date of joining" class="edit">
+                    <p>Permission</p>
+                    <select class="select-css">
+                        <option value="0">All</option>
+                        <option value="1">Manager</option>
+                        <option value="2">Employee</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="confirm-modal1" class="modalbackground">
+                <div class="modalwindow">
+                    <h3>Please confirm delete employee!</h3>
+                    <a class="my_button" href="#Save">Delete</a>
+                    <a class="my_button" href="manage_employees.html">Cancle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
