@@ -41,7 +41,7 @@ class EmployeeModel(BaseModel):
     @validator('date_of_birth')
     def date_of_birth_check(cls, v):
         age = (math.floor(
-            (datetime.date.today() - datetime.datetime.strptime(str(v), "%d-%m-%Y").date()).days / 365))
+            (datetime.date.today() - datetime.datetime.strptime(str(v), "%Y-%m-%d").date()).days / 365))
         if age < 18 and 'date_of_birth' in request.json:
             raise ValueError('The employee cannot be under the age of 18!')
         return str(v).title()
@@ -102,7 +102,7 @@ class EmployeeModel(BaseModel):
 
     @validator('date_of_joining')
     def date_of_joining_check(cls, v):
-        datetime.datetime.strptime(str(v), "%d-%m-%Y").date()
+        datetime.datetime.strptime(str(v), "%Y-%m-%d").date()
         return v.title()
 
     @validator('salary')

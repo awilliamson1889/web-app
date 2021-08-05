@@ -24,7 +24,7 @@ class DepartmentModel(BaseModel):
     @validator('date_of_creation')
     def date_of_creation_check(cls, v):
         """Date of creation validator"""
-        datetime.datetime.strptime(str(v), "%d-%m-%Y").date()
+        datetime.datetime.strptime(str(v), "%Y-%m-%d").date()
         return str(v).title()
 
     @validator('manager')
