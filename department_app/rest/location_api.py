@@ -1,4 +1,4 @@
-"""rest api"""
+"""Rest location Api"""
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
@@ -13,7 +13,7 @@ api = Api(location_api)
 
 
 class LocationInfo(Resource):
-    """Rest class"""
+    """Location API class"""
     @staticmethod
     def get(location_id):
         """

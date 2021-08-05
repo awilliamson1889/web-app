@@ -1,4 +1,4 @@
-"""rest api"""
+"""Rest department Api"""
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
@@ -12,7 +12,7 @@ api = Api(department_api)
 
 
 class DepartmentInfo(Resource):
-    """Rest class"""
+    """Department API class"""
     @staticmethod
     def get(department_id):
         """
@@ -66,7 +66,7 @@ class DepartmentInfo(Resource):
                 date_of_creation:
                   type: "string"
                   format: "string"
-                  example : "12-12-2021"
+                  example : "2021-12-12"
                 manager:
                   type: "string"
                   format: "string"
@@ -128,7 +128,7 @@ class AllDepartmentInfo(Resource):
                 date_of_creation:
                   type: "string"
                   format: "string"
-                  example : "12-12-2021"
+                  example : "2021-12-12"
                 manager:
                   type: "string"
                   format: "string"

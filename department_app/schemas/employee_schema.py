@@ -102,7 +102,7 @@ class EmployeeModel(BaseModel):
 
     @validator('date_of_joining')
     def date_of_joining_check(cls, v):
-        datetime.datetime.strptime(str(v), "%d-%m-%Y").date()
+        datetime.datetime.strptime(str(v), "%Y-%m-%d").date()
         return v.title()
 
     @validator('salary')

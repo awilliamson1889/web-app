@@ -1,4 +1,4 @@
-"""rest api"""
+"""Rest employee Api"""
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
@@ -12,7 +12,7 @@ api = Api(employee_api)
 
 
 class EmployeeInfo(Resource):
-    """Rest class"""
+    """Employee API class"""
     @staticmethod
     def get(employee_id):
         """
