@@ -88,7 +88,7 @@ class TestApiDepartment(unittest.TestCase):
         client = app.test_client()
         last_department = department[-1]
         update_test_data = {'name': 'update_test_department', 'manager': 'update_manager',
-                            'date_of_creation': '01-01-2022'}
+                            'date_of_creation': '2022-01-11'}
         url = f"/api/department/{last_department.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(201, response.status_code)
