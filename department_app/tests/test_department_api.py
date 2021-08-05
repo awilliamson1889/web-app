@@ -36,7 +36,6 @@ class TestApiDepartment(unittest.TestCase):
         self.assertEqual(last_department.id, response.json['id'])
         self.assertEqual(last_department.name, response.json['name'])
         self.assertEqual(last_department.manager, response.json['manager'])
-        # self.assertEqual(last_department.date_of_creation, response.json['date_of_creation'])  # !!!
 
     def test_get_department_not_exist(self):
         department_id = 999999999
