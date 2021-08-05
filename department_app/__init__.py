@@ -47,11 +47,5 @@ def create_app(test_config=None):
     from department_app.models.app_models import Employee, Department, Permission, Address, Location, Skill
 
     app.register_blueprint(department_app.views.routes.frontend)
-    app.register_blueprint(department_app.rest.employee_api.employee_api)
-    app.register_blueprint(department_app.rest.department_api.department_api)
-    app.register_blueprint(department_app.rest.location_api.location_api)
-    app.register_blueprint(department_app.rest.permission_api.permission_api)
-    app.register_blueprint(department_app.rest.skill_api.skill_api)
-    app.register_blueprint(department_app.rest.address_api.address_api)
 
     return app
