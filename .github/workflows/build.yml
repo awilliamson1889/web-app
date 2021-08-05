@@ -44,7 +44,7 @@ jobs:
           pip install pylint-flask-sqlalchemy
       - name: Run python mypy
         run:
-          python mypy.py
+          python init_test_data.py
       - name: Run pylint check
         run:
           pylint --load-plugins pylint_flask_sqlalchemy department_app
