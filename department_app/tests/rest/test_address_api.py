@@ -1,7 +1,7 @@
 import unittest
 from department_app import create_app
 from department_app.models.app_models import db, Address
-from department_app.tests.factoryes.address_factory import AddressFactory
+from department_app.tests.factories.address_factory import AddressFactory
 
 app = create_app('Test')
 app.app_context().push()

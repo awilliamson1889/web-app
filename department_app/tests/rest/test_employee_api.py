@@ -2,7 +2,7 @@ import unittest
 import datetime
 from department_app import create_app
 from department_app.models.app_models import db, Employee
-from department_app.tests.factoryes.employee_factory import EmployeeFactory
+from department_app.tests.factories.employee_factory import EmployeeFactory
 
 app = create_app('Test')
 app.app_context().push()
