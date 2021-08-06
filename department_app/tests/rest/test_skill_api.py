@@ -142,7 +142,7 @@ class TestApiSkill(unittest.TestCase):
         client = app.test_client()
         update_test_data = {'name': 'test_very_big_skill_test_very_big_skill_test_very_big_skill_test_very_big_skill_'
                                     'test_very_big_skill_test_very_big_skill_test_very_big_skill_test_very_big_skill'}
-        message = "Exception: 1 validation error for SkillModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for SkillSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/skill/{last_skill.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
@@ -153,7 +153,7 @@ class TestApiSkill(unittest.TestCase):
         client = app.test_client()
         last_skill = skill[-1]
         update_test_data = {'name': last_skill.name}
-        message = "Exception: 1 validation error for SkillModel\n" \
+        message = "Exception: 1 validation error for SkillSchema\n" \
                   "name\n  This skill is already in use! (type=value_error)"
         url = f"/api/skill/{last_skill.id}"
         response = client.put(url, json=update_test_data)
@@ -183,7 +183,7 @@ class TestApiSkill(unittest.TestCase):
         client = app.test_client()
         test_data = {'name': 'test_very_big_skill_test_very_big_skill_test_very_big_skill_test_very_big_skill_'
                              'test_very_big_skill_test_very_big_skill_test_very_big_skill_test_very_big_skill'}
-        message = "Exception: 1 validation error for SkillModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for SkillSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/skill"
         response = client.post(url, json=test_data)
         self.assertEqual(response.status_code, 404)

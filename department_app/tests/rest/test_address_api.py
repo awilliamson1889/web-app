@@ -156,7 +156,7 @@ class TestApiAddress(unittest.TestCase):
         client = app.test_client()
         update_test_data = {'name': 'test_very_big_address_name_test_very_big_address_name_test_very_big_address_name_'
                                     'test_very_big_address_name_test_very_big_address_name_test_very_big_address_name'}
-        message = "Exception: 1 validation error for AddressModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for AddressSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/address/{last_address.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
@@ -168,7 +168,7 @@ class TestApiAddress(unittest.TestCase):
         client = app.test_client()
         last_address = address[-1]
         update_test_data = {'name': last_address.name}
-        message = "Exception: 1 validation error for AddressModel\n" \
+        message = "Exception: 1 validation error for AddressSchema\n" \
                   "name\n  This address is already in use! (type=value_error)"
         url = f"/api/address/{last_address.id}"
         response = client.put(url, json=update_test_data)
@@ -193,7 +193,7 @@ class TestApiAddress(unittest.TestCase):
         client = app.test_client()
         test_data = {'name': 'test_very_big_address_name_test_very_big_address_name_test_very_big_address_name_'
                              'test_very_big_address_name_test_very_big_address_name_test_very_big_address_name'}
-        message = "Exception: 1 validation error for AddressModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for AddressSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/address"
         response = client.post(url, json=test_data)
         self.assertEqual(response.status_code, 404)

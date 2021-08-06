@@ -2,8 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models.app_models import Department
-from department_app.schemas.department_schema import DepartmentModel
+from department_app.models.app_models import Department as DepartmentModel
+from department_app.schemas.department_schema import DepartmentSchema
 from department_app.models.app_models import db
 
 department_api = Blueprint('department_api', __name__)
@@ -11,7 +11,7 @@ department_api = Blueprint('department_api', __name__)
 api = Api(department_api)
 
 
-class DepartmentInfo(Resource):
+class Department(Resource):
     """Department API class"""
     @staticmethod
     def get(department_id):
@@ -36,7 +36,7 @@ class DepartmentInfo(Resource):
         """
         if not str(department_id).isdigit():
             abort(404, message="ID must be a number.")
-        department = Department.query.filter_by(id=department_id).first()
+        department = DepartmentModel.query.filter_by(id=department_id).first()
         if not department:
             abort(404, message=f"Could not find department with ID: {department_id}.")
         return make_response(jsonify(department), 200)
@@ -83,7 +83,7 @@ class DepartmentInfo(Resource):
         """
         if not str(department_id).isdigit():
             abort(404, message="ID must be a number.")
-        department = Department.query.filter_by(id=department_id).first()
+        department = DepartmentModel.query.filter_by(id=department_id).first()
         if not department:
             abort(404, message=f"Could not find department with ID: {department_id}.")
 
@@ -94,7 +94,7 @@ class DepartmentInfo(Resource):
         department_data.update(department_json)
 
         try:
-            DepartmentModel(**department_data)
+            DepartmentSchema(**department_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
@@ -106,7 +106,7 @@ class DepartmentInfo(Resource):
         return make_response(jsonify(department), 201)
 
 
-class AllDepartmentInfo(Resource):
+class DepartmentList(Resource):
     """Rest class"""
     @staticmethod
     def post():
@@ -143,11 +143,11 @@ class AllDepartmentInfo(Resource):
         department_data = {'name': request.json['name'], 'manager': request.json['manager'],
                            'date_of_creation': request.json['date_of_creation']}
         try:
-            department = DepartmentModel(**department_data)
+            department = DepartmentSchema(**department_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        result = Department(**department_data)
+        result = DepartmentModel(**department_data)
 
         db.session.add(result)
         db.session.commit()
@@ -165,9 +165,9 @@ class AllDepartmentInfo(Resource):
           200:
             description: All department returned
         """
-        departments = Department.query.all()
+        departments = DepartmentModel.query.all()
         return make_response(jsonify(departments), 200)
 
 
-api.add_resource(AllDepartmentInfo, '/api/department')
-api.add_resource(DepartmentInfo, '/api/department/<string:department_id>')
+api.add_resource(DepartmentList, '/api/department')
+api.add_resource(Department, '/api/department/<string:department_id>')

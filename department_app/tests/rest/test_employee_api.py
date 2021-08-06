@@ -169,7 +169,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         update_test_data = {'name': 'test_very_big_name_test_very_big_name_test_very_big_name_test_very_big_name_'
                                     'test_very_big_name_test_very_big_name_test_very_big_name_test_very_big_name'}
-        message = "Exception: 1 validation error for EmployeeModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for EmployeeSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
@@ -181,7 +181,7 @@ class TestApiEmployee(unittest.TestCase):
         last_emp = emp[-1]
         update_test_data = {'surname': 'test_very_big_surname_test_very_big_surname_test_very_big_surname_'
                                        'test_very_big_surname_test_very_big_surname_test_very_big_surname'}
-        message = "Exception: 1 validation error for EmployeeModel\nsurname\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\nsurname\n  " \
                   "Surname length too big! (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -193,7 +193,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'date_of_birth': datetime.datetime.today().strftime('%Y-%m-%d')}
-        message = "Exception: 1 validation error for EmployeeModel\n" \
+        message = "Exception: 1 validation error for EmployeeSchema\n" \
                   "date_of_birth\n  The employee cannot be under the age of 18! (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -205,7 +205,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'date_of_birth': "12-12-2002"}
-        message = f"Exception: 1 validation error for EmployeeModel\ndate_of_birth\n  " \
+        message = f"Exception: 1 validation error for EmployeeSchema\ndate_of_birth\n  " \
                   f"time data '{update_test_data['date_of_birth']}' does not match format '%Y-%m-%d' (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -217,7 +217,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'date_of_birth': "01 Jan 1999"}
-        message = f"Exception: 1 validation error for EmployeeModel\ndate_of_birth\n  " \
+        message = f"Exception: 1 validation error for EmployeeSchema\ndate_of_birth\n  " \
                   f"time data '{update_test_data['date_of_birth']}' does not match format '%Y-%m-%d' (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -229,7 +229,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'date_of_birth': 500000}
-        message = f"Exception: 1 validation error for EmployeeModel\ndate_of_birth\n  " \
+        message = f"Exception: 1 validation error for EmployeeSchema\ndate_of_birth\n  " \
                   f"time data '{update_test_data['date_of_birth']}' does not match format '%Y-%m-%d' (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -241,7 +241,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'salary': "zero"}
-        message = "Exception: 1 validation error for EmployeeModel\n" \
+        message = "Exception: 1 validation error for EmployeeSchema\n" \
                   "salary\n  value is not a valid float (type=type_error.float)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -253,7 +253,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'email': last_emp.email}
-        message = "Exception: 1 validation error for EmployeeModel\n" \
+        message = "Exception: 1 validation error for EmployeeSchema\n" \
                   "email\n  This email is already in use! (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -265,7 +265,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'email': "test_mail"}
-        message = "Exception: 1 validation error for EmployeeModel\n" \
+        message = "Exception: 1 validation error for EmployeeSchema\n" \
                   "email\n  Check the correctness of the email! (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -277,7 +277,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'phone': "one-two-one"}
-        message = "Exception: 1 validation error for EmployeeModel\n" \
+        message = "Exception: 1 validation error for EmployeeSchema\n" \
                   "phone\n  The number must contain only digits! (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -289,7 +289,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'phone': last_emp.phone}
-        message = "Exception: 1 validation error for EmployeeModel\n" \
+        message = "Exception: 1 validation error for EmployeeSchema\n" \
                   "phone\n  This number is already in use! (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -301,7 +301,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'date_of_joining': "01 Jan 1999"}
-        message = f"Exception: 1 validation error for EmployeeModel\ndate_of_joining\n  " \
+        message = f"Exception: 1 validation error for EmployeeSchema\ndate_of_joining\n  " \
                   f"time data '{update_test_data['date_of_joining']}' " \
                   f"does not match format '%Y-%m-%d' (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
@@ -314,7 +314,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'date_of_joining': 500000}
-        message = f"Exception: 1 validation error for EmployeeModel\ndate_of_joining\n  " \
+        message = f"Exception: 1 validation error for EmployeeSchema\ndate_of_joining\n  " \
                   f"time data '{update_test_data['date_of_joining']}' " \
                   "does not match format '%Y-%m-%d' (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
@@ -327,7 +327,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'department': 999999999}
-        message = "Exception: 1 validation error for EmployeeModel\ndepartment\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\ndepartment\n  " \
                   "There is no such department! See the list of departments: " \
                   ".../swagger/#/Department32API (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
@@ -340,7 +340,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'department': 'RD Lab'}
-        message = "Exception: 1 validation error for EmployeeModel\ndepartment\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\ndepartment\n  " \
                   "value is not a valid integer (type=type_error.integer)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -352,7 +352,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'location': 999999999}
-        message = "Exception: 1 validation error for EmployeeModel\nlocation\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\nlocation\n  " \
                   "There is no such department! See the list of departments: " \
                   ".../swagger/#/Location32API (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
@@ -365,7 +365,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'location': 'Brest'}
-        message = "Exception: 1 validation error for EmployeeModel\nlocation\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\nlocation\n  " \
                   "value is not a valid integer (type=type_error.integer)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -377,7 +377,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'work_address': 999999999}
-        message = "Exception: 1 validation error for EmployeeModel\nwork_address\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\nwork_address\n  " \
                   "There is no such department! See the list of departments: " \
                   ".../swagger/#/Address32API (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
@@ -390,7 +390,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'work_address': 'Moskovskaja, 348'}
-        message = "Exception: 1 validation error for EmployeeModel\nwork_address\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\nwork_address\n  " \
                   "value is not a valid integer (type=type_error.integer)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -402,7 +402,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'key_skill': 999999999}
-        message = "Exception: 1 validation error for EmployeeModel\nkey_skill\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\nkey_skill\n  " \
                   "There is no such department! See the list of departments: " \
                   ".../swagger/#/Skill32API (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
@@ -415,7 +415,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'key_skill': 'Python'}
-        message = "Exception: 1 validation error for EmployeeModel\nkey_skill\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\nkey_skill\n  " \
                   "value is not a valid integer (type=type_error.integer)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -427,7 +427,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'permission': 999999999}
-        message = "Exception: 1 validation error for EmployeeModel\npermission\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\npermission\n  " \
                   "There is no such department! See the list of departments: " \
                   ".../swagger/#/Permission32API (type=value_error)"
         url = f"/api/employee/{last_emp.id}"
@@ -440,7 +440,7 @@ class TestApiEmployee(unittest.TestCase):
         client = app.test_client()
         last_emp = emp[-1]
         update_test_data = {'permission': 'Administrator'}
-        message = "Exception: 1 validation error for EmployeeModel\npermission\n  " \
+        message = "Exception: 1 validation error for EmployeeSchema\npermission\n  " \
                   "value is not a valid integer (type=type_error.integer)"
         url = f"/api/employee/{last_emp.id}"
         response = client.put(url, json=update_test_data)
@@ -500,7 +500,7 @@ class TestApiEmployee(unittest.TestCase):
         last_emp = emp[-1]
         client = app.test_client()
         url = f'/api/employee/{last_emp.id}'
-        message = "Exception: 1 validation error for EmployeeModel\n" \
+        message = "Exception: 1 validation error for EmployeeSchema\n" \
                   "salary\n  Salary less then 0! (type=value_error)"
         response = client.put(url, json=test_data)
 

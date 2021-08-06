@@ -142,7 +142,7 @@ class TestApiLocation(unittest.TestCase):
         client = app.test_client()
         update_test_data = {'name': 'test_very_big_location_name_test_very_big_location_name_very_big_location_name_'
                                     'test_very_big_location_name_test_very_big_location_name_test_very_big_name'}
-        message = "Exception: 1 validation error for LocationModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for LocationSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/location/{last_emp.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
@@ -153,7 +153,7 @@ class TestApiLocation(unittest.TestCase):
         client = app.test_client()
         last_location = location[-1]
         update_test_data = {'name': last_location.name}
-        message = "Exception: 1 validation error for LocationModel\n" \
+        message = "Exception: 1 validation error for LocationSchema\n" \
                   "name\n  This location is already in use! (type=value_error)"
         url = f"/api/location/{last_location.id}"
         response = client.put(url, json=update_test_data)
@@ -183,7 +183,7 @@ class TestApiLocation(unittest.TestCase):
         client = app.test_client()
         test_data = {'name': 'test_very_big_location_name_test_very_big_location_name_very_big_location_name_'
                              'test_very_big_location_name_test_very_big_location_name_test_very_big_name'}
-        message = "Exception: 1 validation error for LocationModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for LocationSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/location"
         response = client.post(url, json=test_data)
         self.assertEqual(response.status_code, 404)

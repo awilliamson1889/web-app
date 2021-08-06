@@ -2,8 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models.app_models import Skill
-from department_app.schemas.skill_schema import SkillModel
+from department_app.models.app_models import Skill as SkillModel
+from department_app.schemas.skill_schema import SkillSchema
 from department_app.models.app_models import db
 
 skill_api = Blueprint('skill_api', __name__)
@@ -11,7 +11,7 @@ skill_api = Blueprint('skill_api', __name__)
 api = Api(skill_api)
 
 
-class SkillInfo(Resource):
+class Skill(Resource):
     """Skill API class"""
     @staticmethod
     def get(skill_id):
@@ -36,7 +36,7 @@ class SkillInfo(Resource):
         """
         if not str(skill_id).isdigit():
             abort(404, message="ID must be a number.")
-        skill = Skill.query.filter_by(id=skill_id).first()
+        skill = SkillModel.query.filter_by(id=skill_id).first()
         if not skill:
             abort(404, message=f"Could not find skill with ID: {skill_id}.")
         return make_response(jsonify(skill), 200)
@@ -75,7 +75,7 @@ class SkillInfo(Resource):
         """
         if not str(skill_id).isdigit():
             abort(404, message="ID must be a number.")
-        skill = Skill.query.filter_by(id=skill_id).first()
+        skill = SkillModel.query.filter_by(id=skill_id).first()
         if not skill:
             abort(404, message=f"Could not find skill with ID: {skill_id}.")
 
@@ -85,7 +85,7 @@ class SkillInfo(Resource):
         skill_data.update(skill_json)
 
         try:
-            SkillModel(**skill_data)
+            SkillSchema(**skill_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
@@ -95,7 +95,7 @@ class SkillInfo(Resource):
         return make_response(jsonify(skill), 201)
 
 
-class AllSkillInfo(Resource):
+class SkillList(Resource):
     """Rest class"""
     @staticmethod
     def post():
@@ -123,11 +123,11 @@ class AllSkillInfo(Resource):
         """
         skill_data = {'name': request.json['name']}
         try:
-            skill = SkillModel(**skill_data)
+            skill = SkillSchema(**skill_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        result = Skill(**skill_data)
+        result = SkillModel(**skill_data)
 
         db.session.add(result)
         db.session.commit()
@@ -145,9 +145,9 @@ class AllSkillInfo(Resource):
           200:
             description: All skill returned
         """
-        skills = Skill.query.all()
+        skills = SkillModel.query.all()
         return make_response(jsonify(skills), 200)
 
 
-api.add_resource(AllSkillInfo, '/api/skill')
-api.add_resource(SkillInfo, '/api/skill/<string:skill_id>')
+api.add_resource(SkillList, '/api/skill')
+api.add_resource(Skill, '/api/skill/<string:skill_id>')

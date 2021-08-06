@@ -147,7 +147,7 @@ class TestApiDepartment(unittest.TestCase):
         client = app.test_client()
         update_test_data = {'name': 'test_very_big_department_test_very_big_department_test_very_big_department_'
                                     'test_very_big_department_test_very_big_department_test_very_big_department'}
-        message = "Exception: 1 validation error for DepartmentModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for DepartmentSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/department/{last_department.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
@@ -160,7 +160,7 @@ class TestApiDepartment(unittest.TestCase):
         update_test_data = {'manager': 'test_very_big_department_manager_test_very_big_department_manager_'
                                        'test_very_big_department_manager_test_very_big_department_manager_'
                                        'test_very_big_department_manager_test_very_big_department_manager_'}
-        message = "Exception: 1 validation error for DepartmentModel\nmanager\n  Manager name length too big! " \
+        message = "Exception: 1 validation error for DepartmentSchema\nmanager\n  Manager name length too big! " \
                   "(type=value_error)"
         url = f"/api/department/{last_department.id}"
         response = client.put(url, json=update_test_data)
@@ -172,7 +172,7 @@ class TestApiDepartment(unittest.TestCase):
         client = app.test_client()
         last_department = department[-1]
         update_test_data = {'name': last_department.name}
-        message = "Exception: 1 validation error for DepartmentModel\n" \
+        message = "Exception: 1 validation error for DepartmentSchema\n" \
                   "name\n  This department is already in use! (type=value_error)"
         url = f"/api/department/{last_department.id}"
         response = client.put(url, json=update_test_data)
@@ -206,7 +206,7 @@ class TestApiDepartment(unittest.TestCase):
                              'test_very_big_department_test_very_big_department_test_very_big_department',
                      'manager': test_department.manager,
                      'date_of_creation': test_department.date_of_creation}
-        message = "Exception: 1 validation error for DepartmentModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for DepartmentSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/department"
         response = client.post(url, json=test_data)
         self.assertEqual(response.status_code, 404)
@@ -219,7 +219,7 @@ class TestApiDepartment(unittest.TestCase):
                      'manager': 'test_very_big_manager_name_test_very_big_manager_name_test_very_big_manager_name_'
                                 'test_very_big_manager_name_test_very_big_manager_name_test_very_big_manager_name',
                      'date_of_creation': test_department.date_of_creation}
-        message = "Exception: 1 validation error for DepartmentModel\nmanager\n" \
+        message = "Exception: 1 validation error for DepartmentSchema\nmanager\n" \
                   "  Manager name length too big! (type=value_error)"
         url = f"/api/department"
         response = client.post(url, json=test_data)

@@ -4,7 +4,7 @@ from department_app.models.app_models import Address
 from flask import request
 
 
-class AddressModel(BaseModel):
+class AddressSchema(BaseModel):
     """Address schema class"""
     name: str
 

@@ -3,7 +3,7 @@ from department_app.models.app_models import Permission
 from flask import request
 
 
-class PermissionModel(BaseModel):
+class PermissionSchema(BaseModel):
     name: str
 
     @validator('name')

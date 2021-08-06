@@ -3,7 +3,7 @@ from department_app.models.app_models import Location
 from flask import request
 
 
-class LocationModel(BaseModel):
+class LocationSchema(BaseModel):
     name: str
 
     @validator('name')

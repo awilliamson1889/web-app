@@ -2,8 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models.app_models import Address
-from department_app.schemas.address_schema import AddressModel
+from department_app.models.app_models import Address as AddressModel
+from department_app.schemas.address_schema import AddressSchema
 from department_app.models.app_models import db
 
 address_api = Blueprint('address_api', __name__)
@@ -11,7 +11,7 @@ address_api = Blueprint('address_api', __name__)
 api = Api(address_api)
 
 
-class AddressInfo(Resource):
+class Address(Resource):
     """Address API class"""
     @staticmethod
     def get(address_id):
@@ -36,7 +36,7 @@ class AddressInfo(Resource):
         """
         if not str(address_id).isdigit():
             abort(404, message="ID must be a number.")
-        address = Address.query.filter_by(id=address_id).first()
+        address = AddressModel.query.filter_by(id=address_id).first()
         if not address:
             abort(404, message=f"Could not find address with ID: {address_id}.")
         return make_response(jsonify(address), 200)
@@ -75,7 +75,7 @@ class AddressInfo(Resource):
         """
         if not str(address_id).isdigit():
             abort(404, message="ID must be a number.")
-        address = Address.query.filter_by(id=address_id).first()
+        address = AddressModel.query.filter_by(id=address_id).first()
         if not address:
             abort(404, message=f"Could not find address with ID: {address_id}.")
 
@@ -85,7 +85,7 @@ class AddressInfo(Resource):
         address_data.update(address_json)
 
         try:
-            AddressModel(**address_data)
+            AddressSchema(**address_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
@@ -95,7 +95,7 @@ class AddressInfo(Resource):
         return make_response(jsonify(address), 201)
 
 
-class AllAddressInfo(Resource):
+class AddressList(Resource):
     """Address API"""
     @staticmethod
     def post():
@@ -123,11 +123,11 @@ class AllAddressInfo(Resource):
         """
         address_data = {'name': request.json['name']}
         try:
-            address = AddressModel(**address_data)
+            address = AddressSchema(**address_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        result = Address(**address_data)
+        result = AddressModel(**address_data)
 
         db.session.add(result)
         db.session.commit()
@@ -145,9 +145,9 @@ class AllAddressInfo(Resource):
           200:
             description: All addresses returned
         """
-        addresses = Address.query.all()
+        addresses = AddressModel.query.all()
         return make_response(jsonify(addresses), 200)
 
 
-api.add_resource(AllAddressInfo, '/api/address')
-api.add_resource(AddressInfo, '/api/address/<string:address_id>')
+api.add_resource(AddressList, '/api/address')
+api.add_resource(Address, '/api/address/<string:address_id>')

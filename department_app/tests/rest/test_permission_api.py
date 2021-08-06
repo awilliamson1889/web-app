@@ -142,7 +142,7 @@ class TestApiPermission(unittest.TestCase):
         client = app.test_client()
         update_test_data = {'name': 'test_very_big_permission_name_test_very_big_permission_name_'
                                     'test_very_big_permission_name_test_very_big_permission_name'}
-        message = "Exception: 1 validation error for PermissionModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for PermissionSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/permission/{last_permission.id}"
         response = client.put(url, json=update_test_data)
         self.assertEqual(response.status_code, 404)
@@ -153,7 +153,7 @@ class TestApiPermission(unittest.TestCase):
         client = app.test_client()
         last_permission = permission[-1]
         update_test_data = {'name': last_permission.name}
-        message = "Exception: 1 validation error for PermissionModel\n" \
+        message = "Exception: 1 validation error for PermissionSchema\n" \
                   "name\n  This permission is already in use! (type=value_error)"
         url = f"/api/permission/{last_permission.id}"
         response = client.put(url, json=update_test_data)
@@ -184,7 +184,7 @@ class TestApiPermission(unittest.TestCase):
         test_data = {'name': 'test_very_big_permission_name_test_very_big_permission_name_'
                              'test_very_big_permission_name_test_very_big_permission_name_'
                              'test_very_big_permission_name_test_very_big_permission_name_'}
-        message = "Exception: 1 validation error for PermissionModel\nname\n  Name length too big! (type=value_error)"
+        message = "Exception: 1 validation error for PermissionSchema\nname\n  Name length too big! (type=value_error)"
         url = f"/api/permission"
         response = client.post(url, json=test_data)
         self.assertEqual(response.status_code, 404)

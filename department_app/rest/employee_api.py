@@ -2,8 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models.app_models import Employee
-from department_app.schemas.employee_schema import EmployeeModel
+from department_app.models.app_models import Employee as EmployeeModel
+from department_app.schemas.employee_schema import EmployeeSchema
 from department_app.models.app_models import db
 
 employee_api = Blueprint('employee_api', __name__)
@@ -11,7 +11,7 @@ employee_api = Blueprint('employee_api', __name__)
 api = Api(employee_api)
 
 
-class EmployeeInfo(Resource):
+class Employee(Resource):
     """Employee API class"""
     @staticmethod
     def get(employee_id):
@@ -36,7 +36,7 @@ class EmployeeInfo(Resource):
         """
         if not str(employee_id).isdigit():
             abort(404, message="ID must be a number.")
-        employee = Employee.query.filter_by(id=employee_id).first()
+        employee = EmployeeModel.query.filter_by(id=employee_id).first()
         if not employee:
             abort(404, message=f"Could not find employee with ID: {employee_id}.")
         return make_response(jsonify(employee), 200)
@@ -119,7 +119,7 @@ class EmployeeInfo(Resource):
         """
         if not str(employee_id).isdigit():
             abort(404, message="ID must be a number.")
-        employee = Employee.query.filter_by(id=employee_id).first()
+        employee = EmployeeModel.query.filter_by(id=employee_id).first()
         if not employee:
             abort(404, message=f"Could not find employee with ID: {employee_id}.")
 
@@ -134,7 +134,7 @@ class EmployeeInfo(Resource):
         employee_data.update(employee_json)
 
         try:
-            EmployeeModel(**employee_data)
+            EmployeeSchema(**employee_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
@@ -176,7 +176,7 @@ class EmployeeInfo(Resource):
         """
         if not str(employee_id).isdigit():
             abort(404, message="ID must be a number.")
-        employee = Employee.query.filter_by(id=employee_id).first()
+        employee = EmployeeModel.query.filter_by(id=employee_id).first()
         if not employee:
             abort(404, message=f"Could not find employee with ID: {employee_id}.")
         db.session.delete(employee)
@@ -184,7 +184,7 @@ class EmployeeInfo(Resource):
         return '', 204
 
 
-class AllEmployeeInfo(Resource):
+class EmployeeList(Resource):
     """Rest class"""
     @staticmethod
     def post():
@@ -261,11 +261,11 @@ class AllEmployeeInfo(Resource):
                          'location': request.json['location'], 'work_address': request.json['work_address'],
                          'key_skill': request.json['key_skill'], 'permission': request.json['permission']}
         try:
-            employees = EmployeeModel(**employee_data)
+            employees = EmployeeSchema(**employee_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        result = Employee(**employee_data)
+        result = EmployeeModel(**employee_data)
 
         db.session.add(result)
         db.session.commit()
@@ -283,9 +283,9 @@ class AllEmployeeInfo(Resource):
           200:
             description: All employees returned
         """
-        employee = Employee.query.all()
+        employee = EmployeeModel.query.all()
         return make_response(jsonify(employee), 200)
 
 
-api.add_resource(EmployeeInfo, '/api/employee/<string:employee_id>')
-api.add_resource(AllEmployeeInfo, '/api/employee')
+api.add_resource(Employee, '/api/employee/<string:employee_id>')
+api.add_resource(EmployeeList, '/api/employee')

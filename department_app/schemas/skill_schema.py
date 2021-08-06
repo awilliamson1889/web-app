@@ -3,7 +3,7 @@ from department_app.models.app_models import Skill
 from flask import request
 
 
-class SkillModel(BaseModel):
+class SkillSchema(BaseModel):
     name: str
 
     @validator('name')

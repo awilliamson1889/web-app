@@ -6,7 +6,7 @@ import datetime
 import re
 
 
-class EmployeeModel(BaseModel):
+class EmployeeSchema(BaseModel):
     name: str
     surname: str
     date_of_birth: str

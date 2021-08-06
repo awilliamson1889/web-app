@@ -2,8 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models.app_models import Location
-from department_app.schemas.location_schema import LocationModel
+from department_app.models.app_models import Location as LocationModel
+from department_app.schemas.location_schema import LocationSchema
 from department_app.models.app_models import db
 
 
@@ -12,7 +12,7 @@ location_api = Blueprint('location_api', __name__)
 api = Api(location_api)
 
 
-class LocationInfo(Resource):
+class Location(Resource):
     """Location API class"""
     @staticmethod
     def get(location_id):
@@ -37,7 +37,7 @@ class LocationInfo(Resource):
         """
         if not str(location_id).isdigit():
             abort(404, message="ID must be a number.")
-        location = Location.query.filter_by(id=location_id).first()
+        location = LocationModel.query.filter_by(id=location_id).first()
         if not location:
             abort(404, message=f"Could not find location with ID: {location_id}.")
         return make_response(jsonify(location), 200)
@@ -76,7 +76,7 @@ class LocationInfo(Resource):
         """
         if not str(location_id).isdigit():
             abort(404, message="ID must be a number.")
-        location = Location.query.filter_by(id=location_id).first()
+        location = LocationModel.query.filter_by(id=location_id).first()
         if not location:
             abort(404, message=f"Could not find location with ID: {location_id}.")
 
@@ -86,7 +86,7 @@ class LocationInfo(Resource):
         location_data.update(location_json)
 
         try:
-            LocationModel(**location_data)
+            LocationSchema(**location_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
@@ -96,7 +96,7 @@ class LocationInfo(Resource):
         return make_response(jsonify(location), 201)
 
 
-class AllLocationInfo(Resource):
+class LocationList(Resource):
     """Rest class"""
     @staticmethod
     def post():
@@ -124,11 +124,11 @@ class AllLocationInfo(Resource):
         """
         location_data = {'name': request.json['name']}
         try:
-            location = LocationModel(**location_data)
+            location = LocationSchema(**location_data)
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        result = Location(**location_data)
+        result = LocationModel(**location_data)
 
         db.session.add(result)
         db.session.commit()
@@ -146,9 +146,9 @@ class AllLocationInfo(Resource):
           200:
             description: All location returned
         """
-        locations = Location.query.all()
+        locations = LocationModel.query.all()
         return make_response(jsonify(locations), 200)
 
 
-api.add_resource(AllLocationInfo, '/api/location')
-api.add_resource(LocationInfo, '/api/location/<string:location_id>')
+api.add_resource(LocationList, '/api/location')
+api.add_resource(Location, '/api/location/<string:location_id>')

@@ -5,7 +5,7 @@ from flask import request
 import datetime
 
 
-class DepartmentModel(BaseModel):
+class DepartmentSchema(BaseModel):
     """Department schema class"""
     name: str
     manager: str
