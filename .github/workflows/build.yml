@@ -1,4 +1,4 @@
-name: build
+name: Project-Coverage
 
 on:
   pull_request:
@@ -6,9 +6,6 @@ on:
       - master
       - develop
   push:
-      
-  
-
 
 jobs:
   build:
