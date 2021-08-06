@@ -1,5 +1,5 @@
 import unittest
-from department_app import create_app
+from department_app.app import create_app
 from department_app.models.app_models import db, Permission
 from department_app.tests.factories.permission_factory import PermissionFactory
 

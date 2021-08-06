@@ -1,5 +1,5 @@
 import unittest
-from department_app import create_app
+from department_app.app import create_app
 from department_app.models.app_models import db, Location
 from department_app.tests.factories.location_factory import LocationFactory
 

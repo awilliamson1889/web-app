@@ -1,6 +1,6 @@
 import factory
 import random
-from department_app import create_app
+from department_app.app import create_app
 from department_app.models.app_models import Employee, Department, Permission, Address, Location, Skill
 
 app = create_app('Test')

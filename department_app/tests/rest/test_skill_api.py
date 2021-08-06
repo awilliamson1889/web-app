@@ -1,5 +1,5 @@
 import unittest
-from department_app import create_app
+from department_app.app import create_app
 from department_app.models.app_models import db, Skill
 from department_app.tests.factories.skill_factory import SkillFactory
 
