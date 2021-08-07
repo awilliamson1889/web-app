@@ -10,3 +10,4 @@ requests
 factory_boy
 flask_script
 gunicorn
+flask-fixtures
