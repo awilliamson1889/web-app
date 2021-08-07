@@ -2,28 +2,23 @@ import unittest
 from department_app.app import create_app
 from department_app.models.app_models import db, Address
 from department_app.tests.factories.address_factory import AddressFactory
+from flask_fixtures import FixturesMixin
 
 app = create_app('Test')
 app.app_context().push()
 
 
-class TestApiAddress(unittest.TestCase):
+class TestApiAddress(unittest.TestCase, FixturesMixin):
     """Test address api class"""
+
+    fixtures = ['address.yaml']
+
+    app = app
+    db = db
+
     def setUp(self):
         """setUp method"""
         self.app = app.test_client()
-        test_address = AddressFactory()
-        test_data = {'name': test_address.name}
-        address = Address(**test_data)
-        db.session.add(address)
-        db.session.commit()
-        db.create_all()
-
-    def tearDown(self):
-        """tearDown method"""
-        address = Address.query.order_by(Address.id).all()
-        db.session.delete(address[-1])
-        db.session.commit()
 
     def test_get_address(self):
         """Api should return information about address."""

@@ -3,31 +3,23 @@ import datetime
 from department_app.app import create_app
 from department_app.models.app_models import db, Employee
 from department_app.tests.factories.employee_factory import EmployeeFactory
+from flask_fixtures import FixturesMixin
 
 app = create_app('Test')
 app.app_context().push()
 
 
-class TestApiEmployee(unittest.TestCase):
+class TestApiEmployee(unittest.TestCase, FixturesMixin):
     """ doc str """
+
+    fixtures = ['employee.yaml']
+
+    app = app
+    db = db
+
     def setUp(self):
         """ doc str """
         self.app = app.test_client()
-        test_emp = EmployeeFactory()
-        test_data = {'name': test_emp.name, 'surname': test_emp.surname, 'date_of_birth': test_emp.date_of_birth,
-                     'salary': test_emp.salary, 'email': test_emp.email, 'phone': test_emp.phone,
-                     'date_of_joining': test_emp.date_of_joining, 'department': test_emp.department,
-                     'location': test_emp.location, 'work_address': test_emp.work_address,
-                     'key_skill': test_emp.key_skill, 'permission': test_emp.permission}
-        employee = Employee(**test_data)
-        db.session.add(employee)
-        db.session.commit()
-        db.create_all()
-
-    def tearDown(self):
-        emp = Employee.query.order_by(Employee.id).all()
-        db.session.delete(emp[-1])
-        db.session.commit()
 
     def test_get_employee(self):
         emp = Employee.query.order_by(Employee.id).all()

@@ -2,27 +2,23 @@ import unittest
 from department_app.app import create_app
 from department_app.models.app_models import db, Location
 from department_app.tests.factories.location_factory import LocationFactory
+from flask_fixtures import FixturesMixin
 
 app = create_app('Test')
 app.app_context().push()
 
 
-class TestApiLocation(unittest.TestCase):
+class TestApiLocation(unittest.TestCase, FixturesMixin):
     """ doc str """
+
+    fixtures = ['location.yaml']
+
+    app = app
+    db = db
+
     def setUp(self):
         """ doc str """
         self.app = app.test_client()
-        test_location = LocationFactory()
-        test_data = {'name': test_location.name}
-        location = Location(**test_data)
-        db.session.add(location)
-        db.session.commit()
-        db.create_all()
-
-    def tearDown(self):
-        location = Location.query.order_by(Location.id).all()
-        db.session.delete(location[-1])
-        db.session.commit()
 
     def test_get_location(self):
         location = Location.query.order_by(Location.id).all()

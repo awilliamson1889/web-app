@@ -2,13 +2,20 @@ import unittest
 from department_app.app import create_app
 from department_app.models.app_models import db, Skill
 from department_app.tests.factories.skill_factory import SkillFactory
+from flask_fixtures import FixturesMixin
 
 app = create_app('Test')
 app.app_context().push()
 
 
-class TestApiSkill(unittest.TestCase):
+class TestApiSkill(unittest.TestCase, FixturesMixin):
     """ doc str """
+
+    fixtures = ['skill.yaml']
+
+    app = app
+    db = db
+
     def setUp(self):
         """ doc str """
         self.app = app.test_client()

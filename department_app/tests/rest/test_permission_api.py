@@ -2,13 +2,20 @@ import unittest
 from department_app.app import create_app
 from department_app.models.app_models import db, Permission
 from department_app.tests.factories.permission_factory import PermissionFactory
+from flask_fixtures import FixturesMixin
 
 app = create_app('Test')
 app.app_context().push()
 
 
-class TestApiPermission(unittest.TestCase):
+class TestApiPermission(unittest.TestCase, FixturesMixin):
     """ doc str """
+
+    fixtures = ['permission.yaml']
+
+    app = app
+    db = db
+
     def setUp(self):
         """ doc str """
         self.app = app.test_client()

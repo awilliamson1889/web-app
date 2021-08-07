@@ -2,32 +2,28 @@ import unittest
 from department_app.app import create_app
 from department_app.models.app_models import db, Department
 from department_app.tests.factories.department_factory import DepartmentFactory
+from flask_fixtures import FixturesMixin
 
 app = create_app('Test')
 app.app_context().push()
 
 
-class TestApiDepartment(unittest.TestCase):
+class TestApiDepartment(unittest.TestCase, FixturesMixin):
     """ doc str """
+
+    fixtures = ['department.yaml']
+
+    app = app
+    db = db
+
     def setUp(self):
         """ doc str """
         self.app = app.test_client()
-        test_department = DepartmentFactory()
-        test_data = {'name': test_department.name, 'manager': test_department.manager,
-                     'date_of_creation': test_department.date_of_creation}
-        department = Department(**test_data)
-        db.session.add(department)
-        db.session.commit()
-        db.create_all()
-
-    def tearDown(self):
-        department = Department.query.order_by(Department.id).all()
-        db.session.delete(department[-1])
-        db.session.commit()
 
     def test_get_department(self):
         department = Department.query.order_by(Department.id).all()
         last_department = department[-1]
+        print(last_department.date_of_creation)
         url = f"/api/department/{last_department.id}"
         client = app.test_client()
         response = client.get(url)
