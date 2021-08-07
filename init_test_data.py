@@ -1,5 +1,5 @@
 from department_app.models.app_models import db, Department, Permission, Address, Location, Skill
-from department_app import create_app
+from department_app.app import create_app
 import random
 
 app = create_app('Test')
