@@ -1,8 +1,11 @@
-name: build
+name: Project-Coverage
 
 on:
-  push:
   pull_request:
+    branches:
+      - master
+      - develop
+  push:
 
 jobs:
   build:
