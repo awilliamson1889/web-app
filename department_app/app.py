@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flasgger import Swagger
 from department_app.models import db
 
+
 MIGRATION_DIR = os.path.join('department_app/migrations')
 
 
