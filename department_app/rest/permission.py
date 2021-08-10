@@ -2,10 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models.app_models import Permission as PermissionModel
-from department_app.schemas.permission_schema import PermissionSchema
-from department_app.models.app_models import db
-
+from department_app.models import PermissionModel, db
+from department_app.schemas import PermissionSchema
 
 permission_api = Blueprint('permission_api', __name__)
 

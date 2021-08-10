@@ -26,3 +26,8 @@ class TestingConfig(Config):
     # SQLALCHEMY_DATABASE_URI = "postgresql://postgres:postgres@localhost:5432/flask_test"
     SQLALCHEMY_DATABASE_URI = 'sqlite:///flask_app.db'
     TESTING = True
+
+
+configs = {'Prod': ProductionConfig,
+           'Dev': DevelopmentConfig,
+           'Test': TestingConfig}

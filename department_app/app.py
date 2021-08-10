@@ -3,21 +3,16 @@ import os
 from flask import Flask
 from flask_migrate import Migrate
 from flasgger import Swagger
-from department_app.models.app_models import db
+from department_app.models import db
 
 MIGRATION_DIR = os.path.join('department_app/migrations')
 
 
-def create_app(test_config=None):
+def create_app(config):
     """Create app method"""
 
     app = Flask(__name__)
-    if test_config is None or test_config == 'Dev':
-        app.config.from_object("config.DevelopmentConfig")
-    elif test_config == 'Prod':
-        app.config.from_object("config.ProductionConfig")
-    elif test_config == 'Test':
-        app.config.from_object("config.TestingConfig")
+    app.config.from_object("config." + config)
 
     db.init_app(app)
     with app.app_context():
@@ -43,27 +38,28 @@ def create_app(test_config=None):
 
     migrate = Migrate(app, db, directory=MIGRATION_DIR)
 
-    import department_app.views.routes
-    app.register_blueprint(department_app.views.routes.frontend)
+    from department_app.views.routes import frontend
+    app.register_blueprint(frontend)
 
-    import department_app.rest.employee_api
-    app.register_blueprint(department_app.rest.employee_api.employee_api)
+    from department_app.rest.employee import employee_api
+    app.register_blueprint(employee_api)
 
-    import department_app.rest.department_api
-    app.register_blueprint(department_app.rest.department_api.department_api)
+    from department_app.rest.department import department_api
+    app.register_blueprint(department_api)
 
-    import department_app.rest.location_api
-    app.register_blueprint(department_app.rest.location_api.location_api)
+    from department_app.rest.location import location_api
+    app.register_blueprint(location_api)
 
-    import department_app.rest.permission_api
-    app.register_blueprint(department_app.rest.permission_api.permission_api)
+    from department_app.rest.permission import permission_api
+    app.register_blueprint(permission_api)
 
-    import department_app.rest.skill_api
-    app.register_blueprint(department_app.rest.skill_api.skill_api)
+    from department_app.rest.skill import skill_api
+    app.register_blueprint(skill_api)
 
-    import department_app.rest.address_api
-    app.register_blueprint(department_app.rest.address_api.address_api)
+    from department_app.rest.address import address_api
+    app.register_blueprint(address_api)
 
-    from department_app.models.app_models import Employee, Department, Permission, Address, Location, Skill
+    from department_app.models import EmployeeModel, DepartmentModel, PermissionModel,\
+        AddressModel, LocationModel, SkillModel
 
     return app

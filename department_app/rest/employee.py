@@ -2,9 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models.app_models import Employee as EmployeeModel
-from department_app.schemas.employee_schema import EmployeeSchema
-from department_app.models.app_models import db
+from department_app.models import EmployeeModel, db
+from department_app.schemas import EmployeeSchema
 
 employee_api = Blueprint('employee_api', __name__)
 

@@ -2,9 +2,9 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models.app_models import Address as AddressModel
-from department_app.schemas.address_schema import AddressSchema
-from department_app.models.app_models import db
+from department_app.models import AddressModel, db
+from department_app.schemas import AddressSchema
+from department_app.service import CRUDAddress
 
 address_api = Blueprint('address_api', __name__)
 
@@ -34,11 +34,7 @@ class Address(Resource):
           200:
             description: Address information returned
         """
-        if not str(address_id).isdigit():
-            abort(404, message="ID must be a number.")
-        address = AddressModel.query.filter_by(id=address_id).first()
-        if not address:
-            abort(404, message=f"Could not find address with ID: {address_id}.")
+        address = CRUDAddress.get_address(address_id)
         return make_response(jsonify(address), 200)
 
     @staticmethod

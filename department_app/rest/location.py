@@ -2,10 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models.app_models import Location as LocationModel
-from department_app.schemas.location_schema import LocationSchema
-from department_app.models.app_models import db
-
+from department_app.models import LocationModel, db
+from department_app.schemas import LocationSchema
 
 location_api = Blueprint('location_api', __name__)
 
