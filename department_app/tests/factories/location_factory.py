@@ -1,10 +1,10 @@
 import factory
-from department_app.models.app_models import Location
+from department_app.models import LocationModel
 
 
 class LocationFactory(factory.Factory):
     class Meta:
-        model = Location
+        model = LocationModel
 
     name = factory.Faker('country')
 

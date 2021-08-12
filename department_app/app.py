@@ -3,13 +3,13 @@ import os
 from flask import Flask
 from flask_migrate import Migrate
 from flasgger import Swagger
-from department_app.models import db
+from department_app.database import db
 
 
 MIGRATION_DIR = os.path.join('department_app/migrations')
 
 
-def create_app(config):
+def create_app(config='TestingConfig'):
     """Create app method"""
 
     app = Flask(__name__)

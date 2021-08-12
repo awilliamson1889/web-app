@@ -2,8 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models import LocationModel, db
 from department_app.schemas import LocationSchema
+from department_app.service import CRUDLocation
 
 location_api = Blueprint('location_api', __name__)
 
@@ -33,11 +33,7 @@ class Location(Resource):
           200:
             description: Location information returned
         """
-        if not str(location_id).isdigit():
-            abort(404, message="ID must be a number.")
-        location = LocationModel.query.filter_by(id=location_id).first()
-        if not location:
-            abort(404, message=f"Could not find location with ID: {location_id}.")
+        location = CRUDLocation.get_location(location_id)
         return make_response(jsonify(location), 200)
 
     @staticmethod
@@ -72,11 +68,7 @@ class Location(Resource):
           204:
             description: Location information successful update
         """
-        if not str(location_id).isdigit():
-            abort(404, message="ID must be a number.")
-        location = LocationModel.query.filter_by(id=location_id).first()
-        if not location:
-            abort(404, message=f"Could not find location with ID: {location_id}.")
+        location = CRUDLocation.get_location(location_id)
 
         location_data = {'name': location.name}
 
@@ -88,9 +80,8 @@ class Location(Resource):
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        location.name = location_data['name']
+        CRUDLocation.update_location(location_id, location_data)
 
-        db.session.commit()
         return make_response(jsonify(location), 201)
 
 
@@ -126,10 +117,8 @@ class LocationList(Resource):
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        result = LocationModel(**location_data)
+        CRUDLocation.create_location()
 
-        db.session.add(result)
-        db.session.commit()
         return location.dict(), 201
 
     @staticmethod
@@ -144,7 +133,7 @@ class LocationList(Resource):
           200:
             description: All location returned
         """
-        locations = LocationModel.query.all()
+        locations = CRUDLocation.get_all_location()
         return make_response(jsonify(locations), 200)
 
 

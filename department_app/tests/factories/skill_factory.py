@@ -1,9 +1,9 @@
 import factory
-from department_app.models.app_models import Skill
+from department_app.models import SkillModel
 
 
 class SkillFactory(factory.Factory):
     class Meta:
-        model = Skill
+        model = SkillModel
 
     name = factory.Faker('first_name')

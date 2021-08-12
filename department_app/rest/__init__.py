@@ -1,3 +1,4 @@
+"""REST module"""
 from .address import Address, AddressList, address_api
 from .department import Department, DepartmentList, department_api
 from .employee import Employee, EmployeeList, employee_api

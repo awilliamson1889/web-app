@@ -2,8 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models import SkillModel, db
 from department_app.schemas import SkillSchema
+from department_app.service import CRUDSkill
 
 skill_api = Blueprint('skill_api', __name__)
 
@@ -33,11 +33,7 @@ class Skill(Resource):
           200:
             description: skill information returned
         """
-        if not str(skill_id).isdigit():
-            abort(404, message="ID must be a number.")
-        skill = SkillModel.query.filter_by(id=skill_id).first()
-        if not skill:
-            abort(404, message=f"Could not find skill with ID: {skill_id}.")
+        skill = CRUDSkill.get_skill(skill_id)
         return make_response(jsonify(skill), 200)
 
     @staticmethod
@@ -72,11 +68,7 @@ class Skill(Resource):
           204:
             description: Skill information successful update
         """
-        if not str(skill_id).isdigit():
-            abort(404, message="ID must be a number.")
-        skill = SkillModel.query.filter_by(id=skill_id).first()
-        if not skill:
-            abort(404, message=f"Could not find skill with ID: {skill_id}.")
+        skill = CRUDSkill.get_skill(skill_id)
 
         skill_data = {'name': skill.name}
 
@@ -88,9 +80,8 @@ class Skill(Resource):
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        skill.name = skill_data['name']
+        CRUDSkill.update_skill(skill_id, skill_data)
 
-        db.session.commit()
         return make_response(jsonify(skill), 201)
 
 
@@ -126,10 +117,8 @@ class SkillList(Resource):
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        result = SkillModel(**skill_data)
+        CRUDSkill.create_skill()
 
-        db.session.add(result)
-        db.session.commit()
         return skill.dict(), 201
 
     @staticmethod
@@ -144,7 +133,7 @@ class SkillList(Resource):
           200:
             description: All skill returned
         """
-        skills = SkillModel.query.all()
+        skills = CRUDSkill.get_all_skill()
         return make_response(jsonify(skills), 200)
 
 

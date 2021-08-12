@@ -2,7 +2,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models import AddressModel, db
 from department_app.schemas import AddressSchema
 from department_app.service import CRUDAddress
 
@@ -69,11 +68,7 @@ class Address(Resource):
           204:
             description: Address information successful update
         """
-        if not str(address_id).isdigit():
-            abort(404, message="ID must be a number.")
-        address = AddressModel.query.filter_by(id=address_id).first()
-        if not address:
-            abort(404, message=f"Could not find address with ID: {address_id}.")
+        address = CRUDAddress.get_address(address_id)
 
         address_data = {'name': address.name}
 
@@ -85,9 +80,8 @@ class Address(Resource):
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        address.name = address_data['name']
+        CRUDAddress.update_address(address_id, address_data)
 
-        db.session.commit()
         return make_response(jsonify(address), 201)
 
 
@@ -123,10 +117,8 @@ class AddressList(Resource):
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        result = AddressModel(**address_data)
+        CRUDAddress.create_address()
 
-        db.session.add(result)
-        db.session.commit()
         return address.dict(), 201
 
     @staticmethod
@@ -141,7 +133,7 @@ class AddressList(Resource):
           200:
             description: All addresses returned
         """
-        addresses = AddressModel.query.all()
+        addresses = CRUDAddress.get_all_address()
         return make_response(jsonify(addresses), 200)
 
 

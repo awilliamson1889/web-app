@@ -1,10 +1,10 @@
 import factory
-from department_app.models.app_models import Permission
+from department_app.models import PermissionModel
 
 
 class PermissionFactory(factory.Factory):
     class Meta:
-        model = Permission
+        model = PermissionModel
 
     name = factory.Faker('first_name')
 

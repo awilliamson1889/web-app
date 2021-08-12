@@ -2,8 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models import PermissionModel, db
 from department_app.schemas import PermissionSchema
+from department_app.service import CRUDPermission
 
 permission_api = Blueprint('permission_api', __name__)
 
@@ -33,11 +33,7 @@ class Permission(Resource):
           200:
             description: Permission information returned
         """
-        if not str(permission_id).isdigit():
-            abort(404, message="ID must be a number.")
-        permission = PermissionModel.query.filter_by(id=permission_id).first()
-        if not permission:
-            abort(404, message=f"Could not find permission with ID: {permission_id}.")
+        permission = CRUDPermission.get_permission(permission_id)
         return make_response(jsonify(permission), 200)
 
     @staticmethod
@@ -72,11 +68,7 @@ class Permission(Resource):
           204:
             description: Permission information successful update
         """
-        if not str(permission_id).isdigit():
-            abort(404, message="ID must be a number.")
-        permission = PermissionModel.query.filter_by(id=permission_id).first()
-        if not permission:
-            abort(404, message=f"Could not find permission with ID: {permission_id}.")
+        permission = CRUDPermission.get_permission(permission_id)
 
         permission_data = {'name': permission.name}
 
@@ -88,9 +80,8 @@ class Permission(Resource):
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        permission.name = permission_data['name']
+        CRUDPermission.update_permission(permission_id, permission_data)
 
-        db.session.commit()
         return make_response(jsonify(permission), 201)
 
 
@@ -126,10 +117,8 @@ class PermissionList(Resource):
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        result = PermissionModel(**permission_data)
+        CRUDPermission.create_permission()
 
-        db.session.add(result)
-        db.session.commit()
         return permission.dict(), 201
 
     @staticmethod
@@ -144,7 +133,7 @@ class PermissionList(Resource):
           200:
             description: All permissions returned
         """
-        permissions = PermissionModel.query.all()
+        permissions = CRUDPermission.get_all_permission()
         return make_response(jsonify(permissions), 200)
 
 

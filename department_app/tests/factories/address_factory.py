@@ -1,10 +1,10 @@
 import factory
-from department_app.models.app_models import Address
+from department_app.models import AddressModel
 
 
 class AddressFactory(factory.Factory):
     class Meta:
-        model = Address
+        model = AddressModel
 
     name = factory.Faker('address')
 

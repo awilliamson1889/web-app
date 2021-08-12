@@ -2,8 +2,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
-from department_app.models import EmployeeModel, db
 from department_app.schemas import EmployeeSchema
+from department_app.service import CRUDEmployee
 
 employee_api = Blueprint('employee_api', __name__)
 
@@ -33,11 +33,9 @@ class Employee(Resource):
           200:
             description: Department information returned
         """
-        if not str(employee_id).isdigit():
-            abort(404, message="ID must be a number.")
-        employee = EmployeeModel.query.filter_by(id=employee_id).first()
-        if not employee:
-            abort(404, message=f"Could not find employee with ID: {employee_id}.")
+
+        employee = CRUDEmployee.get_employee(employee_id)
+
         return make_response(jsonify(employee), 200)
 
     @staticmethod
@@ -116,11 +114,7 @@ class Employee(Resource):
           201:
             description: Employee information successful update
         """
-        if not str(employee_id).isdigit():
-            abort(404, message="ID must be a number.")
-        employee = EmployeeModel.query.filter_by(id=employee_id).first()
-        if not employee:
-            abort(404, message=f"Could not find employee with ID: {employee_id}.")
+        employee = CRUDEmployee.get_employee_api(employee_id)
 
         employee_data = {'name': employee.name, 'surname': employee.surname,
                          'date_of_birth': str(employee.date_of_birth), 'salary': employee.salary,
@@ -137,20 +131,8 @@ class Employee(Resource):
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        employee.name = employee_data['name']
-        employee.surname = employee_data['surname']
-        employee.date_of_birth = employee_data['date_of_birth']
-        employee.salary = employee_data['salary']
-        employee.email = employee_data['email']
-        employee.phone = employee_data['phone']
-        employee.date_of_joining = employee_data['date_of_joining']
-        employee.department = employee_data['department']
-        employee.location = employee_data['location']
-        employee.work_address = employee_data['work_address']
-        employee.key_skill = employee_data['key_skill']
-        employee.permission = employee_data['permission']
-        db.session.commit()
-        return make_response(jsonify(employee), 201)
+        CRUDEmployee.update_employee(employee_id, employee_data)
+        return make_response(jsonify(employee_data), 201)
 
     @staticmethod
     def delete(employee_id):
@@ -173,13 +155,7 @@ class Employee(Resource):
           204:
             description: Employee deleted
         """
-        if not str(employee_id).isdigit():
-            abort(404, message="ID must be a number.")
-        employee = EmployeeModel.query.filter_by(id=employee_id).first()
-        if not employee:
-            abort(404, message=f"Could not find employee with ID: {employee_id}.")
-        db.session.delete(employee)
-        db.session.commit()
+        CRUDEmployee.delete_employee(employee_id)
         return '', 204
 
 
@@ -264,10 +240,8 @@ class EmployeeList(Resource):
         except ValidationError as exception:
             abort(404, message=f"Exception: {exception}")
 
-        result = EmployeeModel(**employee_data)
+        CRUDEmployee.create_employee()
 
-        db.session.add(result)
-        db.session.commit()
         return employees.dict(), 201
 
     @staticmethod
@@ -282,7 +256,7 @@ class EmployeeList(Resource):
           200:
             description: All employees returned
         """
-        employee = EmployeeModel.query.all()
+        employee = CRUDEmployee.get_all_employee()
         return make_response(jsonify(employee), 200)
 
 

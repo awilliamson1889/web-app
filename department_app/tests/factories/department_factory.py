@@ -1,10 +1,10 @@
 import factory
-from department_app.models.app_models import Department
+from department_app.models import DepartmentModel
 
 
 class DepartmentFactory(factory.Factory):
     class Meta:
-        model = Department
+        model = DepartmentModel
 
     name = factory.Faker('job')
     manager = factory.Faker('first_name')

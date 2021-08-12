@@ -1,8 +1,7 @@
 """Model for Employee"""
 import datetime
 from dataclasses import dataclass
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
+from department_app.database import db
 
 
 @dataclass

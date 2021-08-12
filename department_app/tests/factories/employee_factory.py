@@ -1,15 +1,16 @@
+import os
 import factory
-import random
 from department_app.app import create_app
-from department_app.models.app_models import Employee, Department, Permission, Address, Location, Skill
+from department_app.models import EmployeeModel
 
-app = create_app('Test')
+os.environ['FLASK_CONFIG'] = 'TestingConfig'
+app = create_app(os.environ.get("FLASK_CONFIG", 'ProductionConfig'))
 app.app_context().push()
 
 
 class EmployeeFactory(factory.Factory):
     class Meta:
-        model = Employee
+        model = EmployeeModel
 
     name = factory.Faker('first_name')
     surname = factory.Faker('last_name')

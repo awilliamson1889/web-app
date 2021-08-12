@@ -7,4 +7,4 @@ frontend = Blueprint('frontend', __name__)
 
 @frontend.route('/')
 def test():
-    return 'Hello World'
+    return 'Hello Worldqqq'
