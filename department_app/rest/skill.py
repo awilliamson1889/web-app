@@ -1,8 +1,7 @@
 """Rest skill api"""
-from flask import Blueprint, request, jsonify, make_response
-from flask_restful import Resource, Api, abort
-from pydantic import ValidationError
-from department_app.schemas import SkillSchema
+from flask import Blueprint, jsonify, make_response
+from flask_restful import Resource, Api
+
 from department_app.service import CRUDSkill
 
 skill_api = Blueprint('skill_api', __name__)
@@ -68,20 +67,7 @@ class Skill(Resource):
           204:
             description: Skill information successful update
         """
-        skill = CRUDSkill.get_skill(skill_id)
-
-        skill_data = {'name': skill.name}
-
-        skill_json = request.json
-        skill_data.update(skill_json)
-
-        try:
-            SkillSchema(**skill_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDSkill.update_skill(skill_id, skill_data)
-
+        skill = CRUDSkill.update_skill(skill_id)
         return make_response(jsonify(skill), 201)
 
 
@@ -111,15 +97,8 @@ class SkillList(Resource):
           201:
             description: The skill was successfully created
         """
-        skill_data = {'name': request.json['name']}
-        try:
-            skill = SkillSchema(**skill_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDSkill.create_skill()
-
-        return skill.dict(), 201
+        skill = CRUDSkill.create_skill()
+        return make_response(jsonify(skill), 201)
 
     @staticmethod
     def get():

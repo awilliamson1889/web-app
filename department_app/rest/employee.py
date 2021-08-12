@@ -1,8 +1,7 @@
 """Rest employee Api"""
-from flask import Blueprint, request, jsonify, make_response
-from flask_restful import Resource, Api, abort
-from pydantic import ValidationError
-from department_app.schemas import EmployeeSchema
+from flask import Blueprint, jsonify, make_response
+from flask_restful import Resource, Api
+
 from department_app.service import CRUDEmployee
 
 employee_api = Blueprint('employee_api', __name__)
@@ -33,9 +32,7 @@ class Employee(Resource):
           200:
             description: Department information returned
         """
-
         employee = CRUDEmployee.get_employee(employee_id)
-
         return make_response(jsonify(employee), 200)
 
     @staticmethod
@@ -114,25 +111,8 @@ class Employee(Resource):
           201:
             description: Employee information successful update
         """
-        employee = CRUDEmployee.get_employee_api(employee_id)
-
-        employee_data = {'name': employee.name, 'surname': employee.surname,
-                         'date_of_birth': str(employee.date_of_birth), 'salary': employee.salary,
-                         'email': employee.email, 'phone': employee.phone,
-                         'date_of_joining': str(employee.date_of_joining), 'department': employee.department,
-                         'location': employee.location, 'work_address': employee.work_address,
-                         'key_skill': employee.key_skill, 'permission': employee.permission}
-
-        employee_json = request.json
-        employee_data.update(employee_json)
-
-        try:
-            EmployeeSchema(**employee_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDEmployee.update_employee(employee_id, employee_data)
-        return make_response(jsonify(employee_data), 201)
+        employee = CRUDEmployee.update_employee(employee_id)
+        return make_response(jsonify(employee), 201)
 
     @staticmethod
     def delete(employee_id):
@@ -229,20 +209,8 @@ class EmployeeList(Resource):
           201:
             description: The employee was successfully created
         """
-        employee_data = {'name': request.json['name'], 'surname': request.json['surname'],
-                         'date_of_birth': request.json['date_of_birth'], 'salary': request.json['salary'],
-                         'email': request.json['email'], 'phone': request.json['phone'],
-                         'date_of_joining': request.json['date_of_joining'], 'department': request.json['department'],
-                         'location': request.json['location'], 'work_address': request.json['work_address'],
-                         'key_skill': request.json['key_skill'], 'permission': request.json['permission']}
-        try:
-            employees = EmployeeSchema(**employee_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDEmployee.create_employee()
-
-        return employees.dict(), 201
+        employee = CRUDEmployee.create_employee()
+        return make_response(jsonify(employee), 201)
 
     @staticmethod
     def get():

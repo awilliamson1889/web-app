@@ -1,8 +1,7 @@
 """Rest addresses Api"""
-from flask import Blueprint, request, jsonify, make_response
-from flask_restful import Resource, Api, abort
-from pydantic import ValidationError
-from department_app.schemas import AddressSchema
+from flask import Blueprint, jsonify, make_response
+from flask_restful import Resource, Api
+
 from department_app.service import CRUDAddress
 
 address_api = Blueprint('address_api', __name__)
@@ -68,20 +67,7 @@ class Address(Resource):
           204:
             description: Address information successful update
         """
-        address = CRUDAddress.get_address(address_id)
-
-        address_data = {'name': address.name}
-
-        address_json = request.json
-        address_data.update(address_json)
-
-        try:
-            AddressSchema(**address_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDAddress.update_address(address_id, address_data)
-
+        address = CRUDAddress.update_address(address_id)
         return make_response(jsonify(address), 201)
 
 
@@ -111,15 +97,8 @@ class AddressList(Resource):
           201:
             description: The address was successfully created
         """
-        address_data = {'name': request.json['name']}
-        try:
-            address = AddressSchema(**address_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDAddress.create_address()
-
-        return address.dict(), 201
+        address = CRUDAddress.create_address()
+        return make_response(jsonify(address), 201)
 
     @staticmethod
     def get():

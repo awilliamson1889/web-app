@@ -1,9 +1,13 @@
 """Permission CRUD"""
 from sqlalchemy.exc import IntegrityError
-from flask import request
+from pydantic import ValidationError
 from flask_restful import abort
+from flask import request
+
+from department_app.schemas import PermissionSchema
 from department_app.models import PermissionModel
 from department_app.database import db
+from .service import check_id_format
 
 
 class CRUDPermission:
@@ -11,8 +15,7 @@ class CRUDPermission:
     @staticmethod
     def get_permission(permission_id):
         """Get permission func"""
-        if not str(permission_id).isdigit():
-            abort(404, message="ID must be a number.")
+        check_id_format(permission_id)
         permission = PermissionModel.query.filter_by(id=permission_id).first()
         if not permission:
             abort(404, message=f"Could not find permission with ID: {permission_id}.")
@@ -29,10 +32,21 @@ class CRUDPermission:
         return tuple(permission_list)
 
     @staticmethod
-    def update_permission(permission_id, json):
+    def update_permission(permission_id):
         """update permission func"""
-        permission = PermissionModel.query.filter_by(id=permission_id).first()
-        permission.name = json['name']
+        permission = CRUDPermission.get_permission(permission_id)
+
+        permission_data = {'name': permission.name}
+
+        permission_json = request.json
+        permission_data.update(permission_json)
+
+        try:
+            PermissionSchema(**permission_data)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
+
+        permission.name = permission_data['name']
 
         try:
             db.session.commit()
@@ -44,12 +58,21 @@ class CRUDPermission:
     def create_permission(form=None):
         """Create department func"""
         if form:
-            permission = PermissionModel(name=form.name.data)
+            permission_data = {'name': form.name.data}
+            permission = PermissionModel(**permission_data)
         else:
-            permission = PermissionModel(name=request.json['name'])
+            permission_data = {'name': request.json['name']}
+            permission = PermissionModel(**permission_data)
+
+        try:
+            PermissionSchema(**permission_data)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         try:
             db.session.add(permission)
             db.session.commit()
         except IntegrityError as exception:
             abort(404, message=f"Exception: {exception}")
+
+        return permission

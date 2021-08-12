@@ -1,9 +1,13 @@
 """Location CRUD"""
 from sqlalchemy.exc import IntegrityError
-from flask import request
+from pydantic import ValidationError
 from flask_restful import abort
-from department_app.database import db
+from flask import request
+
+from department_app.schemas import LocationSchema
 from department_app.models import LocationModel
+from department_app.database import db
+from .service import check_id_format
 
 
 class CRUDLocation:
@@ -11,8 +15,8 @@ class CRUDLocation:
     @staticmethod
     def get_location(location_id):
         """Get location func"""
-        if not str(location_id).isdigit():
-            abort(404, message="ID must be a number.")
+        check_id_format(location_id)
+
         location = LocationModel.query.filter_by(id=location_id).first()
         if not location:
             abort(404, message=f"Could not find location with ID: {location_id}.")
@@ -30,10 +34,21 @@ class CRUDLocation:
         return tuple(location_list)
 
     @staticmethod
-    def update_location(location_id, json):
+    def update_location(location_id):
         """update location func"""
-        location = LocationModel.query.filter_by(id=location_id).first()
-        location.name = json['name']
+        location = CRUDLocation.get_location(location_id)
+
+        location_data = {'name': location.name}
+
+        location_json = request.json
+        location_data.update(location_json)
+
+        try:
+            LocationSchema(**location_data)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
+
+        location.name = location_data['name']
 
         try:
             db.session.commit()
@@ -45,9 +60,16 @@ class CRUDLocation:
     def create_location(form=None):
         """Create department func"""
         if form:
-            location = LocationModel(name=form.name.data)
+            location_data = {'name': form.name.data}
+            location = LocationModel(**location_data)
         else:
-            location = LocationModel(name=request.json['name'])
+            location_data = {'name': request.json['name']}
+            location = LocationModel(**location_data)
+
+        try:
+            LocationSchema(**location_data)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         try:
             db.session.add(location)

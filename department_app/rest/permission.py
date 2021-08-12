@@ -1,8 +1,7 @@
 """Rest permission Api"""
-from flask import Blueprint, request, jsonify, make_response
-from flask_restful import Resource, Api, abort
-from pydantic import ValidationError
-from department_app.schemas import PermissionSchema
+from flask import Blueprint, jsonify, make_response
+from flask_restful import Resource, Api
+
 from department_app.service import CRUDPermission
 
 permission_api = Blueprint('permission_api', __name__)
@@ -68,20 +67,7 @@ class Permission(Resource):
           204:
             description: Permission information successful update
         """
-        permission = CRUDPermission.get_permission(permission_id)
-
-        permission_data = {'name': permission.name}
-
-        permission_json = request.json
-        permission_data.update(permission_json)
-
-        try:
-            PermissionSchema(**permission_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDPermission.update_permission(permission_id, permission_data)
-
+        permission = CRUDPermission.update_permission(permission_id)
         return make_response(jsonify(permission), 201)
 
 
@@ -111,15 +97,8 @@ class PermissionList(Resource):
           201:
             description: The permission was successfully created
         """
-        permission_data = {'name': request.json['name']}
-        try:
-            permission = PermissionSchema(**permission_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDPermission.create_permission()
-
-        return permission.dict(), 201
+        permission = CRUDPermission.create_permission()
+        return make_response(jsonify(permission), 201)
 
     @staticmethod
     def get():

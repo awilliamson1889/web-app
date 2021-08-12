@@ -1,8 +1,7 @@
 """Rest location Api"""
-from flask import Blueprint, request, jsonify, make_response
-from flask_restful import Resource, Api, abort
-from pydantic import ValidationError
-from department_app.schemas import LocationSchema
+from flask import Blueprint, jsonify, make_response
+from flask_restful import Resource, Api
+
 from department_app.service import CRUDLocation
 
 location_api = Blueprint('location_api', __name__)
@@ -68,20 +67,7 @@ class Location(Resource):
           204:
             description: Location information successful update
         """
-        location = CRUDLocation.get_location(location_id)
-
-        location_data = {'name': location.name}
-
-        location_json = request.json
-        location_data.update(location_json)
-
-        try:
-            LocationSchema(**location_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDLocation.update_location(location_id, location_data)
-
+        location = CRUDLocation.update_location(location_id)
         return make_response(jsonify(location), 201)
 
 
@@ -111,15 +97,8 @@ class LocationList(Resource):
           201:
             description: The location was successfully created
         """
-        location_data = {'name': request.json['name']}
-        try:
-            location = LocationSchema(**location_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDLocation.create_location()
-
-        return location.dict(), 201
+        location = CRUDLocation.create_location()
+        return make_response(jsonify(location), 201)
 
     @staticmethod
     def get():

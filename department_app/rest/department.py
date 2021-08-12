@@ -1,8 +1,7 @@
 """Rest department Api"""
-from flask import Blueprint, request, jsonify, make_response
-from flask_restful import Resource, Api, abort
-from pydantic import ValidationError
-from department_app.schemas import DepartmentSchema
+from flask import Blueprint, jsonify, make_response
+from flask_restful import Resource, Api
+
 from department_app.service import CRUDDepartment
 
 
@@ -77,22 +76,8 @@ class Department(Resource):
           204:
             description: Department information successful update
         """
-        department = CRUDDepartment.get_department(department_id)
-
-        department_data = {'name': department['name'], 'date_of_creation': department['date_of_creation'],
-                           'manager': department['manager']}
-
-        department_json = request.json
-        department_data.update(department_json)
-
-        try:
-            DepartmentSchema(**department_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDDepartment.update_department(department_id, department_data)
-
-        return make_response(jsonify(department_data), 201)
+        department = CRUDDepartment.update_department(department_id)
+        return make_response(jsonify(department), 201)
 
 
 class DepartmentList(Resource):
@@ -129,16 +114,8 @@ class DepartmentList(Resource):
           201:
             description: The department was successfully created
         """
-        department_data = {'name': request.json['name'], 'manager': request.json['manager'],
-                           'date_of_creation': request.json['date_of_creation']}
-        try:
-            department = DepartmentSchema(**department_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        CRUDDepartment.create_department()
-
-        return department.dict(), 201
+        department = CRUDDepartment.create_department()
+        return make_response(jsonify(department), 201)
 
     @staticmethod
     def get():

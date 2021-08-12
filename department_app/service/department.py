@@ -1,28 +1,34 @@
 """Department CRUD"""
 from sqlalchemy.exc import IntegrityError
+from pydantic import ValidationError
 from flask_restful import abort
 from flask import request
+
 from department_app.models import DepartmentModel, EmployeeModel
+from department_app.schemas import DepartmentSchema
 from department_app.database import db
+from .service import check_id_format
 
 
 class CRUDDepartment:
     """Department CRUD class"""
-    @staticmethod
-    def delete_department(department_id):
-        """Delete department func"""
-        DepartmentModel.query.filter_by(id=department_id).delete()
-        db.session.commit()
 
     @staticmethod
     def create_department(form=None):
         """Create department func"""
         if form:
-            department = DepartmentModel(name=form.name.data, date_of_creation=form.date_of_creation.data,
-                                         manager=form.manager.data)
+            department_data = {'name': form.name.data, 'manager': form.manager.data,
+                               'date_of_creation': form.date_of_creation.data}
+            department = DepartmentModel(**department_data)
         else:
-            department = DepartmentModel(name=request.json['name'], date_of_creation=request.json['date_of_creation'],
-                                         manager=request.json['manager'])
+            department_data = {'name': request.json['name'], 'manager': request.json['manager'],
+                               'date_of_creation': request.json['date_of_creation']}
+            department = DepartmentModel(**department_data)
+
+        try:
+            DepartmentSchema(**department_data)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         try:
             db.session.add(department)
@@ -52,8 +58,8 @@ class CRUDDepartment:
     @staticmethod
     def get_department(department_id):
         """Get department func"""
-        if not str(department_id).isdigit():
-            abort(404, message="ID must be a number.")
+        check_id_format(department_id)
+
         department_query = DepartmentModel.query.filter_by(id=department_id).all()
         if not department_query:
             abort(404, message=f"Could not find department with ID: {department_id}.")
@@ -68,13 +74,28 @@ class CRUDDepartment:
         return False
 
     @staticmethod
-    def update_department(department_id, json):
+    def update_department(department_id):
         """Update department func"""
-        department = DepartmentModel.query.filter_by(id=department_id).first()
+        check_id_format(department_id)
 
-        department.name = json['name']
-        department.manager = json['manager']
-        department.date_of_creation = json['date_of_creation']
+        department = DepartmentModel.query.filter_by(id=department_id).first()
+        if not department:
+            abort(404, message=f"Could not find department with ID: {department_id}.")
+
+        department_data = {'name': department.name, 'date_of_creation': department.date_of_creation,
+                           'manager': department.manager}
+
+        department_json = request.json
+        department_data.update(department_json)
+
+        try:
+            DepartmentSchema(**department_data)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
+
+        department.name = department_data['name']
+        department.manager = department_data['manager']
+        department.date_of_creation = department_data['date_of_creation']
 
         try:
             db.session.commit()

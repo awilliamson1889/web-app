@@ -1,9 +1,13 @@
 """Skill CRUD"""
 from sqlalchemy.exc import IntegrityError
-from flask import request
+from pydantic import ValidationError
 from flask_restful import abort
+from flask import request
+
+from department_app.schemas import SkillSchema
 from department_app.models import SkillModel
 from department_app.database import db
+from .service import check_id_format
 
 
 class CRUDSkill:
@@ -11,8 +15,7 @@ class CRUDSkill:
     @staticmethod
     def get_skill(skill_id):
         """Get skill func"""
-        if not str(skill_id).isdigit():
-            abort(404, message="ID must be a number.")
+        check_id_format(skill_id)
         skill = SkillModel.query.filter_by(id=skill_id).first()
         if not skill:
             abort(404, message=f"Could not find skill with ID: {skill_id}.")
@@ -29,10 +32,21 @@ class CRUDSkill:
         return tuple(skill_list)
 
     @staticmethod
-    def update_skill(skill_id, json):
+    def update_skill(skill_id):
         """update skill func"""
-        skill = SkillModel.query.filter_by(id=skill_id).first()
-        skill.name = json['name']
+        skill = CRUDSkill.get_skill(skill_id)
+
+        skill_data = {'name': skill.name}
+
+        skill_json = request.json
+        skill_data.update(skill_json)
+
+        try:
+            SkillSchema(**skill_data)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
+
+        skill.name = skill_data['name']
 
         try:
             db.session.commit()
@@ -44,12 +58,21 @@ class CRUDSkill:
     def create_skill(form=None):
         """Create department func"""
         if form:
-            skill = SkillModel(name=form.name.data)
+            skill_data = {'name': form.name.data}
+            skill = SkillModel(**skill_data)
         else:
-            skill = SkillModel(name=request.json['name'])
+            skill_data = {'name': request.json['name']}
+            skill = SkillModel(**skill_data)
+
+        try:
+            SkillSchema(**skill_data)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
 
         try:
             db.session.add(skill)
             db.session.commit()
         except IntegrityError as exception:
             abort(404, message=f"Exception: {exception}")
+
+        return skill
