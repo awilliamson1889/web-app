@@ -24,7 +24,6 @@ class CRUDEmployee:
                              'department': request.form['department'], 'location': request.form['location'],
                              'work_address': request.form['work_address'], 'key_skill': request.form['key_skill'],
                              'permission': request.form['permission']}
-            employee = EmployeeModel(**employee_data)
         else:
             employee_data = {'name': request.json['name'], 'surname': request.json['surname'],
                              'date_of_birth': request.json['date_of_birth'], 'salary': request.json['salary'],
@@ -34,7 +33,7 @@ class CRUDEmployee:
                              'location': request.json['location'], 'work_address': request.json['work_address'],
                              'key_skill': request.json['key_skill'], 'permission': request.json['permission']}
 
-            employee = EmployeeModel(**employee_data)
+        employee = EmployeeModel(**employee_data)
 
         try:
             EmployeeSchema(**employee_data)

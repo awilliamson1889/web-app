@@ -61,10 +61,10 @@ class CRUDLocation:
         """Create department func"""
         if form:
             location_data = {'name': form.name.data}
-            location = LocationModel(**location_data)
         else:
             location_data = {'name': request.json['name']}
-            location = LocationModel(**location_data)
+
+        location = LocationModel(**location_data)
 
         try:
             LocationSchema(**location_data)

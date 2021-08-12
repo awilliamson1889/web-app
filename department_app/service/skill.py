@@ -59,10 +59,10 @@ class CRUDSkill:
         """Create department func"""
         if form:
             skill_data = {'name': form.name.data}
-            skill = SkillModel(**skill_data)
         else:
             skill_data = {'name': request.json['name']}
-            skill = SkillModel(**skill_data)
+
+        skill = SkillModel(**skill_data)
 
         try:
             SkillSchema(**skill_data)

@@ -52,7 +52,8 @@ class CRUDAddress:
         addresses = AddressModel.query.all()
         if len(addresses) > 0:
             for address in addresses:
-                address_info = {'name': address.name, 'address_id': address.id}
+                address_info = {'name': address.name,
+                                'address_id': address.id}
                 address_list.append(address_info)
         return tuple(address_list)
 
@@ -61,10 +62,10 @@ class CRUDAddress:
         """Create address func"""
         if form:
             address_data = {'name': form.name.data}
-            address = AddressModel(**address_data)
         else:
             address_data = {'name': request.json['name']}
-            address = AddressModel(**address_data)
+
+        address = AddressModel(**address_data)
 
         try:
             AddressSchema(**address_data)

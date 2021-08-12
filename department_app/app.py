@@ -1,8 +1,10 @@
 """web app"""
 import os
-from flask import Flask
+
 from flask_migrate import Migrate
 from flasgger import Swagger
+from flask import Flask
+
 from department_app.database import db
 
 
@@ -39,28 +41,20 @@ def create_app(config='TestingConfig'):
 
     migrate = Migrate(app, db, directory=MIGRATION_DIR)
 
-    from department_app.views.routes import frontend
-    app.register_blueprint(frontend)
-
-    from department_app.rest.employee import employee_api
-    app.register_blueprint(employee_api)
-
-    from department_app.rest.department import department_api
-    app.register_blueprint(department_api)
-
-    from department_app.rest.location import location_api
-    app.register_blueprint(location_api)
-
     from department_app.rest.permission import permission_api
-    app.register_blueprint(permission_api)
-
-    from department_app.rest.skill import skill_api
-    app.register_blueprint(skill_api)
-
+    from department_app.rest.department import department_api
+    from department_app.rest.location import location_api
+    from department_app.rest.employee import employee_api
     from department_app.rest.address import address_api
-    app.register_blueprint(address_api)
+    from department_app.views.routes import frontend
+    from department_app.rest.skill import skill_api
 
-    from department_app.models import EmployeeModel, DepartmentModel, PermissionModel,\
-        AddressModel, LocationModel, SkillModel
+    app.register_blueprint(department_api)
+    app.register_blueprint(permission_api)
+    app.register_blueprint(location_api)
+    app.register_blueprint(employee_api)
+    app.register_blueprint(address_api)
+    app.register_blueprint(skill_api)
+    app.register_blueprint(frontend)
 
     return app

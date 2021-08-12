@@ -59,10 +59,10 @@ class CRUDPermission:
         """Create department func"""
         if form:
             permission_data = {'name': form.name.data}
-            permission = PermissionModel(**permission_data)
         else:
             permission_data = {'name': request.json['name']}
-            permission = PermissionModel(**permission_data)
+
+        permission = PermissionModel(**permission_data)
 
         try:
             PermissionSchema(**permission_data)

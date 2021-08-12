@@ -19,11 +19,11 @@ class CRUDDepartment:
         if form:
             department_data = {'name': form.name.data, 'manager': form.manager.data,
                                'date_of_creation': form.date_of_creation.data}
-            department = DepartmentModel(**department_data)
         else:
             department_data = {'name': request.json['name'], 'manager': request.json['manager'],
                                'date_of_creation': request.json['date_of_creation']}
-            department = DepartmentModel(**department_data)
+
+        department = DepartmentModel(**department_data)
 
         try:
             DepartmentSchema(**department_data)
@@ -82,7 +82,8 @@ class CRUDDepartment:
         if not department:
             abort(404, message=f"Could not find department with ID: {department_id}.")
 
-        department_data = {'name': department.name, 'date_of_creation': department.date_of_creation,
+        department_data = {'name': department.name,
+                           'date_of_creation': department.date_of_creation,
                            'manager': department.manager}
 
         department_json = request.json
