@@ -4,7 +4,6 @@ from department_app.app import create_app
 from department_app.database import db
 
 
-os.environ['FLASK_CONFIG'] = 'DevelopmentConfig'
 app = create_app(os.environ.get("FLASK_CONFIG", 'ProductionConfig'))
 
 db.init_app(app)
