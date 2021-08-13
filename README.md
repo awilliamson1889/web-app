@@ -2,7 +2,10 @@
 [![Coverage Status](https://coveralls.io/repos/github/awilliamson1889/web-app/badge.svg?branch=create-db)](https://coveralls.io/github/awilliamson1889/web-app?branch=create-db)
 
 # Web-app
-
+# Install dependencies
+```{bash}
+pip install -r requirements.txt
+```
 # Create database
 ```{bash}
 $ sudo apt install postgresql
