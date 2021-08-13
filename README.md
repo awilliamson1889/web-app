@@ -23,6 +23,7 @@ $ exit
 
 
 ```{bash}
+$ export FLASK_APP=department_app.app
 $ flask db init
 $ flask db migrate -m "Initial migration."
 $ flask db upgrade

@@ -8,7 +8,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
-    MIGRATION_DIR = os.path.join('department_app/migrations')
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
