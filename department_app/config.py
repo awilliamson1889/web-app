@@ -1,5 +1,7 @@
-from dotenv import load_dotenv
+"""App config"""
 import os
+from dotenv import load_dotenv
+
 
 load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -15,7 +17,8 @@ class Config(object):
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = f"{os.environ.get('DB_DRIVER')}://{os.environ.get('DB_USER_NAME')}:" \
-                              f"{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}" \
+                              f"{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:" \
+                              f"{os.environ.get('DB_PORT')}" \
                               f"/{os.environ.get('DB_NAME')}"
     DEBUG = False
 

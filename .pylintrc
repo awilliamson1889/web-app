@@ -13,6 +13,7 @@ fail-under=10.0
 ignore=CVS,
       migrations,
       manage.py,
+      config.py,
       asgi.py,
       mypy.py,
       schemas,
