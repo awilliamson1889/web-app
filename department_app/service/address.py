@@ -15,8 +15,7 @@ class CRUDAddress:
     @staticmethod
     def get_address(address_id):
         """Get address func"""
-        if not str(address_id).isdigit():
-            abort(404, message="ID must be a number.")
+        check_id_format(address_id)
 
         address = AddressModel.query.filter_by(id=address_id).first()
         if not address:
