@@ -25,7 +25,7 @@ $ flask db migrate -m "Initial migration."
 $ flask db upgrade
 ```
 # Create .env file
-web-app/.env
+department_app/.env
 ```{bash}
 SECRET_KEY='veryveryswcretkey'
 DB_USER_NAME='jacky'
@@ -39,7 +39,7 @@ DB_PORT='5432'
 # Run
 
 ```{bash}
-gunicorn --bind 127.0.0.1:5000 wsgi:app
+gunicorn --bind 127.0.0.1:5000 department_app.wsgi:app
 ```
 
 Open http://127.0.0.1:5000 in a browser.
