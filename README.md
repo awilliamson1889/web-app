@@ -12,7 +12,8 @@ postgres=# CREATE USER jacky WITH PASSWORD
 'mystrongpassword';
 postgres=# CREATE DATABASE gallery;
 postgres=# GRANT ALL PRIVILEGES ON DATABASE gallery to jacky;
-postgres=# q
+postgres=# \q
+$ exit
 ```
 
 # Create and run migrations
@@ -38,14 +39,7 @@ DB_PORT='5432'
 # Run
 
 ```{bash}
-$ export FLASK_APP=department_app
-$ export FLASK_ENV=development
-$ flask run
+gunicorn --bind 127.0.0.1:5000 wsgi:app
 ```
-Or on Windows cmd:
-```{bash}
-> set FLASK_APP=department_app
-> set FLASK_ENV=development
-> flask run
-```
+
 Open http://127.0.0.1:5000 in a browser.
