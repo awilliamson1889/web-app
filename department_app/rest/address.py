@@ -1,8 +1,11 @@
 """Rest addresses Api"""
-from flask import Blueprint, jsonify, make_response
-from flask_restful import Resource, Api
+from sqlalchemy.exc import IntegrityError, DataError
+from flask import Blueprint, jsonify, make_response, request
+from flask_restful import Resource, Api, abort
+from pydantic import ValidationError
 
 from department_app.service import CRUDAddress
+from department_app.schemas import AddressSchema
 
 address_api = Blueprint('address_api', __name__)
 
@@ -32,7 +35,13 @@ class Address(Resource):
           200:
             description: Address information returned
         """
-        address = CRUDAddress.get_address(address_id)
+        try:
+            address = CRUDAddress.get(address_id)
+        except DataError:
+            abort(404, message="Invalid ID format!")
+
+        if not address:
+            abort(404, message=f"No such address with ID={address_id}")
         return make_response(jsonify(address), 200)
 
     @staticmethod
@@ -67,8 +76,29 @@ class Address(Resource):
           204:
             description: Address information successful update
         """
-        address = CRUDAddress.update_address(address_id)
-        return make_response(jsonify(address), 201)
+        try:
+            address = CRUDAddress.get(address_id)
+        except DataError:
+            abort(404, message="Invalid ID format!")
+
+        if not address:
+            abort(404, message=f"No such address with ID={address_id}")
+
+        try:
+            address_json = {'name': request.json['name']}
+        except KeyError as exception:
+            abort(404, message=f"Exception: JSON should consist {exception} field")
+
+        try:
+            AddressSchema(**address_json)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
+
+        try:
+            result = CRUDAddress.update(address_id, name=address_json['name'])
+        except IntegrityError as exception:
+            abort(404, message=f"{exception}")
+        return make_response(jsonify(result), 201)
 
 
 class AddressList(Resource):
@@ -97,7 +127,17 @@ class AddressList(Resource):
           201:
             description: The address was successfully created
         """
-        address = CRUDAddress.create_address()
+        try:
+            address_json = {'name': request.json['name']}
+        except KeyError as exception:
+            abort(404, message=f"Exception: JSON should consist {exception} field")
+
+        try:
+            AddressSchema(**address_json)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
+
+        address = CRUDAddress.create(**address_json)
         return make_response(jsonify(address), 201)
 
     @staticmethod
@@ -112,7 +152,7 @@ class AddressList(Resource):
           200:
             description: All addresses returned
         """
-        addresses = CRUDAddress.get_all_address()
+        addresses = CRUDAddress.get_address_list()
         return make_response(jsonify(addresses), 200)
 
 

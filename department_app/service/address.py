@@ -1,52 +1,39 @@
 """Address CRUD"""
-from sqlalchemy.exc import IntegrityError
-from pydantic import ValidationError
-from flask_restful import abort
-from flask import request
+from sqlalchemy.exc import IntegrityError, DataError
 
-from department_app.schemas import AddressSchema
 from department_app.models import AddressModel
 from department_app.database import db
-from .service import check_id_format
 
 
 class CRUDAddress:
     """Address CRUD class"""
     @staticmethod
-    def get_address(address_id):
+    def get(address_id: int):
         """Get address func"""
-        check_id_format(address_id)
+        try:
+            address = AddressModel.query.filter_by(id=address_id).first()
+        except DataError as exception:
+            raise exception
 
-        address = AddressModel.query.filter_by(id=address_id).first()
         if not address:
-            abort(404, message=f"Could not find address with ID: {address_id}.")
+            return None
         return address
 
     @staticmethod
-    def update_address(address_id):
+    def update(address_id: int, name: str):
         """update address func"""
-        address = CRUDAddress.get_address(address_id)
+        address = CRUDAddress.get(address_id)
 
-        address_data = {'name': address.name}
-
-        address_json = request.json
-        address_data.update(address_json)
-
-        try:
-            AddressSchema(**address_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        address.name = address_data['name']
+        address.name = name
 
         try:
             db.session.commit()
         except IntegrityError as exception:
-            abort(404, message=f"Exception: {exception}")
+            raise exception
         return address
 
     @staticmethod
-    def get_all_address():
+    def get_address_list():
         """Get all address func"""
         address_list = []
         addresses = AddressModel.query.all()
@@ -58,23 +45,13 @@ class CRUDAddress:
         return tuple(address_list)
 
     @staticmethod
-    def create_address(form=None):
+    def create(name: str):
         """Create address func"""
-        if form:
-            address_data = {'name': form.name.data}
-        else:
-            address_data = {'name': request.json['name']}
-
-        address = AddressModel(**address_data)
-
-        try:
-            AddressSchema(**address_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
+        address = AddressModel(name=name)
 
         try:
             db.session.add(address)
             db.session.commit()
         except IntegrityError as exception:
-            abort(404, message=f"Exception: {exception}")
+            return {"message": f"{exception.args}"}
         return address
