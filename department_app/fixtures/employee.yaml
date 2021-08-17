@@ -1,59 +1,40 @@
 - table: Department
   records:
-  - id: 1
-    name: RD, Lab Brest
+  - name: RD, Lab Brest
     manager: Williams Gibson
     date_of_creation: '2021-12-12'
-  - id: 2
-    name: RD, Lab Minsk
+  - name: RD, Lab Minsk
     manager: Svetlana Moroz
     date_of_creation: '2021-12-12'
-  - id: 3
-    name: RD, Lab Mogilev
+  - name: RD, Lab Mogilev
     manager: Dmitri Kiselev
     date_of_creation: '2021-12-12'
 - table: Location
   records:
-  - id: 1
-    name: Bobruysk
-  - id: 2
-    name: Gomel
-  - id: 3
-    name: Minsk
-  - id: 4
-    name: Mogilev
+  - name: Bobruysk
+  - name: Gomel
+  - name: Minsk
+  - name: Mogilev
 - table: Address
   records:
-  - id: 1
-    name: Skoriny Ul., bld. 17, appt. 12
-  - id: 2
-    name: Moskovskiy Pr., bld. 21/3
-  - id: 3
-    name: Luchiny Ul., bld. 24, appt. 72
-  - id: 4
-    name: Kosmonavtov Pr.
+  - name: Skoriny Ul., bld. 17, appt. 12
+  - name: Moskovskiy Pr., bld. 21/3
+  - name: Luchiny Ul., bld. 24, appt. 72
+  - name: Kosmonavtov Pr.
 - table: Skill
   records:
-  - id: 1
-    name: Python
-  - id: 2
-    name: C++
-  - id: 3
-    name: ".Net"
-  - id: 4
-    name: Data Science
+  - name: Python
+  - name: C++
+  - name: ".Net"
+  - name: Data Science
 - table: Permission
   records:
-  - id: 1
-    name: Administrator
-  - id: 2
-    name: Moderator
-  - id: 3
-    name: Employee
+  - name: Administrator
+  - name: Moderator
+  - name: Employee
 - table: Employee
   records:
-  - id: 1
-    name: Andrei
+  - name: Andrei
     surname: Gizmont
     date_of_birth: '1998-12-12'
     salary: 5000
@@ -65,8 +46,7 @@
     work_address: 1
     key_skill: 1
     permission: 1
-  - id: 2
-    name: Vlada
+  - name: Vlada
     surname: Morozova
     date_of_birth: '2002-12-12'
     salary: 5000

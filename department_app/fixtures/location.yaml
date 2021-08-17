@@ -1,10 +1,6 @@
 - table: Location
   records:
-  - id: 1
-    name: Bobruysk
-  - id: 2
-    name: Gomel
-  - id: 3
-    name: Minsk
-  - id: 4
-    name: Mogilev
+  - name: Bobruysk
+  - name: Gomel
+  - name: Minsk
+  - name: Mogilev

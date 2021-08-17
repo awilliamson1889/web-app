@@ -1,14 +1,11 @@
 - table: Department
   records:
-  - id: 1
-    name: RD, Lab Brest
+  - name: RD, Lab Brest
     manager: Williams Gibson
     date_of_creation: '2021-12-12'
-  - id: 2
-    name: RD, Lab Minsk
+  - name: RD, Lab Minsk
     manager: Svetlana Moroz
     date_of_creation: '2021-12-12'
-  - id: 3
-    name: RD, Lab Mogilev
+  - name: RD, Lab Mogilev
     manager: Dmitri Kiselev
     date_of_creation: '2021-12-12'
