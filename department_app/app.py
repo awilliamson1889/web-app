@@ -15,7 +15,7 @@ def create_app(config='TestingConfig'):
     """Create app method"""
 
     app = Flask(__name__)
-    app.config.from_object("config." + config)
+    app.config.from_object("department_app.config." + config)
 
     db.init_app(app)
     with app.app_context():
