@@ -14,6 +14,37 @@ api = Api(address_api)
 
 class Address(Resource):
     """Address API class"""
+
+    @staticmethod
+    def get_address(address_id):
+        try:
+            address = CRUDAddress.get(address_id)
+        except DataError:
+            abort(404, message="Invalid ID format!")
+        return address
+
+    @staticmethod
+    def check_exist(address_id, address):
+        if not address:
+            abort(404, message=f"No such address with ID={address_id}")
+        else:
+            return True
+
+    @staticmethod
+    def get_json():
+        try:
+            address_json = {'name': request.json['name']}
+        except KeyError as exception:
+            abort(404, message=f"Exception: JSON should consist {exception} field")
+        return address_json
+
+    @staticmethod
+    def validate_json(json):
+        try:
+            AddressSchema(**json)
+        except ValidationError as exception:
+            abort(404, message=f"Exception: {exception}")
+
     @staticmethod
     def get(address_id):
         """
@@ -35,13 +66,9 @@ class Address(Resource):
           200:
             description: Address information returned
         """
-        try:
-            address = CRUDAddress.get(address_id)
-        except DataError:
-            abort(404, message="Invalid ID format!")
+        address = Address.get_address(address_id)
 
-        if not address:
-            abort(404, message=f"No such address with ID={address_id}")
+        Address.check_exist(address_id, address)
         return make_response(jsonify(address), 200)
 
     @staticmethod
@@ -76,23 +103,13 @@ class Address(Resource):
           204:
             description: Address information successful update
         """
-        try:
-            address = CRUDAddress.get(address_id)
-        except DataError:
-            abort(404, message="Invalid ID format!")
+        address = Address.get_address(address_id)
 
-        if not address:
-            abort(404, message=f"No such address with ID={address_id}")
+        Address.check_exist(address_id, address)
 
-        try:
-            address_json = {'name': request.json['name']}
-        except KeyError as exception:
-            abort(404, message=f"Exception: JSON should consist {exception} field")
+        address_json = Address.get_json()
 
-        try:
-            AddressSchema(**address_json)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
+        Address.validate_json(address_json)
 
         try:
             result = CRUDAddress.update(address_id, name=address_json['name'])
@@ -127,17 +144,15 @@ class AddressList(Resource):
           201:
             description: The address was successfully created
         """
-        try:
-            address_json = {'name': request.json['name']}
-        except KeyError as exception:
-            abort(404, message=f"Exception: JSON should consist {exception} field")
+        address_json = Address.get_json()
 
-        try:
-            AddressSchema(**address_json)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
+        Address.validate_json(address_json)
 
-        address = CRUDAddress.create(**address_json)
+        # address = CRUDAddress.create(**address_json)
+        try:
+            address = CRUDAddress.create(**address_json)
+        except IntegrityError as exception:
+            abort(404, message=f"{exception}")
         return make_response(jsonify(address), 201)
 
     @staticmethod
