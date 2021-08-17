@@ -17,6 +17,7 @@ class Address(Resource):
 
     @staticmethod
     def get_address(address_id):
+        """Return address, if address ID have wrong format - return abort"""
         try:
             address = CRUDAddress.get(address_id)
         except DataError:
@@ -25,13 +26,14 @@ class Address(Resource):
 
     @staticmethod
     def check_exist(address_id, address):
+        """Check if address exist, if address not exist - return abort"""
         if not address:
             abort(404, message=f"No such address with ID={address_id}")
-        else:
-            return True
+        return True
 
     @staticmethod
     def get_json():
+        """Get address json, if json have wrong format - return abort """
         try:
             address_json = {'name': request.json['name']}
         except KeyError as exception:
@@ -40,6 +42,7 @@ class Address(Resource):
 
     @staticmethod
     def validate_json(json):
+        """Validate address json data, if json data not valid - return abort"""
         try:
             AddressSchema(**json)
         except ValidationError as exception:
