@@ -6,6 +6,13 @@ from flasgger import Swagger
 from flask import Flask
 
 from department_app.database import db
+from department_app.rest.permission import permission_api
+from department_app.rest.department import department_api
+from department_app.rest.location import location_api
+from department_app.rest.employee import employee_api
+from department_app.rest.address import address_api
+from department_app.views.routes import frontend
+from department_app.rest.skill import skill_api
 
 
 MIGRATION_DIR = os.path.join('department_app/migrations')
@@ -40,14 +47,6 @@ def create_app(config='TestingConfig'):
     swagger = Swagger(app, config=swagger_config)
 
     migrate = Migrate(app, db, directory=MIGRATION_DIR)
-
-    from department_app.rest.permission import permission_api
-    from department_app.rest.department import department_api
-    from department_app.rest.location import location_api
-    from department_app.rest.employee import employee_api
-    from department_app.rest.address import address_api
-    from department_app.views.routes import frontend
-    from department_app.rest.skill import skill_api
 
     app.register_blueprint(department_api)
     app.register_blueprint(permission_api)
