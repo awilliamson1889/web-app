@@ -35,14 +35,13 @@ class CRUDAddress:
     @staticmethod
     def get_address_list():
         """Get all address func"""
-        address_list = []
         addresses = AddressModel.query.all()
+
         if len(addresses) > 0:
-            for address in addresses:
-                address_info = {'name': address.name,
-                                'address_id': address.id}
-                address_list.append(address_info)
-        return tuple(address_list)
+            return tuple(({'name': address.name,
+                           'address_id': address.id} for address in addresses))
+        else:
+            return list()
 
     @staticmethod
     def create(name: str):
@@ -53,5 +52,5 @@ class CRUDAddress:
             db.session.add(address)
             db.session.commit()
         except IntegrityError as exception:
-            return {"message": f"{exception.args}"}
+            raise exception
         return address
