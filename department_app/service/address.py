@@ -11,12 +11,12 @@ class CRUDAddress:
     @staticmethod
     def get(address_id: int):
         """Get address func"""
-        logging.info(f"Get method called with parameters: id={address_id}")
+        logging.info("Get method called with parameters: id=%s", address_id)
 
         try:
             address = AddressModel.query.filter_by(id=address_id).first()
         except DataError as exception:
-            logging.info(f"Address ID={address_id}, has wrong format.")
+            logging.info("Address ID=%s, has wrong format.", address_id)
             raise exception
 
         if not address:
@@ -26,14 +26,14 @@ class CRUDAddress:
     @staticmethod
     def update(address_id: int, name: str):
         """update address func"""
-        logging.info(f"Update method called with parameters: id={address_id}, name={name}.")
+        logging.info("Update method called with parameters: id=%s, name=%s.", address_id, name)
 
         try:
             AddressModel.query.filter(AddressModel.id == address_id). \
                 update({AddressModel.name: name}, synchronize_session=False)
             db.session.commit()
         except IntegrityError as exception:
-            logging.info(f"Address with name={name} already exist.")
+            logging.info("Address with name=%s already exist.", name)
             raise exception
         return {"message": "Data successful updated."}
 
@@ -50,7 +50,7 @@ class CRUDAddress:
     @staticmethod
     def create(name: str):
         """Create address func"""
-        logging.info(f"Create method called with parameters: name={name}.")
+        logging.info("Create method called with parameters: name=%s.", name)
 
         address = AddressModel(name=name)
 
@@ -58,6 +58,6 @@ class CRUDAddress:
             db.session.add(address)
             db.session.commit()
         except IntegrityError as exception:
-            logging.info(f"Address with name={name} already exist.")
+            logging.info("Address with name=%s already exist.", name)
             raise exception
         return address
