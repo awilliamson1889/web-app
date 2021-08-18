@@ -1,5 +1,6 @@
 """web app"""
 import os
+import logging
 
 from flask_migrate import Migrate
 from flasgger import Swagger
@@ -14,7 +15,7 @@ from department_app.rest.address import address_api
 from department_app.views.routes import frontend
 from department_app.rest.skill import skill_api
 
-
+logging.basicConfig(filename="app.log", level=logging.INFO)
 MIGRATION_DIR = os.path.join('department_app/migrations')
 
 
