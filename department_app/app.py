@@ -24,7 +24,7 @@ def create_app():
 
     app = Flask(__name__)
     # app.config.from_object("department_app.config." + config)
-    app.config.from_object(os.environ.get('APP_SETTINGS', 'department_app.config.DevelopmentConfig'))
+    app.config.from_object(os.environ.get('APP_SETTINGS', 'department_app.config.TestingConfig'))
 
     db.init_app(app)
     with app.app_context():
