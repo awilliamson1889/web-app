@@ -16,14 +16,15 @@ from department_app.views.routes import frontend
 from department_app.rest.skill import skill_api
 
 logging.basicConfig(filename="app.log", level=logging.INFO)
-MIGRATION_DIR = os.path.join('department_app/migrations')
+# MIGRATION_DIR = os.path.join('department_app/migrations')
 
 
-def create_app(config='TestingConfig'):
+def create_app():
     """Create app method"""
 
     app = Flask(__name__)
-    app.config.from_object("department_app.config." + config)
+    # app.config.from_object("department_app.config." + config)
+    app.config.from_object(os.environ.get('APP_SETTINGS', 'department_app.config.DevelopmentConfig'))
 
     db.init_app(app)
     with app.app_context():
@@ -47,7 +48,8 @@ def create_app(config='TestingConfig'):
 
     swagger = Swagger(app, config=swagger_config)
 
-    migrate = Migrate(app, db, directory=MIGRATION_DIR)
+    # migrate = Migrate(app, db, directory=MIGRATION_DIR)
+    migrate = Migrate(app, db)
 
     app.register_blueprint(department_api)
     app.register_blueprint(permission_api)
