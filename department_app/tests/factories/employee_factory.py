@@ -1,11 +1,5 @@
-import os
 import factory
-from department_app.app import create_app
 from department_app.models import EmployeeModel
-
-os.environ['FLASK_CONFIG'] = 'TestingConfig'
-app = create_app(os.environ.get("FLASK_CONFIG", 'ProductionConfig'))
-app.app_context().push()
 
 
 class EmployeeFactory(factory.Factory):
