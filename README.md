@@ -19,25 +19,24 @@ postgres=# \q
 $ exit
 ```
 
-# Create and run migrations
+# Create ENV variables
+```{bash}
+export APP_SETTINGS=department_app.config.ProductionConfig
+
+also you can chose TestingConfig for tests
+export APP_SETTINGS=department_app.config.TestingConfig
+
+or DevelopmentConfig for development
+export APP_SETTINGS=department_app.config.DevelopmentConfig
 
 
-```{bash}
-$ export FLASK_APP=department_app.app
-$ flask db init
-$ flask db migrate -m "Initial migration."
-$ flask db upgrade
-```
-# Create .env file
-department_app/.env
-```{bash}
-SECRET_KEY='veryveryswcretkey'
-DB_USER_NAME='jacky'
-DB_PASSWORD='mystrongpassword'
-DB_NAME='gallery'
-DB_DRIVER='postgresql'
-DB_HOST='localhost'
-DB_PORT='5432'
+export SECRET_KEY='veryveryswcretkey'
+export DB_USER_NAME='jacky'
+export DB_PASSWORD='mystrongpassword'
+export DB_NAME='gallery'
+export DB_DRIVER='postgresql'
+export DB_HOST='localhost'
+export DB_PORT='5432'
 ```
 
 # Run
