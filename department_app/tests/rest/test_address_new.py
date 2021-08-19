@@ -2,7 +2,10 @@ from unittest.mock import patch
 import unittest
 
 from department_app.rest import Address, AddressList
-from department_app.tests import AddressFactory
+from department_app.app import create_app
+
+app = create_app()
+app.app_context().push()
 
 
 class TestApiAddress(unittest.TestCase):
