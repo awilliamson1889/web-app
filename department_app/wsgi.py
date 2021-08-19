@@ -4,7 +4,6 @@ import os
 from department_app.app import create_app
 from department_app.database import db
 
-sys.path.append('department_app')
 
 app = create_app(os.environ.get("FLASK_CONFIG", 'ProductionConfig'))
 
