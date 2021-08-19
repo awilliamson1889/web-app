@@ -1,11 +1,9 @@
 """WSGI file"""
-import sys
-import os
 from department_app.app import create_app
 from department_app.database import db
 
 
-app = create_app(os.environ.get("FLASK_CONFIG", 'ProductionConfig'))
+app = create_app()
 
 db.init_app(app)
 with app.app_context():
