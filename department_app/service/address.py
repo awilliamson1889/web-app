@@ -13,11 +13,7 @@ class CRUDAddress:
         """Get address func"""
         logging.info("Get method called with parameters: id=%s", address_id)
 
-        try:
-            address = AddressModel.query.filter_by(id=address_id).first()
-        except DataError as exception:
-            logging.info("Address ID=%s, has wrong format.", address_id)
-            raise exception
+        address = AddressModel.query.filter_by(id=address_id).first()
 
         if not address:
             return None
@@ -29,13 +25,13 @@ class CRUDAddress:
         logging.info("Update method called with parameters: id=%s, name=%s.", address_id, name)
 
         try:
-            AddressModel.query.filter(AddressModel.id == address_id). \
-                update({AddressModel.name: name}, synchronize_session=False)
+            result = AddressModel.query.where(AddressModel.id == address_id). \
+                update({AddressModel.name: name})
             db.session.commit()
         except IntegrityError as exception:
             logging.info("Address with name=%s already exist.", name)
             raise exception
-        return {"message": "Data successful updated."}
+        return bool(result)
 
     @staticmethod
     def get_address_list():
