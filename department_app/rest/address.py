@@ -16,37 +16,22 @@ class Address(Resource):
     """Address API class"""
 
     @staticmethod
-    def get_address(address_id):
-        """Return address, if address ID have wrong format - return abort"""
-        try:
-            address = CRUDAddress.get(address_id)
-        except DataError:
-            abort(404, message="Invalid ID format!")
-        return address
-
-    @staticmethod
-    def check_exist(address_id, address):
-        """Check if address exist, if address not exist - return abort"""
-        if not address:
-            abort(404, message=f"No such address with ID={address_id}")
-        return True
-
-    @staticmethod
     def get_json():
         """Get address json, if json have wrong format - return abort """
         try:
             address_json = {'name': request.json['name']}
-        except KeyError as exception:
-            abort(404, message=f"Exception: JSON should consist {exception} field")
+        except KeyError:
+            return False
         return address_json
 
     @staticmethod
-    def validate_json(json):
+    def json_is_valid(json) -> bool:
         """Validate address json data, if json data not valid - return abort"""
         try:
             AddressSchema(**json)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
+        except ValidationError:
+            return False
+        return True
 
     @staticmethod
     def get(address_id):
@@ -69,9 +54,12 @@ class Address(Resource):
           200:
             description: Address information returned
         """
-        address = Address.get_address(address_id)
-
-        Address.check_exist(address_id, address)
+        if address_id.isdigit() and int(address_id) > 0:
+            address = CRUDAddress.get(address_id)
+        else:
+            abort(404, message="Invalid ID format!")
+        if not address:
+            abort(404, message=f"No such address with ID={address_id}")
         return make_response(jsonify(address), 200)
 
     @staticmethod
@@ -106,19 +94,19 @@ class Address(Resource):
           204:
             description: Address information successful update
         """
-        address = Address.get_address(address_id)
-
-        Address.check_exist(address_id, address)
-
         address_json = Address.get_json()
+        if not address_json:
+            abort(404, message=f"Wrong JSON fields names.")
 
-        Address.validate_json(address_json)
-
-        try:
-            result = CRUDAddress.update(address_id, name=address_json['name'])
-        except IntegrityError as exception:
-            abort(404, message=f"{exception}")
-        return make_response(jsonify(result), 201)
+        if Address.json_is_valid(address_json):
+            try:
+                result = CRUDAddress.update(address_id, name=address_json['name'])
+            except IntegrityError as exception:
+                abort(404, message=f"{exception}")
+            if not result:
+                abort(404, message="Address not updated.")
+            return make_response(jsonify({'message': 'Data successful updated.'}), 201)
+        abort(404, message=f"JSON is not valid.")
 
 
 class AddressList(Resource):
@@ -148,15 +136,16 @@ class AddressList(Resource):
             description: The address was successfully created
         """
         address_json = Address.get_json()
+        if not address_json:
+            abort(404, message=f"Wrong JSON fields names.")
 
-        Address.validate_json(address_json)
-
-        # address = CRUDAddress.create(**address_json)
-        try:
-            address = CRUDAddress.create(**address_json)
-        except IntegrityError as exception:
-            abort(404, message=f"{exception}")
-        return make_response(jsonify(address), 201)
+        if Address.json_is_valid(address_json):
+            try:
+                address = CRUDAddress.create(**address_json)
+            except IntegrityError as exception:
+                abort(404, message=f"{exception}")
+            return make_response(jsonify(address), 201)
+        abort(404, message=f"JSON is not valid.")
 
     @staticmethod
     def get():
