@@ -96,17 +96,18 @@ class Address(Resource):
         """
         address_json = Address.get_json()
         if not address_json:
-            abort(404, message=f"Wrong JSON fields names.")
+            abort(404, message="Wrong JSON fields names.")
 
-        if Address.json_is_valid(address_json):
-            try:
-                result = CRUDAddress.update(address_id, name=address_json['name'])
-            except IntegrityError as exception:
-                abort(404, message=f"{exception}")
-            if not result:
-                abort(404, message="Address not updated.")
-            return make_response(jsonify({'message': 'Data successful updated.'}), 201)
-        abort(404, message=f"JSON is not valid.")
+        if not Address.json_is_valid(address_json):
+            abort(404, message="JSON is not valid.")
+        try:
+            result = CRUDAddress.update(address_id, name=address_json['name'])
+        except IntegrityError as exception:
+            abort(404, message=f"{exception}")
+        if not result:
+            abort(404, message="Address not updated.")
+        return make_response(jsonify({'message': 'Data successful updated.'}), 201)
+
 
 
 class AddressList(Resource):
@@ -137,15 +138,15 @@ class AddressList(Resource):
         """
         address_json = Address.get_json()
         if not address_json:
-            abort(404, message=f"Wrong JSON fields names.")
+            abort(404, message="Wrong JSON fields names.")
 
-        if Address.json_is_valid(address_json):
-            try:
-                address = CRUDAddress.create(**address_json)
-            except IntegrityError as exception:
-                abort(404, message=f"{exception}")
-            return make_response(jsonify(address), 201)
-        abort(404, message=f"JSON is not valid.")
+        if not Address.json_is_valid(address_json):
+            abort(404, message="JSON is not valid.")
+        try:
+            address = CRUDAddress.create(**address_json)
+        except IntegrityError as exception:
+            abort(404, message=f"{exception}")
+        return make_response(jsonify(address), 201)
 
     @staticmethod
     def get():
