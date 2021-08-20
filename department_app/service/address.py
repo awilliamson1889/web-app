@@ -1,6 +1,6 @@
 """Address CRUD"""
 import logging
-from sqlalchemy.exc import IntegrityError, DataError
+from sqlalchemy.exc import IntegrityError
 
 from department_app.models import AddressModel
 from department_app.database import db
@@ -40,7 +40,7 @@ class CRUDAddress:
 
         if len(addresses) > 0:
             return tuple(({'name': address.name,
-                           'address_id': address.id} for address in addresses))
+                           'id': address.id} for address in addresses))
         return list()
 
     @staticmethod

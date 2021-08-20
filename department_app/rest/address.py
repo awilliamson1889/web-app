@@ -1,5 +1,5 @@
 """Rest addresses Api"""
-from sqlalchemy.exc import IntegrityError, DataError
+from sqlalchemy.exc import IntegrityError
 from flask import Blueprint, jsonify, make_response, request
 from flask_restful import Resource, Api, abort
 from pydantic import ValidationError
@@ -54,7 +54,7 @@ class Address(Resource):
           200:
             description: Address information returned
         """
-        if address_id.isdigit() and int(address_id) > 0:
+        if str(address_id).isdigit() and int(address_id) > 0:
             address = CRUDAddress.get(address_id)
         else:
             abort(404, message="Invalid ID format!")
@@ -105,9 +105,8 @@ class Address(Resource):
         except IntegrityError as exception:
             abort(404, message=f"{exception}")
         if not result:
-            abort(404, message="Address not updated.")
+            return abort(404, message="Address not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
-
 
 
 class AddressList(Resource):
