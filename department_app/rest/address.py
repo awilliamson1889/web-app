@@ -56,9 +56,9 @@ class Address(Resource):
         if str(address_id).isdigit() and int(address_id) > 0:
             address = CRUDAddress.get(address_id)
         else:
-            abort(404, message="Invalid ID format!")
+            return abort(404, message="Invalid ID format!")
         if not address:
-            abort(404, message=f"No such address with ID={address_id}")
+            return abort(404, message=f"No such address with ID={address_id}")
         return make_response(jsonify(address), 200)
 
     @staticmethod
@@ -95,14 +95,14 @@ class Address(Resource):
         """
         address_json = Address.get_json()
         if not address_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Address.json_is_valid(address_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             result = CRUDAddress.update(address_id, name=address_json['name'])
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         if not result:
             return abort(404, message="Address not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -136,14 +136,14 @@ class AddressList(Resource):
         """
         address_json = Address.get_json()
         if not address_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Address.json_is_valid(address_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             address = CRUDAddress.create(**address_json)
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         return make_response(jsonify(address), 201)
 
     @staticmethod

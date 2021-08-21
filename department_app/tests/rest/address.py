@@ -10,9 +10,16 @@ app.app_context().push()
 
 class TestApiAddress(unittest.TestCase):
     """Test address api class"""
+    wrong_json_msg = "Wrong JSON fields names."
     wrong_id_format_msg = "Invalid ID format!"
+    not_valid_json_msg = "JSON is not valid."
+
+    wrong_json = {"name_field": "Some Address1"}
 
     post_valid_data = {"name": "POST ADDRESS"}
+    post_invalid_data = {"name": "Some Address1 Some Address1 Some Address1 Some Address1 Some Address1 Some Address1"
+                                 "Some Address1 Some Address1 Some Address1 Some Address1 Some Address1 Some Address1"
+                                 "Some Address1 Some Address1 Some Address1 Some Address1 Some Address1 Some Address1"}
 
     valid_test_data = [
             {
@@ -25,8 +32,7 @@ class TestApiAddress(unittest.TestCase):
             },
             {
                 "id": 3,
-                "name": "Some Address3"
-            }]
+                "name": "Some Address3"}]
 
     @patch('department_app.rest.address.CRUDAddress.get')
     def test_get_address(self, mock_get_address):
@@ -62,6 +68,26 @@ class TestApiAddress(unittest.TestCase):
         self.assertEqual(response.json['id'], 1)
         self.assertEqual(response.json['name'], self.post_valid_data['name'])
 
+    @patch('department_app.rest.address.abort')
+    @patch('department_app.rest.address.Address.get_json')
+    def test_post_address_not_valid(self, mok_get_json, mok_abort):
+        """Api should return information about address."""
+        mok_get_json.return_value = self.wrong_json
+
+        AddressList.post()
+
+        mok_abort.assert_called_once_with(404, message=self.wrong_json_msg)
+
+    @patch('department_app.rest.address.abort')
+    @patch('department_app.rest.address.Address.get_json')
+    def test_post_address_not_valid(self, mok_get_json, mok_abort):
+        """Api should return information about address."""
+        mok_get_json.return_value = self.post_invalid_data
+
+        AddressList.post()
+
+        mok_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
+
     @patch('department_app.rest.address.CRUDAddress.get_address_list')
     def test_get_all_address(self, mock_get_all_address):
         """Api should return information about address."""
@@ -72,3 +98,12 @@ class TestApiAddress(unittest.TestCase):
         self.assertEqual(len(response.json), len(self.valid_test_data))
         self.assertEqual(response.json[0]['id'], self.valid_test_data[0]['id'])
         self.assertEqual(response.json[0]['name'], self.valid_test_data[0]['name'])
+
+    @patch('department_app.rest.address.CRUDAddress.get_address_list')
+    def test_get_all_address_empty(self, mock_get_all_address):
+        """Api should return information about address."""
+        mock_get_all_address.return_value = []
+        response = AddressList.get()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json), 0)
