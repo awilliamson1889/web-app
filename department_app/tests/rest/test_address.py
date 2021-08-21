@@ -79,7 +79,7 @@ class TestApiAddress(unittest.TestCase):
     @patch('department_app.rest.address.Address.get_json')
     def test_put_address_success(self, mok_get_json):
         """Api should return information about address."""
-        mok_get_json.return_value = self.valid_test_data[1]
+        mok_get_json.return_value = self.valid_test_data[0]
         response = Address.put(1)
 
         self.assertEqual(response.status_code, 201)
