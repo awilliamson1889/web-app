@@ -14,7 +14,6 @@ api = Api(address_api)
 
 class Address(Resource):
     """Address API class"""
-
     @staticmethod
     def get_json():
         """Get address json, if json have wrong format - return abort """
