@@ -1,8 +1,11 @@
 """Rest employee Api"""
-from flask import Blueprint, jsonify, make_response
-from flask_restful import Resource, Api
+from sqlalchemy.exc import IntegrityError
+from flask import Blueprint, jsonify, make_response, request
+from flask_restful import Resource, Api, abort
+from pydantic import ValidationError
 
 from department_app.service import CRUDEmployee
+from department_app.schemas import EmployeeSchema
 
 employee_api = Blueprint('employee_api', __name__)
 
@@ -11,6 +14,31 @@ api = Api(employee_api)
 
 class Employee(Resource):
     """Employee API class"""
+    @staticmethod
+    def get_json():
+        """Get employee json, if json have wrong format - return abort """
+        try:
+            employee_json = {'name': request.json['name'], 'surname': request.json['surname'],
+                             'date_of_birth': request.json['date_of_birth'],
+                             'salary': request.json['salary'], 'email': request.json['email'],
+                             'phone': request.json['phone'],
+                             'date_of_joining': request.json['date_of_joining'],
+                             'department': request.json['department'], 'location': request.json['location'],
+                             'work_address': request.json['work_address'], 'key_skill': request.json['key_skill'],
+                             'permission': request.json['permission']}
+        except KeyError:
+            return False
+        return employee_json
+
+    @staticmethod
+    def json_is_valid(json) -> bool:
+        """Validate employee json data, if json data not valid - return abort"""
+        try:
+            EmployeeSchema(**json)
+        except ValidationError:
+            return False
+        return True
+
     @staticmethod
     def get(employee_id):
         """
@@ -32,7 +60,12 @@ class Employee(Resource):
           200:
             description: Department information returned
         """
-        employee = CRUDEmployee.get_employee(employee_id)
+        if str(employee_id).isdigit() and int(employee_id) > 0:
+            employee = CRUDEmployee.get(employee_id)
+        else:
+            abort(404, message="Invalid ID format!")
+        if not employee:
+            abort(404, message=f"No such employee with ID={employee_id}")
         return make_response(jsonify(employee), 200)
 
     @staticmethod
@@ -111,8 +144,25 @@ class Employee(Resource):
           201:
             description: Employee information successful update
         """
-        employee = CRUDEmployee.update_employee(employee_id)
-        return make_response(jsonify(employee), 201)
+        employee_json = Employee.get_json()
+        if not employee_json:
+            abort(404, message="Wrong JSON fields names.")
+
+        if not Employee.json_is_valid(employee_json):
+            abort(404, message="JSON is not valid.")
+        try:
+            result = CRUDEmployee.update(employee_id, name=employee_json['name'], surname=employee_json['surname'],
+                                         date_of_birth=employee_json['date_of_birth'], salary=employee_json['salary'],
+                                         email=employee_json['email'], phone=employee_json['phone'],
+                                         date_of_joining=employee_json['date_of_joining'],
+                                         department=employee_json['department'], location=employee_json['location'],
+                                         work_address=employee_json['work_address'],
+                                         key_skill=employee_json['key_skill'], permission=employee_json['permission'])
+        except IntegrityError as exception:
+            abort(404, message=f"{exception}")
+        if not result:
+            return abort(404, message="Employee not updated.")
+        return make_response(jsonify({'message': 'Data successful updated.'}), 201)
 
     @staticmethod
     def delete(employee_id):
@@ -135,8 +185,9 @@ class Employee(Resource):
           204:
             description: Employee deleted
         """
-        CRUDEmployee.delete_employee(employee_id)
-        return '', 204
+        if CRUDEmployee.delete(employee_id):
+            return make_response(jsonify({'message': 'Data successful deleted.'}), 204)
+        return abort(404, message="Employee not deleted.")
 
 
 class EmployeeList(Resource):
@@ -209,7 +260,16 @@ class EmployeeList(Resource):
           201:
             description: The employee was successfully created
         """
-        employee = CRUDEmployee.create_employee()
+        employee_json = Employee.get_json()
+        if not employee_json:
+            abort(404, message="Wrong JSON fields names.")
+
+        if not Employee.json_is_valid(employee_json):
+            abort(404, message="JSON is not valid.")
+        try:
+            employee = CRUDEmployee.create(**employee_json)
+        except IntegrityError as exception:
+            abort(404, message=f"{exception}")
         return make_response(jsonify(employee), 201)
 
     @staticmethod
@@ -224,7 +284,7 @@ class EmployeeList(Resource):
           200:
             description: All employees returned
         """
-        employee = CRUDEmployee.get_all_employee()
+        employee = CRUDEmployee.get_employee_list()
         return make_response(jsonify(employee), 200)
 
 
