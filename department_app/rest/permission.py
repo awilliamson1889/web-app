@@ -1,8 +1,11 @@
 """Rest permission Api"""
-from flask import Blueprint, jsonify, make_response
-from flask_restful import Resource, Api
+from sqlalchemy.exc import IntegrityError
+from flask import Blueprint, jsonify, make_response, request
+from flask_restful import Resource, Api, abort
+from pydantic import ValidationError
 
 from department_app.service import CRUDPermission
+from department_app.schemas import PermissionSchema
 
 permission_api = Blueprint('permission_api', __name__)
 
@@ -11,6 +14,24 @@ api = Api(permission_api)
 
 class Permission(Resource):
     """Permission API class"""
+    @staticmethod
+    def get_json():
+        """Get permission json, if json have wrong format - return false """
+        try:
+            permission_json = {'name': request.json['name']}
+        except KeyError:
+            return False
+        return permission_json
+
+    @staticmethod
+    def json_is_valid(json) -> bool:
+        """Validate permission json data, if json data not valid - return abort"""
+        try:
+            PermissionSchema(**json)
+        except ValidationError:
+            return False
+        return True
+
     @staticmethod
     def get(permission_id):
         """
@@ -32,7 +53,12 @@ class Permission(Resource):
           200:
             description: Permission information returned
         """
-        permission = CRUDPermission.get_permission(permission_id)
+        if str(permission_id).isdigit() and int(permission_id) > 0:
+            permission = CRUDPermission.get(permission_id)
+        else:
+            abort(404, message="Invalid ID format!")
+        if not permission:
+            abort(404, message=f"No such permission with ID={permission_id}")
         return make_response(jsonify(permission), 200)
 
     @staticmethod
@@ -67,8 +93,19 @@ class Permission(Resource):
           204:
             description: Permission information successful update
         """
-        permission = CRUDPermission.update_permission(permission_id)
-        return make_response(jsonify(permission), 201)
+        permission_json = Permission.get_json()
+        if not permission_json:
+            abort(404, message="Wrong JSON fields names.")
+
+        if not Permission.json_is_valid(permission_json):
+            abort(404, message="JSON is not valid.")
+        try:
+            result = CRUDPermission.update(permission_id, name=permission_json['name'])
+        except IntegrityError as exception:
+            abort(404, message=f"{exception}")
+        if not result:
+            return abort(404, message="Permission not updated.")
+        return make_response(jsonify({'message': 'Data successful updated.'}), 201)
 
 
 class PermissionList(Resource):
@@ -97,7 +134,16 @@ class PermissionList(Resource):
           201:
             description: The permission was successfully created
         """
-        permission = CRUDPermission.create_permission()
+        permission_json = Permission.get_json()
+        if not permission_json:
+            abort(404, message="Wrong JSON fields names.")
+
+        if not Permission.json_is_valid(permission_json):
+            abort(404, message="JSON is not valid.")
+        try:
+            permission = CRUDPermission.create(**permission_json)
+        except IntegrityError as exception:
+            abort(404, message=f"{exception}")
         return make_response(jsonify(permission), 201)
 
     @staticmethod
@@ -112,7 +158,7 @@ class PermissionList(Resource):
           200:
             description: All permissions returned
         """
-        permissions = CRUDPermission.get_all_permission()
+        permissions = CRUDPermission.get_permission_list()
         return make_response(jsonify(permissions), 200)
 
 

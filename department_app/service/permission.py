@@ -1,78 +1,59 @@
 """Permission CRUD"""
+import logging
 from sqlalchemy.exc import IntegrityError
-from pydantic import ValidationError
-from flask_restful import abort
-from flask import request
 
-from department_app.schemas import PermissionSchema
 from department_app.models import PermissionModel
 from department_app.database import db
-from .service import check_id_format
 
 
 class CRUDPermission:
-    """Employee CRUD class"""
+    """Permission CRUD class"""
     @staticmethod
-    def get_permission(permission_id):
+    def get(permission_id):
         """Get permission func"""
-        check_id_format(permission_id)
+        logging.info("Get permission method called with parameters: id=%s", permission_id)
+
         permission = PermissionModel.query.filter_by(id=permission_id).first()
+
         if not permission:
-            abort(404, message=f"Could not find permission with ID: {permission_id}.")
+            return None
         return permission
 
     @staticmethod
-    def get_all_permission():
-        """Get permission func"""
-        permission_list = []
-        permissions = PermissionModel.query.all()
-        for permission in permissions:
-            permission_info = {'name': permission.name, 'permission_id': permission.id}
-            permission_list.append(permission_info)
-        return tuple(permission_list)
-
-    @staticmethod
-    def update_permission(permission_id):
-        """update permission func"""
-        permission = CRUDPermission.get_permission(permission_id)
-
-        permission_data = {'name': permission.name}
-
-        permission_json = request.json
-        permission_data.update(permission_json)
+    def update(permission_id, name):
+        """Update permission func"""
+        logging.info("Update permission method called with parameters: id=%s, name=%s.", permission_id, name)
 
         try:
-            PermissionSchema(**permission_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
-
-        permission.name = permission_data['name']
-
-        try:
+            result = PermissionModel.query.where(PermissionModel.id == permission_id). \
+                update({PermissionModel.name: name})
             db.session.commit()
         except IntegrityError as exception:
-            abort(404, message=f"Exception: {exception}")
-        return permission
+            logging.info("Permission with name=%s already exist.", name)
+            raise exception
+        return bool(result)
 
     @staticmethod
-    def create_permission(form=None):
-        """Create department func"""
-        if form:
-            permission_data = {'name': form.name.data}
-        else:
-            permission_data = {'name': request.json['name']}
+    def get_permission_list():
+        """Get location func"""
+        permissions = PermissionModel.query.all()
 
-        permission = PermissionModel(**permission_data)
+        if len(permissions) > 0:
+            return tuple(({'name': permission.name,
+                           'id': permission.id} for permission in permissions))
+        return list()
 
-        try:
-            PermissionSchema(**permission_data)
-        except ValidationError as exception:
-            abort(404, message=f"Exception: {exception}")
+    @staticmethod
+    def create(name):
+        """Create permission func"""
+        logging.info("Create permission method called with parameters: name=%s.", name)
+
+        permission = PermissionModel(name=name)
 
         try:
             db.session.add(permission)
             db.session.commit()
         except IntegrityError as exception:
-            abort(404, message=f"Exception: {exception}")
-
+            logging.info("Permission with name=%s already exist.", name)
+            raise exception
         return permission
