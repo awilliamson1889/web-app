@@ -41,7 +41,7 @@ class CRUDPermission:
         if len(permissions) > 0:
             return tuple(({'name': permission.name,
                            'id': permission.id} for permission in permissions))
-        return list()
+        return []
 
     @staticmethod
     def create(name):

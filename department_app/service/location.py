@@ -41,7 +41,7 @@ class CRUDLocation:
         if len(locations) > 0:
             return tuple(({'name': location.name,
                            'id': location.id} for location in locations))
-        return list()
+        return []
 
     @staticmethod
     def create(name):

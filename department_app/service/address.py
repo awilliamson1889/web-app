@@ -41,7 +41,7 @@ class CRUDAddress:
         if len(addresses) > 0:
             return tuple(({'name': address.name,
                            'id': address.id} for address in addresses))
-        return list()
+        return []
 
     @staticmethod
     def create(name: str):
