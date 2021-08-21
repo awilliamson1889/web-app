@@ -41,7 +41,7 @@ class CRUDSkill:
         if len(skills) > 0:
             return tuple(({'name': skill.name,
                            'id': skill.id} for skill in skills))
-        return list()
+        return []
 
     @staticmethod
     def create(name):
