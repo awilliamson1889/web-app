@@ -19,6 +19,7 @@ class TestApiAddress(unittest.TestCase):
     wrong_json = {"name_field": "Some Address1"}
 
     post_valid_data = {"name": "POST ADDRESS"}
+    put_valid_data = {"name": "PUT ADDRESS"}
     post_invalid_data = {"name": "Some Address1 Some Address1 Some Address1 Some Address1 Some Address1 Some Address1"
                                  "Some Address1 Some Address1 Some Address1 Some Address1 Some Address1 Some Address1"
                                  "Some Address1 Some Address1 Some Address1 Some Address1 Some Address1 Some Address1"}
@@ -79,7 +80,7 @@ class TestApiAddress(unittest.TestCase):
     @patch('department_app.rest.address.Address.get_json')
     def test_put_address_success(self, mok_get_json):
         """Api should return information about address."""
-        mok_get_json.return_value = self.post_valid_data
+        mok_get_json.return_value = self.put_valid_data
         response = Address.put(1)
 
         self.assertEqual(response.status_code, 201)
@@ -90,7 +91,7 @@ class TestApiAddress(unittest.TestCase):
     @patch('department_app.rest.address.Address.get_json')
     def test_put_address_fail(self, mok_get_json, mock_update, mock_abort):
         """Api should return information about address."""
-        mok_get_json.return_value = self.post_valid_data
+        mok_get_json.return_value = self.put_valid_data
         mock_update.return_value = False
         Address.put(1)
 
