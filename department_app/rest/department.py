@@ -1,8 +1,11 @@
 """Rest department Api"""
-from flask import Blueprint, jsonify, make_response
-from flask_restful import Resource, Api
+from sqlalchemy.exc import IntegrityError
+from flask import Blueprint, jsonify, make_response, request
+from flask_restful import Resource, Api, abort
+from pydantic import ValidationError
 
 from department_app.service import CRUDDepartment
+from department_app.schemas import DepartmentSchema
 
 
 department_api = Blueprint('department_api', __name__)
@@ -12,6 +15,26 @@ api = Api(department_api)
 
 class Department(Resource):
     """Department API class"""
+    @staticmethod
+    def get_json():
+        """Get address json, if json have wrong format - return abort """
+        try:
+            department_json = {'name': request.json['name'],
+                               'date_of_creation': request.json['date_of_creation'],
+                               'manager': request.json['manager']}
+        except KeyError:
+            return False
+        return department_json
+
+    @staticmethod
+    def json_is_valid(json) -> bool:
+        """Validate address json data, if json data not valid - return abort"""
+        try:
+            DepartmentSchema(**json)
+        except ValidationError:
+            return False
+        return True
+
     @staticmethod
     def get(department_id):
         """
@@ -33,7 +56,12 @@ class Department(Resource):
           200:
             description: Department information returned
         """
-        department = CRUDDepartment.get_department(department_id)
+        if str(department_id).isdigit() and int(department_id) > 0:
+            department = CRUDDepartment.get(department_id)
+        else:
+            abort(404, message="Invalid ID format!")
+        if not department:
+            abort(404, message=f"No such department with ID={department_id}")
         return make_response(jsonify(department), 200)
 
     @staticmethod
@@ -76,8 +104,21 @@ class Department(Resource):
           204:
             description: Department information successful update
         """
-        department = CRUDDepartment.update_department(department_id)
-        return make_response(jsonify(department), 201)
+        department_json = Department.get_json()
+        if not department_json:
+            abort(404, message="Wrong JSON fields names.")
+
+        if not Department.json_is_valid(department_json):
+            abort(404, message="JSON is not valid.")
+        try:
+            result = CRUDDepartment.update(department_id, name=department_json['name'],
+                                           date_of_creation=department_json['date_of_creation'],
+                                           manager=department_json['manager'])
+        except IntegrityError as exception:
+            abort(404, message=f"{exception}")
+        if not result:
+            return abort(404, message="Department not updated.")
+        return make_response(jsonify({'message': 'Data successful updated.'}), 201)
 
 
 class DepartmentList(Resource):
@@ -114,7 +155,16 @@ class DepartmentList(Resource):
           201:
             description: The department was successfully created
         """
-        department = CRUDDepartment.create_department()
+        department_json = Department.get_json()
+        if not department_json:
+            abort(404, message="Wrong JSON fields names.")
+
+        if not Department.json_is_valid(department_json):
+            abort(404, message="JSON is not valid.")
+        try:
+            department = CRUDDepartment.create(**department_json)
+        except IntegrityError as exception:
+            abort(404, message=f"{exception}")
         return make_response(jsonify(department), 201)
 
     @staticmethod
@@ -129,7 +179,7 @@ class DepartmentList(Resource):
           200:
             description: All department returned
         """
-        departments = CRUDDepartment.get_all_department()
+        departments = CRUDDepartment.get_department_list()
         return make_response(jsonify(departments), 200)
 
 
