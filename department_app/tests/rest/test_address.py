@@ -90,7 +90,7 @@ class TestApiAddress(unittest.TestCase):
     @patch('department_app.rest.address.Address.get_json')
     def test_put_address_fail(self, mok_get_json, mock_update, mock_abort):
         """Api should return information about address."""
-        mok_get_json.return_value = self.valid_test_data[1]
+        mok_get_json.return_value = self.post_valid_data
         mock_update.return_value = False
         Address.put(1)
 
