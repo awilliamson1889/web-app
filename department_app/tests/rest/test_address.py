@@ -77,10 +77,12 @@ class TestApiAddress(unittest.TestCase):
 
         mock_abort.assert_called_once_with(404, message="No such address with ID=1")
 
+    @patch('department_app.rest.address.CRUDAddress.update')
     @patch('department_app.rest.address.Address.get_json')
-    def test_put_address_success(self, mok_get_json):
+    def test_put_address_success(self, mok_get_json, mock_update):
         """Api should return information about address."""
         mok_get_json.return_value = self.put_valid_data
+        mock_update.return_value = True
         response = Address.put(1)
 
         self.assertEqual(response.status_code, 201)
