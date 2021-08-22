@@ -63,9 +63,9 @@ class Employee(Resource):
         if str(employee_id).isdigit() and int(employee_id) > 0:
             employee = CRUDEmployee.get(employee_id)
         else:
-            abort(404, message="Invalid ID format!")
+            return abort(404, message="Invalid ID format!")
         if not employee:
-            abort(404, message=f"No such employee with ID={employee_id}")
+            return abort(404, message=f"No such employee with ID={employee_id}")
         return make_response(jsonify(employee), 200)
 
     @staticmethod
@@ -146,10 +146,10 @@ class Employee(Resource):
         """
         employee_json = Employee.get_json()
         if not employee_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Employee.json_is_valid(employee_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             result = CRUDEmployee.update(employee_id, name=employee_json['name'], surname=employee_json['surname'],
                                          date_of_birth=employee_json['date_of_birth'], salary=employee_json['salary'],
@@ -159,7 +159,7 @@ class Employee(Resource):
                                          work_address=employee_json['work_address'],
                                          key_skill=employee_json['key_skill'], permission=employee_json['permission'])
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         if not result:
             return abort(404, message="Employee not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -262,14 +262,14 @@ class EmployeeList(Resource):
         """
         employee_json = Employee.get_json()
         if not employee_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Employee.json_is_valid(employee_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             employee = CRUDEmployee.create(**employee_json)
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         return make_response(jsonify(employee), 201)
 
     @staticmethod

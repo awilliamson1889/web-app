@@ -105,12 +105,15 @@ class CRUDEmployee:
             .join(DepartmentModel).join(PermissionModel).join(AddressModel).join(LocationModel).join(SkillModel)
         employee_list = []
         employees = query_join.all()
-        for employee, department, permission, address, location_inf, skill_inf in employees:
-            user_info = {'name': employee.name, 'surname': employee.surname, 'date_of_birth': employee.date_of_birth,
+        for employee, department, permission, address, location, skill in employees:
+            user_info = {'name': employee.name, 'surname': employee.surname,
+                         'date_of_birth': employee.date_of_birth,
                          'salary': employee.salary, 'email': employee.email, 'phone': employee.phone,
                          'date_of_joining': employee.date_of_joining, 'department': department.name,
-                         'location': location_inf.name, 'work_address': address.name, 'key_skill': skill_inf.name,
+                         'location': location.name, 'work_address': address.name, 'key_skill': skill.name,
                          'permission': permission.name, 'department_id': employee.department,
-                         'employee_id': employee.id}
+                         'employee_id': employee.id, 'location_id': employee.location,
+                         'address_id': employee.work_address, 'skill_id': employee.key_skill,
+                         'permission_id': employee.permission}
             employee_list.append(user_info)
         return tuple(employee_list)
