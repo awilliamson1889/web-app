@@ -56,9 +56,9 @@ class Skill(Resource):
         if str(skill_id).isdigit() and int(skill_id) > 0:
             skill = CRUDSkill.get(skill_id)
         else:
-            abort(404, message="Invalid ID format!")
+            return abort(404, message="Invalid ID format!")
         if not skill:
-            abort(404, message=f"No such skill with ID={skill_id}")
+            return abort(404, message=f"No such skill with ID={skill_id}")
         return make_response(jsonify(skill), 200)
 
     @staticmethod
@@ -95,14 +95,14 @@ class Skill(Resource):
         """
         skill_json = Skill.get_json()
         if not skill_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Skill.json_is_valid(skill_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             result = CRUDSkill.update(skill_id, name=skill_json['name'])
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         if not result:
             return abort(404, message="Skill not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -136,14 +136,14 @@ class SkillList(Resource):
         """
         skill_json = Skill.get_json()
         if not skill_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Skill.json_is_valid(skill_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             skill = CRUDSkill.create(**skill_json)
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         return make_response(jsonify(skill), 201)
 
     @staticmethod
