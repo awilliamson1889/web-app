@@ -59,9 +59,9 @@ class Department(Resource):
         if str(department_id).isdigit() and int(department_id) > 0:
             department = CRUDDepartment.get(department_id)
         else:
-            abort(404, message="Invalid ID format!")
+            return abort(404, message="Invalid ID format!")
         if not department:
-            abort(404, message=f"No such department with ID={department_id}")
+            return abort(404, message=f"No such department with ID={department_id}")
         return make_response(jsonify(department), 200)
 
     @staticmethod
@@ -106,16 +106,16 @@ class Department(Resource):
         """
         department_json = Department.get_json()
         if not department_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Department.json_is_valid(department_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             result = CRUDDepartment.update(department_id, name=department_json['name'],
                                            date_of_creation=department_json['date_of_creation'],
                                            manager=department_json['manager'])
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         if not result:
             return abort(404, message="Department not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -157,14 +157,14 @@ class DepartmentList(Resource):
         """
         department_json = Department.get_json()
         if not department_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Department.json_is_valid(department_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             department = CRUDDepartment.create(**department_json)
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         return make_response(jsonify(department), 201)
 
     @staticmethod

@@ -19,11 +19,11 @@ class CRUDDepartment:
         for department in department_query:
             employee = EmployeeModel.query.filter_by(department=department.id).all()
             department_info = {'name': department.name,
-                                'manager': department.manager,
-                                'date_of_creation': department.date_of_creation,
-                                'employees': len(EmployeeModel.query.filter_by(department=department.id).all()),
-                                'department_avg_salary': sum([x.salary for x in employee]),
-                                'department_id': department.id}
+                               'manager': department.manager,
+                               'date_of_creation': department.date_of_creation,
+                               'employees': len(EmployeeModel.query.filter_by(department=department.id).all()),
+                               'department_avg_salary': sum([x.salary for x in employee]),
+                               'department_id': department.id}
             return department_info
 
     @staticmethod
