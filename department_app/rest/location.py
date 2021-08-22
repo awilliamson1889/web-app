@@ -56,9 +56,9 @@ class Location(Resource):
         if str(location_id).isdigit() and int(location_id) > 0:
             location = CRUDLocation.get(location_id)
         else:
-            abort(404, message="Invalid ID format!")
+            return abort(404, message="Invalid ID format!")
         if not location:
-            abort(404, message=f"No such location with ID={location_id}")
+            return abort(404, message=f"No such location with ID={location_id}")
         return make_response(jsonify(location), 200)
 
     @staticmethod
@@ -95,14 +95,14 @@ class Location(Resource):
         """
         location_json = Location.get_json()
         if not location_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Location.json_is_valid(location_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             result = CRUDLocation.update(location_id, name=location_json['name'])
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         if not result:
             return abort(404, message="Location not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -136,14 +136,14 @@ class LocationList(Resource):
         """
         location_json = Location.get_json()
         if not location_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Location.json_is_valid(location_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             location = CRUDLocation.create(**location_json)
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         return make_response(jsonify(location), 201)
 
     @staticmethod
