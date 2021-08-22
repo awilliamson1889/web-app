@@ -56,9 +56,9 @@ class Permission(Resource):
         if str(permission_id).isdigit() and int(permission_id) > 0:
             permission = CRUDPermission.get(permission_id)
         else:
-            abort(404, message="Invalid ID format!")
+            return abort(404, message="Invalid ID format!")
         if not permission:
-            abort(404, message=f"No such permission with ID={permission_id}")
+            return abort(404, message=f"No such permission with ID={permission_id}")
         return make_response(jsonify(permission), 200)
 
     @staticmethod
@@ -95,14 +95,14 @@ class Permission(Resource):
         """
         permission_json = Permission.get_json()
         if not permission_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Permission.json_is_valid(permission_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             result = CRUDPermission.update(permission_id, name=permission_json['name'])
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         if not result:
             return abort(404, message="Permission not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -136,14 +136,14 @@ class PermissionList(Resource):
         """
         permission_json = Permission.get_json()
         if not permission_json:
-            abort(404, message="Wrong JSON fields names.")
+            return abort(404, message="Wrong JSON fields names.")
 
         if not Permission.json_is_valid(permission_json):
-            abort(404, message="JSON is not valid.")
+            return abort(404, message="JSON is not valid.")
         try:
             permission = CRUDPermission.create(**permission_json)
         except IntegrityError as exception:
-            abort(404, message=f"{exception}")
+            return abort(404, message=f"{exception}")
         return make_response(jsonify(permission), 201)
 
     @staticmethod
