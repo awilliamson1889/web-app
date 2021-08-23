@@ -13,11 +13,7 @@ class CRUDLocation:
         """Get location func"""
         logging.info("Get location method called with parameters: id=%s", location_id)
 
-        location = LocationModel.query.filter_by(id=location_id).first()
-
-        if not location:
-            return None
-        return location
+        return LocationModel.query.filter_by(id=location_id).first()
 
     @staticmethod
     def update(location_id, name):

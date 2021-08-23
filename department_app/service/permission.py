@@ -13,11 +13,7 @@ class CRUDPermission:
         """Get permission func"""
         logging.info("Get permission method called with parameters: id=%s", permission_id)
 
-        permission = PermissionModel.query.filter_by(id=permission_id).first()
-
-        if not permission:
-            return None
-        return permission
+        return PermissionModel.query.filter_by(id=permission_id).first()
 
     @staticmethod
     def update(permission_id, name):

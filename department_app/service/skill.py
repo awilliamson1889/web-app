@@ -13,11 +13,7 @@ class CRUDSkill:
         """Get skill func"""
         logging.info("Get skill method called with parameters: id=%s", skill_id)
 
-        skill = SkillModel.query.filter_by(id=skill_id).first()
-
-        if not skill:
-            return None
-        return skill
+        return SkillModel.query.filter_by(id=skill_id).first()
 
     @staticmethod
     def update(skill_id, name):

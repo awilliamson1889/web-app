@@ -13,11 +13,7 @@ class CRUDAddress:
         """Get address func"""
         logging.info("Get method called with parameters: id=%s", address_id)
 
-        address = AddressModel.query.filter_by(id=address_id).first()
-
-        if not address:
-            return None
-        return address
+        return AddressModel.query.filter_by(id=address_id).first()
 
     @staticmethod
     def update(address_id: int, name: str):
