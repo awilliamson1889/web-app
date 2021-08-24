@@ -1,0 +1,34 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+      <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+     <div class="content">
+              <div class="navbar">
+                <a href="{{ url_for('frontend.employee_page', employee_id='1') }}">My Profile</a>
+                <a href="{{ url_for('frontend.departments_page') }}">Departments</a>
+                <a href="{{ url_for('frontend.search_employee_page') }}">People Search</a>
+                <div class="dropdown">
+                <button class="dropbtn">Management
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('frontend.manage_department_page') }}">Departments</a>
+                    <a href="{{ url_for('frontend.manage_employee_page') }}">Employees</a>
+                </div>
+                </div>
+                <!-- Right-aligned links -->
+                <div class="topnav-right">
+                    <a href="{{ url_for('frontend.logout') }}">Logout</a>
+                </div>
+            </div>
+    {% block content %}
+    {% endblock %}
+    </div>
+  </body>
+  </html>
