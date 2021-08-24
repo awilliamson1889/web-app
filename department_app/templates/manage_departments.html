@@ -1,54 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-    <title>Manage departments</title>
-</head>
-<body>
-    <script src="../static/js/sort_table2.js"></script>
-    <div class="container">
-        <div class="content">
-            <div class="navbar">
-                <a href="/employee/1">My Profile</a>
-                <a href="/departments">Departments</a>
-                <a href="/employee/search">People Search</a>
-                <div class="dropdown">
-                <button class="dropbtn">Management
-                    <i class="fa fa-caret-down"></i>
-                </button> 
-                <div class="dropdown-content">
-                    <a href="/manage/department">Departments</a>
-                    <a href="/manage/employee">Employees</a>
-                </div>
-                </div>
-                <!-- Right-aligned links -->
-                <div class="topnav-right">
-                    <a href="login.html">Logout</a>
-                </div>
-            </div>
-            <div class="filters"><p>MANAGE DEPARTMENTS</p></div>
-            <div>
+{% extends 'base.html' %}
 
-                <br>
-                <a class="my_button" href="/add/department">Add Department</a>
-            </div>
+{% block title%}Manage departments{% endblock %}
 
-            <div class="table_dark_department">
-                <table>
-                    <thead><tr><th>Department</th><th>Manager</th><th>Total Employees</th><th>Date of creation</th><th>Avg salary</th><th>Action</th></tr></thead>
-                    {% for department in departments_data%}
+{% block content %}
+<div class="filters"><p>MANAGE DEPARTMENTS</p></div>
+<div>
+    <br>
+    <a class="my_button" href="/add/department">Add Department</a>
+</div>
+<div class="table_dark_department">
+    {% if departments_data %}
+        <table>
+            <thead><tr><th>Department</th><th>Manager</th><th>Total Employees</th><th>Date of creation</th><th>Avg salary</th><th>Action</th></tr></thead>
+                {% for department in departments_data%}
                     <tr><td>{{department.name}}</td><td>{{department.manager}}</td><td>{{department.emp_count}}</td><td>{{department.date_of_creation}}</td><td>{%if department.emp_count == 0%} 0 {%else%} {{department.dep_salary / department.emp_count}}{%endif%}</td><td><a href="/update/department/{{department.dep_id}}">Edit</a> | <a href="/department/{{department.dep_id}}">View</a></td></tr>
-                    {% endfor %}
-                </table>
-            </div>
-        
-            <div class="pagination">
-                <span class="footer_part-span">Page <span class="first">1</span> of <span class="second">1</span></span>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+                {% endfor %}
+        </table>
+    {% else %}
+        <br>
+        <p>No departments here!</p>
+        <br>
+    {% endif %}
+</div>
+<div class="pagination">
+    <span class="footer_part-span">Page <span class="first">1</span> of <span class="second">1</span></span>
+</div>
+{% endblock %}
