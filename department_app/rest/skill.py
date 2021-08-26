@@ -15,15 +15,6 @@ api = Api(skill_api)
 class Skill(Resource):
     """Skill API class"""
     @staticmethod
-    def get_json():
-        """Get address json, if json have wrong format - return abort """
-        try:
-            skill_json = {'name': request.json['name']}
-        except KeyError:
-            return False
-        return skill_json
-
-    @staticmethod
     def json_is_valid(json) -> bool:
         """Validate address json data, if json data not valid - return abort"""
         try:
@@ -93,14 +84,12 @@ class Skill(Resource):
           204:
             description: Skill information successful update
         """
-        skill_json = Skill.get_json()
-        if not skill_json:
-            return abort(404, message="Wrong JSON fields names.")
+        skill_json = request.json
 
         if not Skill.json_is_valid(skill_json):
             return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDSkill.update(skill_id, name=skill_json['name'])
+            result = CRUDSkill.update(skill_id, **skill_json)
         except IntegrityError as exception:
             return abort(404, message=f"{exception}")
         if not result:
@@ -134,9 +123,7 @@ class SkillList(Resource):
           201:
             description: The skill was successfully created
         """
-        skill_json = Skill.get_json()
-        if not skill_json:
-            return abort(404, message="Wrong JSON fields names.")
+        skill_json = request.json
 
         if not Skill.json_is_valid(skill_json):
             return abort(404, message="JSON is not valid.")
