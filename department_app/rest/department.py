@@ -16,17 +16,6 @@ api = Api(department_api)
 class Department(Resource):
     """Department API class"""
     @staticmethod
-    def get_json():
-        """Get address json, if json have wrong format - return abort """
-        try:
-            department_json = {'name': request.json['name'],
-                               'date_of_creation': request.json['date_of_creation'],
-                               'manager': request.json['manager']}
-        except KeyError:
-            return False
-        return department_json
-
-    @staticmethod
     def json_is_valid(json) -> bool:
         """Validate address json data, if json data not valid - return abort"""
         try:
@@ -104,16 +93,12 @@ class Department(Resource):
           204:
             description: Department information successful update
         """
-        department_json = Department.get_json()
-        if not department_json:
-            return abort(404, message="Wrong JSON fields names.")
+        department_json = request.json
 
         if not Department.json_is_valid(department_json):
             return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDDepartment.update(department_id, name=department_json['name'],
-                                           date_of_creation=department_json['date_of_creation'],
-                                           manager=department_json['manager'])
+            result = CRUDDepartment.update(department_id, **department_json)
         except IntegrityError as exception:
             return abort(404, message=f"{exception}")
         if not result:
@@ -155,7 +140,7 @@ class DepartmentList(Resource):
           201:
             description: The department was successfully created
         """
-        department_json = Department.get_json()
+        department_json = request.json
         if not department_json:
             return abort(404, message="Wrong JSON fields names.")
 
