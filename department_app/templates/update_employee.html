@@ -6,12 +6,12 @@
 <div class="bg-add-employe">
     <h2>Update Employee</h2>
     {% if employee_data %}
-        <form action="/update/employee/data/{{employee_data.emp_id}}" method="POST">
+        <form method="POST">
             <div class="add-employee">
-                <p>Name</p>
-                <input type="text" placeholder="Name" name="name" class="edit" value="{{employee_data.name}}"> <br>
-                <p>Surname</p>
-                <input type="text" placeholder="Surname" name="surname" class="edit" value="{{employee_data.surname}}"> <br>
+                <p>{{ form.name.label }}</p>
+                    {{ form.name(class="edit", value=employee_data.name) }}
+                <p>{{ form.surname.label }}</p>
+                    {{ form.surname(class="edit", value=employee_data.surname) }}
                 <p>Department</p>
                 <select class="select-css" name="department">
                     <option value="{{employee_data.department_id}}" selected hidden>{{employee_data.department}}</option>
@@ -20,33 +20,40 @@
                     {% endfor%}
                 </select>
                 <a href="/add/department">New</a> <br>
-                <p>Date of Birth</p>
-                <input type="date" name="date_of_birth" class="edit" required value="{{employee_data.date_of_birth}}">
-                <p>Salary</p>
-                <input type="text" placeholder="Salary" name="salary" class="edit" value="{{employee_data.salary}}"> <br>
-                <p>Work phone</p>
-                <input type="text" placeholder="Work phone" name="phone" class="edit" value="{{employee_data.phone}}"><br>
+                <p>{{ form.date_of_birth.label }}</p>
+                    {{ form.date_of_birth(class="edit", value=employee_data.date_of_birth) }}
+                <p>{{ form.salary.label }}</p>
+                    {{ form.salary(class="edit", value=employee_data.salary) }}
+                <p>{{ form.phone.label }}</p>
+                    {{ form.phone(class="edit", value=employee_data.phone) }}
                 <br>
                 <a class="my_button" href="/manage/employee">Cancle</a>
                 <button type="submit" class="my_button"><i class="save"></i>Save</button>
+                <p> </p>
+                {% for field, errors in form.errors.items() %}
+                    <small class="form-text text-muted ">
+                        {{ ', '.join(errors) }}
+                        <br>
+                    </small>
+                {% endfor %}
             </div>
             <div class="add-employee">
-                <p>Email</p>
-                <input type="email" placeholder="Email" name="email" class="edit" value="{{employee_data.email}}"> <br>
+                <p>{{ form.email.label }}</p>
+                    {{ form.email(class="edit", value=employee_data.email) }}
                 <p>Location</p>
                 <select class="select-css" name="location">
                     <option value="{{employee_data.location_id}}" selected hidden>{{employee_data.location}}</option>
-                    {% for location in locations_data %}
-                    <option value="{{location.location_id}}">{{location.name}}</option>
-                    {% endfor%}
+                        {% for location in locations_data %}
+                            <option value="{{location.location_id}}">{{location.name}}</option>
+                        {% endfor%}
                 </select>
                 <a href="/add/location">New</a> <br>
                 <p>Work address</p>
                 <select class="select-css" name="work_address">
                     <option value="{{employee_data.address_id}}" selected hidden>{{employee_data.work_address}}</option>
-                    {% for address in addresses_data %}
-                        <option value="{{address.address_id}}">{{address.name}}</option>
-                    {% endfor %}
+                        {% for address in addresses_data %}
+                            <option value="{{address.address_id}}">{{address.name}}</option>
+                        {% endfor %}
                 </select>
                 <a href="/add/address">New</a> <br>
                 <p>Key skill</p>
@@ -57,8 +64,8 @@
                     {% endfor%}
                 </select>
                 <a href="/add/skill">New</a> <br>
-                <p>Date of joining</p>
-                <input type="date" name="date_of_joining" class="edit" value="{{employee_data.date_of_joining}}">
+                <p>{{ form.date_of_joining.label }}</p>
+                    {{ form.date_of_joining(class="edit", value=employee_data.date_of_joining) }}
                 <p>Permission</p>
                 <select class="select-css" name="permission">
                     <option value="{{employee_data.permission_id}}" selected hidden>{{employee_data.permission}}</option>

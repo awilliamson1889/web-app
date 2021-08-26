@@ -6,16 +6,31 @@
 <div class="bg-add-employe">
     <h2>Create Department</h2>
     <div class="add-employee">
-        <form action="/create/new/department" method = "POST">
-            <p>Department</p>
-            <input type="text" placeholder="Name" name="name" class="edit"> <br>
-            <p>Manager</p>
-            <input type="text" placeholder="Surname" name="manager" class="edit"> <br>
-            <p>Date of creation</p>
-            <input type="date" name="date_of_creation" class="edit">
-            <br>
-            <a class="my_button" href="/manage/department">Cancle</a>
-            <button type="submit" class="my_button"><i class="save"></i>Save</button>
+        <form method = "POST">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for=""> {{ form.name.label }}</label>
+                        {{ form.name(class="edit") }}
+                    <br>
+                    <label for=""> {{ form.manager.label }}</label>
+                        {{ form.manager(class="edit") }}
+                    <br>
+                    <label for=""> {{ form.date_of_creation.label }}</label>
+                        {{ form.date_of_creation(class="edit") }}
+                </div>
+                <div class="form-group">
+                    {{ form.submit}}
+                </div>
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% endif %}
+                {% for field, errors in form.errors.items() %}
+                    <small class="form-text text-muted ">
+                        {{ ', '.join(errors) }}
+                        <br>
+                    </small>
+                {% endfor %}
+            </div>
         </form>
     </div>
 </div>

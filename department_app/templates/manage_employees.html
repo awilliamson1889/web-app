@@ -28,7 +28,7 @@
         <table>
             <thead><tr><th>Name</th><th>Surname</th><th>Department</th><th>Date of Birth</th><th>Salary</th><th>Phone</th><th>Email</th><th>Location</th><th>Address</th><th>Key skill</th><th>Date of joining</th><th>Permission</th><th>Action</th></tr></thead>
             {% for employee in employees_data%}
-                <tr><td>{{employee.name}}</td><td>{{employee.surname}}</td><td>{{employee.department}}</td><td>{{employee.date_of_birth}}</td><td>{{employee.salary}}</td><td>{{employee.phone}}</td><td>{{employee.email}}</td><td>{{employee.location}}</td> <td>{{employee.work_address}}</td><td>{{employee.key_skill}}</td><td>{{employee.date_of_joining}}</td><td>{{employee.permission}}</td><td><a href="/update/employee/{{employee.emp_id}}">Edit</a> | <a href="/employee/{{employee.emp_id}}">View</a> | <a href="/delete-employee/{{employee.emp_id}}">Delete</a></td></tr>
+                <tr><td>{{employee.name}}</td><td>{{employee.surname}}</td><td>{{employee.department}}</td><td>{{employee.date_of_birth}}</td><td>{{employee.salary}}</td><td>{{employee.phone}}</td><td>{{employee.email}}</td><td>{{employee.location}}</td> <td>{{employee.work_address}}</td><td>{{employee.key_skill}}</td><td>{{employee.date_of_joining}}</td><td>{{employee.permission}}</td><td><a href="/update-employee/{{employee.employee_id}}">Edit</a> | <a href="/employee/{{employee.employee_id}}">View</a> | <a href="/delete-employee/{{employee.employee_id}}">Delete</a></td></tr>
             {% endfor %}
         </table>
     {% else %}

@@ -16,23 +16,23 @@
     <ul>
         {% if departments_data %}
             {% for department in departments_data %}
-            <li>
-                <div class="department">
-                    <div class="department-info-image">
-                        <img src="static/img/image1.jpg" width="150" height="150" class="image" id="img">
+                <li>
+                    <div class="department">
+                        <div class="department-info-image">
+                            <img src="static/img/image1.jpg" width="150" height="150" class="image" id="img">
+                        </div>
+                        <div class="department-info">
+                            <p><a href="/department/{{department.department_id}}">{{ department.name }}</a></p>
+                            <p>Total employees {{ department.employees }}</p>
+                            <p>Manager {{ department.manager }}</p>
+                            <br>
+                        </div>
                     </div>
-                    <div class="department-info">
-                        <p><a href="/department/{{department.dep_id}}">{{ department.name }}</a></p>
-                        <p>Total employees {{ department.emp_count }}</p>
-                        <p>Manager {{ department.manager }}</p>
-                        <br>
-                    </div>
-                </div>
-            </li>
-            {% endfor %}
-        {% else %}
-            <p>No departments here!</p>
-            <br>
+                </li>
+                {% endfor %}
+            {% else %}
+                <p>No departments here!</p>
+                <br>
         {% endif %}
     </ul>
 </div>
