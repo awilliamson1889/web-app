@@ -85,8 +85,6 @@ class Location(Resource):
             description: Location information successful update
         """
         location_json = request.json
-        if not location_json:
-            return abort(404, message="Wrong JSON fields names.")
 
         if not Location.json_is_valid(location_json):
             return abort(404, message="JSON is not valid.")
@@ -126,8 +124,6 @@ class LocationList(Resource):
             description: The location was successfully created
         """
         location_json = request.json
-        if not location_json:
-            return abort(404, message="Wrong JSON fields names.")
 
         if not Location.json_is_valid(location_json):
             return abort(404, message="JSON is not valid.")

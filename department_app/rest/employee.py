@@ -129,8 +129,6 @@ class Employee(Resource):
             description: Employee information successful update
         """
         employee_json = request.json
-        if not employee_json:
-            return abort(404, message="Wrong JSON fields names.")
 
         if not Employee.json_is_valid(employee_json):
             return abort(404, message="JSON is not valid.")
@@ -239,8 +237,6 @@ class EmployeeList(Resource):
             description: The employee was successfully created
         """
         employee_json = request.json
-        if not employee_json:
-            return abort(404, message="Wrong JSON fields names.")
 
         if not Employee.json_is_valid(employee_json):
             return abort(404, message="JSON is not valid.")

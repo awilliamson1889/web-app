@@ -141,8 +141,6 @@ class DepartmentList(Resource):
             description: The department was successfully created
         """
         department_json = request.json
-        if not department_json:
-            return abort(404, message="Wrong JSON fields names.")
 
         if not Department.json_is_valid(department_json):
             return abort(404, message="JSON is not valid.")
