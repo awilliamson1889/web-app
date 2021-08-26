@@ -15,22 +15,6 @@ api = Api(employee_api)
 class Employee(Resource):
     """Employee API class"""
     @staticmethod
-    def get_json():
-        """Get employee json, if json have wrong format - return abort """
-        try:
-            employee_json = {'name': request.json['name'], 'surname': request.json['surname'],
-                             'date_of_birth': request.json['date_of_birth'],
-                             'salary': request.json['salary'], 'email': request.json['email'],
-                             'phone': request.json['phone'],
-                             'date_of_joining': request.json['date_of_joining'],
-                             'department': request.json['department'], 'location': request.json['location'],
-                             'work_address': request.json['work_address'], 'key_skill': request.json['key_skill'],
-                             'permission': request.json['permission']}
-        except KeyError:
-            return False
-        return employee_json
-
-    @staticmethod
     def json_is_valid(json) -> bool:
         """Validate employee json data, if json data not valid - return abort"""
         try:
@@ -144,20 +128,14 @@ class Employee(Resource):
           201:
             description: Employee information successful update
         """
-        employee_json = Employee.get_json()
+        employee_json = request.json
         if not employee_json:
             return abort(404, message="Wrong JSON fields names.")
 
         if not Employee.json_is_valid(employee_json):
             return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDEmployee.update(employee_id, name=employee_json['name'], surname=employee_json['surname'],
-                                         date_of_birth=employee_json['date_of_birth'], salary=employee_json['salary'],
-                                         email=employee_json['email'], phone=employee_json['phone'],
-                                         date_of_joining=employee_json['date_of_joining'],
-                                         department=employee_json['department'], location=employee_json['location'],
-                                         work_address=employee_json['work_address'],
-                                         key_skill=employee_json['key_skill'], permission=employee_json['permission'])
+            result = CRUDEmployee.update(employee_id, **employee_json)
         except IntegrityError as exception:
             return abort(404, message=f"{exception}")
         if not result:
@@ -260,7 +238,7 @@ class EmployeeList(Resource):
           201:
             description: The employee was successfully created
         """
-        employee_json = Employee.get_json()
+        employee_json = request.json
         if not employee_json:
             return abort(404, message="Wrong JSON fields names.")
 
