@@ -15,15 +15,6 @@ api = Api(location_api)
 class Location(Resource):
     """Location API class"""
     @staticmethod
-    def get_json():
-        """Get location json, if json have wrong format - return false """
-        try:
-            location_json = {'name': request.json['name']}
-        except KeyError:
-            return False
-        return location_json
-
-    @staticmethod
     def json_is_valid(json) -> bool:
         """Validate location json data, if json data not valid - return false"""
         try:
@@ -93,14 +84,14 @@ class Location(Resource):
           204:
             description: Location information successful update
         """
-        location_json = Location.get_json()
+        location_json = request.json
         if not location_json:
             return abort(404, message="Wrong JSON fields names.")
 
         if not Location.json_is_valid(location_json):
             return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDLocation.update(location_id, name=location_json['name'])
+            result = CRUDLocation.update(location_id, **location_json)
         except IntegrityError as exception:
             return abort(404, message=f"{exception}")
         if not result:
@@ -134,7 +125,7 @@ class LocationList(Resource):
           201:
             description: The location was successfully created
         """
-        location_json = Location.get_json()
+        location_json = request.json
         if not location_json:
             return abort(404, message="Wrong JSON fields names.")
 
