@@ -15,15 +15,6 @@ api = Api(permission_api)
 class Permission(Resource):
     """Permission API class"""
     @staticmethod
-    def get_json():
-        """Get permission json, if json have wrong format - return false """
-        try:
-            permission_json = {'name': request.json['name']}
-        except KeyError:
-            return False
-        return permission_json
-
-    @staticmethod
     def json_is_valid(json) -> bool:
         """Validate permission json data, if json data not valid - return abort"""
         try:
@@ -93,14 +84,12 @@ class Permission(Resource):
           204:
             description: Permission information successful update
         """
-        permission_json = Permission.get_json()
-        if not permission_json:
-            return abort(404, message="Wrong JSON fields names.")
+        permission_json = request.json
 
         if not Permission.json_is_valid(permission_json):
             return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDPermission.update(permission_id, name=permission_json['name'])
+            result = CRUDPermission.update(permission_id, **permission_json)
         except IntegrityError as exception:
             return abort(404, message=f"{exception}")
         if not result:
@@ -134,9 +123,7 @@ class PermissionList(Resource):
           201:
             description: The permission was successfully created
         """
-        permission_json = Permission.get_json()
-        if not permission_json:
-            return abort(404, message="Wrong JSON fields names.")
+        permission_json = request.json
 
         if not Permission.json_is_valid(permission_json):
             return abort(404, message="JSON is not valid.")
