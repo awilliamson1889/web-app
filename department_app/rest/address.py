@@ -15,15 +15,6 @@ api = Api(address_api)
 class Address(Resource):
     """Address API class"""
     @staticmethod
-    def get_json():
-        """Get address json, if json have wrong format - return abort """
-        try:
-            address_json = {'name': request.json['name']}
-        except KeyError:
-            return False
-        return address_json
-
-    @staticmethod
     def json_is_valid(json) -> bool:
         """Validate address json data, if json data not valid - return abort"""
         try:
@@ -93,14 +84,12 @@ class Address(Resource):
           204:
             description: Address information successful update
         """
-        address_json = Address.get_json()
-        if not address_json:
-            return abort(404, message="Wrong JSON fields names.")
+        address_json = request.json
 
         if not Address.json_is_valid(address_json):
             return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDAddress.update(address_id, name=address_json['name'])
+            result = CRUDAddress.update(address_id, **address_json)
         except IntegrityError as exception:
             return abort(404, message=f"{exception}")
         if not result:
@@ -134,9 +123,7 @@ class AddressList(Resource):
           201:
             description: The address was successfully created
         """
-        address_json = Address.get_json()
-        if not address_json:
-            return abort(404, message="Wrong JSON fields names.")
+        address_json = request.json
 
         if not Address.json_is_valid(address_json):
             return abort(404, message="JSON is not valid.")
