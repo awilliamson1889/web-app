@@ -15,15 +15,6 @@ api = Api(employee_api)
 class Employee(Resource):
     """Employee API class"""
     @staticmethod
-    def json_is_valid(json) -> bool:
-        """Validate employee json data, if json data not valid - return abort"""
-        try:
-            EmployeeSchema(**json)
-        except ValidationError:
-            return False
-        return True
-
-    @staticmethod
     def get(employee_id):
         """
         This is the Employee API
@@ -44,10 +35,7 @@ class Employee(Resource):
           200:
             description: Department information returned
         """
-        if str(employee_id).isdigit() and int(employee_id) > 0:
-            employee = CRUDEmployee.get(employee_id)
-        else:
-            return abort(404, message="Invalid ID format!")
+        employee = CRUDEmployee.get(employee_id)
         if not employee:
             return abort(404, message=f"No such employee with ID={employee_id}")
         return make_response(jsonify(employee), 200)
@@ -130,11 +118,12 @@ class Employee(Resource):
         """
         employee_json = request.json
 
-        if not Employee.json_is_valid(employee_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDEmployee.update(employee_id, **employee_json)
+            valid_employee_json = EmployeeSchema(**employee_json).dict(exclude_unset=True)
+            result = CRUDEmployee.update(employee_id, **valid_employee_json)
         except IntegrityError as exception:
+            return abort(404, message=f"{exception}")
+        except ValidationError as exception:
             return abort(404, message=f"{exception}")
         if not result:
             return abort(404, message="Employee not updated.")
@@ -238,11 +227,12 @@ class EmployeeList(Resource):
         """
         employee_json = request.json
 
-        if not Employee.json_is_valid(employee_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            employee = CRUDEmployee.create(**employee_json)
+            valid_employee_json = EmployeeSchema(**employee_json).dict(exclude_unset=True)
+            employee = CRUDEmployee.create(**valid_employee_json)
         except IntegrityError as exception:
+            return abort(404, message=f"{exception}")
+        except ValidationError as exception:
             return abort(404, message=f"{exception}")
         return make_response(jsonify(employee), 201)
 

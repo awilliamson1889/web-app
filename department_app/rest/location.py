@@ -15,15 +15,6 @@ api = Api(location_api)
 class Location(Resource):
     """Location API class"""
     @staticmethod
-    def json_is_valid(json) -> bool:
-        """Validate location json data, if json data not valid - return false"""
-        try:
-            LocationSchema(**json)
-        except ValidationError:
-            return False
-        return True
-
-    @staticmethod
     def get(location_id):
         """
         This is the location API
@@ -44,10 +35,7 @@ class Location(Resource):
           200:
             description: Location information returned
         """
-        if str(location_id).isdigit() and int(location_id) > 0:
-            location = CRUDLocation.get(location_id)
-        else:
-            return abort(404, message="Invalid ID format!")
+        location = CRUDLocation.get(location_id)
         if not location:
             return abort(404, message=f"No such location with ID={location_id}")
         return make_response(jsonify(location), 200)
@@ -86,11 +74,12 @@ class Location(Resource):
         """
         location_json = request.json
 
-        if not Location.json_is_valid(location_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDLocation.update(location_id, **location_json)
+            valid_location_json = LocationSchema(**location_json).dict(exclude_unset=True)
+            result = CRUDLocation.update(location_id, **valid_location_json)
         except IntegrityError as exception:
+            return abort(404, message=f"{exception}")
+        except ValidationError as exception:
             return abort(404, message=f"{exception}")
         if not result:
             return abort(404, message="Location not updated.")
@@ -125,11 +114,12 @@ class LocationList(Resource):
         """
         location_json = request.json
 
-        if not Location.json_is_valid(location_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            location = CRUDLocation.create(**location_json)
+            valid_location_json = LocationSchema(**location_json).dict(exclude_unset=True)
+            location = CRUDLocation.create(**valid_location_json)
         except IntegrityError as exception:
+            return abort(404, message=f"{exception}")
+        except ValidationError as exception:
             return abort(404, message=f"{exception}")
         return make_response(jsonify(location), 201)
 

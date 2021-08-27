@@ -15,15 +15,6 @@ api = Api(address_api)
 class Address(Resource):
     """Address API class"""
     @staticmethod
-    def json_is_valid(json) -> bool:
-        """Validate address json data, if json data not valid - return abort"""
-        try:
-            AddressSchema(**json)
-        except ValidationError:
-            return False
-        return True
-
-    @staticmethod
     def get(address_id):
         """
         This is the Address API
@@ -44,10 +35,7 @@ class Address(Resource):
           200:
             description: Address information returned
         """
-        if str(address_id).isdigit() and int(address_id) > 0:
-            address = CRUDAddress.get(address_id)
-        else:
-            return abort(404, message="Invalid ID format!")
+        address = CRUDAddress.get(address_id)
         if not address:
             return abort(404, message=f"No such address with ID={address_id}")
         return make_response(jsonify(address), 200)
@@ -86,12 +74,14 @@ class Address(Resource):
         """
         address_json = request.json
 
-        if not Address.json_is_valid(address_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDAddress.update(address_id, **address_json)
+            valid_address_json = AddressSchema(**address_json).dict(exclude_unset=True)
+            result = CRUDAddress.update(address_id, **valid_address_json)
         except IntegrityError as exception:
             return abort(404, message=f"{exception}")
+        except ValidationError as exception:
+            return abort(404, message=f"{exception}")
+
         if not result:
             return abort(404, message="Address not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -125,11 +115,12 @@ class AddressList(Resource):
         """
         address_json = request.json
 
-        if not Address.json_is_valid(address_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            address = CRUDAddress.create(**address_json)
+            valid_address_json = AddressSchema(**address_json).dict(exclude_unset=True)
+            address = CRUDAddress.create(**valid_address_json)
         except IntegrityError as exception:
+            return abort(404, message=f"{exception}")
+        except ValidationError as exception:
             return abort(404, message=f"{exception}")
         return make_response(jsonify(address), 201)
 

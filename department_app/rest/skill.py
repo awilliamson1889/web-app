@@ -14,14 +14,6 @@ api = Api(skill_api)
 
 class Skill(Resource):
     """Skill API class"""
-    @staticmethod
-    def json_is_valid(json) -> bool:
-        """Validate address json data, if json data not valid - return abort"""
-        try:
-            SkillSchema(**json)
-        except ValidationError:
-            return False
-        return True
 
     @staticmethod
     def get(skill_id):
@@ -44,10 +36,7 @@ class Skill(Resource):
           200:
             description: skill information returned
         """
-        if str(skill_id).isdigit() and int(skill_id) > 0:
-            skill = CRUDSkill.get(skill_id)
-        else:
-            return abort(404, message="Invalid ID format!")
+        skill = CRUDSkill.get(skill_id)
         if not skill:
             return abort(404, message=f"No such skill with ID={skill_id}")
         return make_response(jsonify(skill), 200)
@@ -86,11 +75,12 @@ class Skill(Resource):
         """
         skill_json = request.json
 
-        if not Skill.json_is_valid(skill_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDSkill.update(skill_id, **skill_json)
+            valid_skill_json = SkillSchema(**skill_json).dict(exclude_unset=True)
+            result = CRUDSkill.update(skill_id, **valid_skill_json)
         except IntegrityError as exception:
+            return abort(404, message=f"{exception}")
+        except ValidationError as exception:
             return abort(404, message=f"{exception}")
         if not result:
             return abort(404, message="Skill not updated.")
@@ -125,11 +115,12 @@ class SkillList(Resource):
         """
         skill_json = request.json
 
-        if not Skill.json_is_valid(skill_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            skill = CRUDSkill.create(**skill_json)
+            valid_skill_json = SkillSchema(**skill_json).dict(exclude_unset=True)
+            skill = CRUDSkill.create(**valid_skill_json)
         except IntegrityError as exception:
+            return abort(404, message=f"{exception}")
+        except ValidationError as exception:
             return abort(404, message=f"{exception}")
         return make_response(jsonify(skill), 201)
 

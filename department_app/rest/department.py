@@ -16,15 +16,6 @@ api = Api(department_api)
 class Department(Resource):
     """Department API class"""
     @staticmethod
-    def json_is_valid(json) -> bool:
-        """Validate address json data, if json data not valid - return abort"""
-        try:
-            DepartmentSchema(**json)
-        except ValidationError:
-            return False
-        return True
-
-    @staticmethod
     def get(department_id):
         """
         This is the Department API
@@ -45,10 +36,7 @@ class Department(Resource):
           200:
             description: Department information returned
         """
-        if str(department_id).isdigit() and int(department_id) > 0:
-            department = CRUDDepartment.get(department_id)
-        else:
-            return abort(404, message="Invalid ID format!")
+        department = CRUDDepartment.get(department_id)
         if not department:
             return abort(404, message=f"No such department with ID={department_id}")
         return make_response(jsonify(department), 200)
@@ -95,11 +83,12 @@ class Department(Resource):
         """
         department_json = request.json
 
-        if not Department.json_is_valid(department_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDDepartment.update(department_id, **department_json)
+            valid_department_json = DepartmentSchema(**department_json).dict(exclude_unset=True)
+            result = CRUDDepartment.update(department_id, **valid_department_json)
         except IntegrityError as exception:
+            return abort(404, message=f"{exception}")
+        except ValidationError as exception:
             return abort(404, message=f"{exception}")
         if not result:
             return abort(404, message="Department not updated.")
@@ -142,11 +131,12 @@ class DepartmentList(Resource):
         """
         department_json = request.json
 
-        if not Department.json_is_valid(department_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            department = CRUDDepartment.create(**department_json)
+            valid_department_json = DepartmentSchema(**department_json).dict(exclude_unset=True)
+            department = CRUDDepartment.create(**valid_department_json)
         except IntegrityError as exception:
+            return abort(404, message=f"{exception}")
+        except ValidationError as exception:
             return abort(404, message=f"{exception}")
         return make_response(jsonify(department), 201)
 
