@@ -19,9 +19,6 @@ class Address(db.Model):
     def __init__(self, name):
         self.name = name
 
-    def __repr__(self):
-        return '<Address: {}>'.format(self.name)
-
 
 @dataclass
 class Department(db.Model):
@@ -43,9 +40,6 @@ class Department(db.Model):
         self.name = name
         self.manager = manager
         self.date_of_creation = date_of_creation
-
-    def __repr__(self):
-        return '<Department: {}>'.format(self.name)
 
 
 @dataclass
@@ -95,9 +89,6 @@ class Employee(db.Model):
         self.date_of_joining = date_of_joining
         self.permission = permission
 
-    def __repr__(self):
-        return '<Employee: {}>'.format(self.name)
-
 
 @dataclass
 class Location(db.Model):
@@ -113,9 +104,6 @@ class Location(db.Model):
 
     def __init__(self, name):
         self.name = name
-
-    def __repr__(self):
-        return '<Location: {}>'.format(self.name)
 
 
 @dataclass
@@ -133,9 +121,6 @@ class Permission(db.Model):
     def __init__(self, name):
         self.name = name
 
-    def __repr__(self):
-        return '<Permission: {}>'.format(self.name)
-
 
 @dataclass
 class Skill(db.Model):
@@ -151,6 +136,3 @@ class Skill(db.Model):
 
     def __init__(self, name):
         self.name = name
-
-    def __repr__(self):
-        return '<Skill: {}>'.format(self.name)
