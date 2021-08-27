@@ -154,4 +154,3 @@ class Skill(db.Model):
 
     def __repr__(self):
         return '<Skill: {}>'.format(self.name)
-
