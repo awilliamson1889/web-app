@@ -1,5 +1,3 @@
-from flask import copy_current_request_context
-import requests
 from unittest.mock import patch
 import unittest
 
