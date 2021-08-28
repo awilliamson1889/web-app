@@ -18,6 +18,13 @@ postgres=# GRANT ALL PRIVILEGES ON DATABASE gallery to jacky;
 postgres=# \q
 $ exit
 ```
+# Flask Migrate
+```{bash}
+$ export FLASK_APP=department_app.app
+$ flask db init
+$ flask db migrate -m "Initial migration."
+$ flask db upgrade
+```
 
 # Create ENV variables
 ```{bash}
