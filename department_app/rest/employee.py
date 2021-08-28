@@ -122,9 +122,9 @@ class Employee(Resource):
             valid_employee_json = EmployeeSchema(**employee_json).dict(exclude_unset=True)
             result = CRUDEmployee.update(employee_id, **valid_employee_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Employee {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Employee {exception}")
         if not result:
             return abort(404, message="Employee not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -231,9 +231,9 @@ class EmployeeList(Resource):
             valid_employee_json = EmployeeSchema(**employee_json).dict(exclude_unset=True)
             employee = CRUDEmployee.create(**valid_employee_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Employee {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Employee {exception}")
         return make_response(jsonify(employee), 201)
 
     @staticmethod

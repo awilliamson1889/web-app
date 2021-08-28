@@ -87,9 +87,9 @@ class Department(Resource):
             valid_department_json = DepartmentSchema(**department_json).dict(exclude_unset=True)
             result = CRUDDepartment.update(department_id, **valid_department_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Department {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Department {exception}")
         if not result:
             return abort(404, message="Department not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -135,9 +135,9 @@ class DepartmentList(Resource):
             valid_department_json = DepartmentSchema(**department_json).dict(exclude_unset=True)
             department = CRUDDepartment.create(**valid_department_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Department {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Department {exception}")
         return make_response(jsonify(department), 201)
 
     @staticmethod

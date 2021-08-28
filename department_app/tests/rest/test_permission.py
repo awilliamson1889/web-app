@@ -13,8 +13,8 @@ class TestApiPermission(unittest.TestCase):
     update_success_msg = "Data successful updated."
     update_fail_msg = "Permission not updated."
     wrong_id_format_msg = "Invalid ID format!"
-    wrong_json_msg = "1 validation error for PermissionSchema\nname\n  field required (type=value_error.missing)"
-    not_valid_json_msg = "1 validation error for PermissionSchema\nname\n  Name length too big! (type=value_error)"
+    wrong_json_msg = "Permission 1 validation error for PermissionSchema\nname\n  field required (type=value_error.missing)"
+    not_valid_json_msg = "Permission 1 validation error for PermissionSchema\nname\n  Name length too big! (type=value_error)"
 
     wrong_json = {"name_field": "Some Permission1"}
 

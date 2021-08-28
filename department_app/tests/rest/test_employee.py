@@ -12,8 +12,8 @@ class TestApiEmployee(unittest.TestCase):
     update_success_msg = "Data successful updated."
     update_fail_msg = "Employee not updated."
     wrong_id_format_msg = "Invalid ID format!"
-    wrong_json_msg = "Wrong JSON fields names."
-    not_valid_json_msg = "12 validation errors for EmployeeSchema\nname\n  Name length too big! (type=value_error)\n" \
+    not_valid_json_msg = "Employee 12 validation errors for EmployeeSchema\nname\n  Name length too big! " \
+                         "(type=value_error)\n" \
                          "surname\n  field required (type=value_error.missing)\ndate_of_birth\n  field required " \
                          "(type=value_error.missing)\nsalary\n  field required (type=value_error.missing)\nemail\n  " \
                          "field required (type=value_error.missing)\nphone\n  field required " \

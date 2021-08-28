@@ -78,9 +78,9 @@ class Permission(Resource):
             valid_permission_json = PermissionSchema(**permission_json).dict(exclude_unset=True)
             result = CRUDPermission.update(permission_id, **valid_permission_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Permission {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Permission {exception}")
         if not result:
             return abort(404, message="Permission not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -118,9 +118,9 @@ class PermissionList(Resource):
             valid_permission_json = PermissionSchema(**permission_json).dict(exclude_unset=True)
             permission = CRUDPermission.create(**valid_permission_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Permission {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Permission {exception}")
         return make_response(jsonify(permission), 201)
 
     @staticmethod

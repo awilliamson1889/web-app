@@ -79,9 +79,9 @@ class Skill(Resource):
             valid_skill_json = SkillSchema(**skill_json).dict(exclude_unset=True)
             result = CRUDSkill.update(skill_id, **valid_skill_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Skill {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Skill {exception}")
         if not result:
             return abort(404, message="Skill not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -119,9 +119,9 @@ class SkillList(Resource):
             valid_skill_json = SkillSchema(**skill_json).dict(exclude_unset=True)
             skill = CRUDSkill.create(**valid_skill_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Skill {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Skill {exception}")
         return make_response(jsonify(skill), 201)
 
     @staticmethod

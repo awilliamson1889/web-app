@@ -13,8 +13,8 @@ class TestApiAddress(unittest.TestCase):
     update_success_msg = "Data successful updated."
     update_fail_msg = "Address not updated."
     wrong_id_format_msg = "Invalid ID format!"
-    wrong_json_msg = "1 validation error for AddressSchema\nname\n  field required (type=value_error.missing)"
-    not_valid_json_msg = "1 validation error for AddressSchema\nname\n  Name length too big! (type=value_error)"
+    wrong_json_msg = "Address 1 validation error for AddressSchema\nname\n  field required (type=value_error.missing)"
+    not_valid_json_msg = "Address 1 validation error for AddressSchema\nname\n  Name length too big! (type=value_error)"
 
     wrong_json = {"name_field": "Some Address1"}
 

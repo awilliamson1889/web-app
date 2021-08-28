@@ -78,9 +78,9 @@ class Location(Resource):
             valid_location_json = LocationSchema(**location_json).dict(exclude_unset=True)
             result = CRUDLocation.update(location_id, **valid_location_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Location {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Location {exception}")
         if not result:
             return abort(404, message="Location not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -118,9 +118,9 @@ class LocationList(Resource):
             valid_location_json = LocationSchema(**location_json).dict(exclude_unset=True)
             location = CRUDLocation.create(**valid_location_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Location {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Location {exception}")
         return make_response(jsonify(location), 201)
 
     @staticmethod

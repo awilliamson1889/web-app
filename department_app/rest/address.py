@@ -78,9 +78,9 @@ class Address(Resource):
             valid_address_json = AddressSchema(**address_json).dict(exclude_unset=True)
             result = CRUDAddress.update(address_id, **valid_address_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Address {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Address {exception}")
 
         if not result:
             return abort(404, message="Address not updated.")
@@ -119,9 +119,9 @@ class AddressList(Resource):
             valid_address_json = AddressSchema(**address_json).dict(exclude_unset=True)
             address = CRUDAddress.create(**valid_address_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Address {exception}")
         except ValidationError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Address {exception}")
         return make_response(jsonify(address), 201)
 
     @staticmethod
