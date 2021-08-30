@@ -98,11 +98,20 @@ class CRUDEmployee:
         return employee
 
     @staticmethod
-    def get_employee_list():
+    def get_employee_list(filters=None):
         """Get employee func"""
         query_join = db.session.query(
             EmployeeModel, DepartmentModel, PermissionModel, AddressModel, LocationModel, SkillModel)\
             .join(DepartmentModel).join(PermissionModel).join(AddressModel).join(LocationModel).join(SkillModel)
+
+        if filters:
+            query_join = query_join.filter(EmployeeModel.date_of_birth.
+                                           between(filters.get('date1', ''),
+                                                   filters.get('date2', '9999-11-11')))
+            for attr, value in filters.items():
+                if value != '' and attr != ('date1' and 'date2'):
+                    query_join = query_join.filter(attr == value)
+
         employee_list = []
         employees = query_join.all()
         for employee, department, permission, address, location, skill in employees:

@@ -152,6 +152,8 @@ class DepartmentList(Resource):
           200:
             description: All department returned
         """
+        # filters = {'department_name_f': request.form.get('department_name_f') or ''}
+        # departments = CRUDDepartment.get_department_list(filters=filters)
         departments = CRUDDepartment.get_department_list()
         return make_response(jsonify(departments), 200)
 

@@ -6,6 +6,8 @@ from pydantic import ValidationError
 
 from department_app.service import CRUDEmployee
 from department_app.schemas import EmployeeSchema
+# from department_app.models import DepartmentModel, PermissionModel, AddressModel, LocationModel,\
+#     SkillModel, EmployeeModel
 
 employee_api = Blueprint('employee_api', __name__)
 
@@ -248,6 +250,15 @@ class EmployeeList(Resource):
           200:
             description: All employees returned
         """
+        # filters = {'date1': request.form.get('date1_f') or '',
+        #            'date2': request.form.get('date2_f') or '9999-11-11',
+        #            DepartmentModel.id: request.form.get('department_f') or '',
+        #            LocationModel.id: request.form.get('location_f') or '',
+        #            SkillModel.id: request.form.get('skill_f') or '',
+        #            EmployeeModel.name: request.form.get('employee_name_f') or '',
+        #            EmployeeModel.surname: request.form.get('employee_surname_f') or ''}
+        #
+        # employee = CRUDEmployee.get_employee_list(filters=filters)
         employee = CRUDEmployee.get_employee_list()
         return make_response(jsonify(employee), 200)
 

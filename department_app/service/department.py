@@ -44,9 +44,15 @@ class CRUDDepartment:
         return bool(result)
 
     @staticmethod
+    # def get_department_list(filters=None):
     def get_department_list():
         """Get department func"""
         department_list = []
+        # if filters:
+        #     departments = DepartmentModel.query.filter(DepartmentModel.name.
+        #                                                like(str('%' + filters.get('department_name_f') + '%')))
+        # else:
+        #     departments = DepartmentModel.query.all()
         departments = DepartmentModel.query.all()
         if len(departments) > 0:
             for department in departments:
