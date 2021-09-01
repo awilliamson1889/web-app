@@ -1,0 +1,6 @@
+- table: Location
+  records:
+  - name: Bobruysk
+  - name: Gomel
+  - name: Minsk
+  - name: Mogilev

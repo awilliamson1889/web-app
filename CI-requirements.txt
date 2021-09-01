@@ -1,0 +1,6 @@
+-r requirements.txt
+coverage
+flask-migrate
+pylint
+pylint-flask
+pylint-flask-sqlalchemy

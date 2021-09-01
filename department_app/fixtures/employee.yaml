@@ -1,0 +1,60 @@
+- table: Department
+  records:
+  - name: RD, Lab Brest
+    manager: Williams Gibson
+    date_of_creation: '2021-12-12'
+  - name: RD, Lab Minsk
+    manager: Svetlana Moroz
+    date_of_creation: '2021-12-12'
+  - name: RD, Lab Mogilev
+    manager: Dmitri Kiselev
+    date_of_creation: '2021-12-12'
+- table: Location
+  records:
+  - name: Bobruysk
+  - name: Gomel
+  - name: Minsk
+  - name: Mogilev
+- table: Address
+  records:
+  - name: Skoriny Ul., bld. 17, appt. 12
+  - name: Moskovskiy Pr., bld. 21/3
+  - name: Luchiny Ul., bld. 24, appt. 72
+  - name: Kosmonavtov Pr.
+- table: Skill
+  records:
+  - name: Python
+  - name: C++
+  - name: ".Net"
+  - name: Data Science
+- table: Permission
+  records:
+  - name: Administrator
+  - name: Moderator
+  - name: Employee
+- table: Employee
+  records:
+  - name: Andrei
+    surname: Gizmont
+    date_of_birth: '1998-12-12'
+    salary: 5000
+    email: gizmont@mail.com
+    phone: '1111111'
+    date_of_joining: '2021-12-12'
+    department: 1
+    location: 1
+    work_address: 1
+    key_skill: 1
+    permission: 1
+  - name: Vlada
+    surname: Morozova
+    date_of_birth: '2002-12-12'
+    salary: 5000
+    email: morozova@mail.com
+    phone: '2222222'
+    date_of_joining: '2021-12-12'
+    department: 1
+    location: 2
+    work_address: 2
+    key_skill: 3
+    permission: 2

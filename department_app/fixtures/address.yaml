@@ -1,0 +1,6 @@
+- table: Address
+  records:
+  - name: Skoriny Ul., bld. 17, appt. 12
+  - name: Moskovskiy Pr., bld. 21/3
+  - name: Luchiny Ul., bld. 24, appt. 72
+  - name: Kosmonavtov Pr.

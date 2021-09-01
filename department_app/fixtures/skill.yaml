@@ -1,0 +1,6 @@
+- table: Skill
+  records:
+  - name: Python
+  - name: C++
+  - name: ".Net"
+  - name: Data Science
