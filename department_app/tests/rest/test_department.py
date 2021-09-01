@@ -12,8 +12,12 @@ class TestApiDepartment(unittest.TestCase):
     update_success_msg = "Data successful updated."
     update_fail_msg = "Department not updated."
     wrong_id_format_msg = "Invalid ID format!"
-    wrong_json_msg = "Wrong JSON fields names."
-    not_valid_json_msg = "JSON is not valid."
+    wrong_json_msg = "Department 3 validation errors for DepartmentSchema\nname\n  " \
+                     "field required (type=value_error.missing)\n" \
+                     "manager\n  field required (type=value_error.missing)\n" \
+                     "date_of_creation\n  field required (type=value_error.missing)"
+    not_valid_json_msg = "Department 1 validation error for DepartmentSchema\nname\n  " \
+                         "Name length too big! (type=value_error)"
 
     wrong_json = {"name_field": "Some Department1",
                   "manager_field": "Some Manager1",
@@ -77,21 +81,23 @@ class TestApiDepartment(unittest.TestCase):
         """Api should return error message if id have wrong format."""
         Department.get('one')
 
-        mock_abort.assert_called_once_with(404, message=self.wrong_id_format_msg)
+        mock_abort.assert_called_once_with(404, message="No such department with ID=one")
 
     @patch('department_app.rest.department.abort')
-    def test_get_department_wrong_id_case2(self, mock_abort):
+    @patch('department_app.rest.department.CRUDDepartment.get')
+    def test_get_department_wrong_id_case2(self, mock_get_department, mock_abort):
         """Api should return error message if id have wrong format."""
+        mock_get_department.return_value = None
         Department.get(1.0)
 
-        mock_abort.assert_called_once_with(404, message=self.wrong_id_format_msg)
+        mock_abort.assert_called_once_with(404, message="No such department with ID=1.0")
 
     @patch('department_app.rest.department.abort')
     def test_get_department_wrong_id_case3(self, mock_abort):
         """Api should return error message if id have wrong format."""
         Department.get(-1)
 
-        mock_abort.assert_called_once_with(404, message=self.wrong_id_format_msg)
+        mock_abort.assert_called_once_with(404, message="No such department with ID=-1")
 
     @patch('department_app.rest.department.abort')
     @patch('department_app.rest.department.CRUDDepartment.get')
@@ -103,77 +109,68 @@ class TestApiDepartment(unittest.TestCase):
         mock_abort.assert_called_once_with(404, message="No such department with ID=1")
 
     @patch('department_app.rest.department.CRUDDepartment.update')
-    @patch('department_app.rest.department.Department.get_json')
-    def test_put_department_success(self, mok_get_json, mock_update):
+    def test_put_department_success(self, mock_update):
         """Api should return information about department."""
-        mok_get_json.return_value = self.put_valid_data
-        mock_update.return_value = True
-        response = Department.put(1)
+        with app.test_request_context(json=self.post_valid_data):
+            mock_update.return_value = True
+            response = Department.put(1)
 
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.json['message'], self.update_success_msg)
+            self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.json['message'], self.update_success_msg)
 
     @patch('department_app.rest.department.abort')
     @patch('department_app.rest.department.CRUDDepartment.update')
-    @patch('department_app.rest.department.Department.get_json')
-    def test_put_department_fail(self, mok_get_json, mock_update, mock_abort):
+    def test_put_department_fail(self, mock_update, mock_abort):
         """Api should return information about department."""
-        mok_get_json.return_value = self.put_valid_data
-        mock_update.return_value = False
-        Department.put(1)
+        with app.test_request_context(json=self.post_valid_data):
+            mock_update.return_value = False
+            Department.put(1)
 
-        mock_abort.assert_called_once_with(404, message=self.update_fail_msg)
+            mock_abort.assert_called_once_with(404, message=self.update_fail_msg)
 
     @patch('department_app.rest.department.abort')
-    @patch('department_app.rest.department.Department.get_json')
-    def test_put_department_not_valid(self, mok_get_json, mock_abort):
+    def test_put_department_not_valid(self, mock_abort):
         """Api should return information about department."""
-        mok_get_json.return_value = self.post_invalid_data
-        Department.put(1)
+        with app.test_request_context(json=self.post_invalid_data):
+            Department.put(1)
 
-        mock_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
+            mock_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
 
     @patch('department_app.rest.department.abort')
-    @patch('department_app.rest.department.Department.get_json')
-    def test_put_department_wrong_json(self, mok_get_json, mock_abort):
+    def test_put_department_wrong_json(self, mock_abort):
         """Api should return information about department."""
-        mok_get_json.return_value = False
-        Department.put(1)
+        with app.test_request_context(json=self.wrong_json):
+            Department.put(1)
 
-        mock_abort.assert_called_once_with(404, message=self.wrong_json_msg)
+            mock_abort.assert_called_once_with(404, message=self.wrong_json_msg)
 
-    @patch('department_app.rest.department.Department.get_json')
     @patch('department_app.rest.department.CRUDDepartment.create')
-    def test_post_department(self, mock_create_department, mok_get_json):
+    def test_post_department(self, mock_create_department):
         """Api should return information about department."""
-        mok_get_json.return_value = self.post_valid_data
-        mock_create_department.return_value = self.post_valid_data
-        response = DepartmentList.post()
+        with app.test_request_context(json=self.post_valid_data):
+            mock_create_department.return_value = self.post_valid_data
+            response = DepartmentList.post()
 
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.json['name'], self.post_valid_data['name'])
-        self.assertEqual(response.json['manager'], self.post_valid_data['manager'])
-        self.assertEqual(response.json['date_of_creation'], self.post_valid_data['date_of_creation'])
+            self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.json['name'], self.post_valid_data['name'])
+            self.assertEqual(response.json['manager'], self.post_valid_data['manager'])
+            self.assertEqual(response.json['date_of_creation'], self.post_valid_data['date_of_creation'])
 
     @patch('department_app.rest.department.abort')
-    @patch('department_app.rest.department.Department.get_json')
-    def test_post_department_not_valid(self, mok_get_json, mok_abort):
+    def test_post_department_not_valid(self, mok_abort):
         """Api should return information about department."""
-        mok_get_json.return_value = self.post_invalid_data
+        with app.test_request_context(json=self.post_invalid_data):
+            DepartmentList.post()
 
-        DepartmentList.post()
-
-        mok_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
+            mok_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
 
     @patch('department_app.rest.department.abort')
-    @patch('department_app.rest.department.Department.get_json')
-    def test_post_department_wrong_json(self, mok_get_json, mock_abort):
+    def test_post_department_wrong_json(self, mock_abort):
         """Api should return information about department."""
-        mok_get_json.return_value = False
+        with app.test_request_context(json=self.wrong_json):
+            DepartmentList.post()
 
-        DepartmentList.post()
-
-        mock_abort.assert_called_once_with(404, message=self.wrong_json_msg)
+            mock_abort.assert_called_once_with(404, message=self.wrong_json_msg)
 
     @patch('department_app.rest.department.CRUDDepartment.get_department_list')
     def test_get_all_department(self, mock_get_all_department):

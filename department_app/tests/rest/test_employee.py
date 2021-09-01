@@ -12,8 +12,16 @@ class TestApiEmployee(unittest.TestCase):
     update_success_msg = "Data successful updated."
     update_fail_msg = "Employee not updated."
     wrong_id_format_msg = "Invalid ID format!"
-    wrong_json_msg = "Wrong JSON fields names."
-    not_valid_json_msg = "JSON is not valid."
+    not_valid_json_msg = "Employee 12 validation errors for EmployeeSchema\nname\n  Name length too big! " \
+                         "(type=value_error)\n" \
+                         "surname\n  field required (type=value_error.missing)\ndate_of_birth\n  field required " \
+                         "(type=value_error.missing)\nsalary\n  field required (type=value_error.missing)\nemail\n  " \
+                         "field required (type=value_error.missing)\nphone\n  field required " \
+                         "(type=value_error.missing)\ndate_of_joining\n  field required (type=value_error.missing)\n" \
+                         "department\n  field required (type=value_error.missing)\nlocation\n  field required " \
+                         "(type=value_error.missing)\nwork_address\n  field required (type=value_error.missing)\n" \
+                         "key_skill\n  field required (type=value_error.missing)\npermission\n  field required " \
+                         "(type=value_error.missing)"
 
     wrong_json = {"name_field": "Some Employee1",
                   "manager_field": "Some Manager1",
@@ -84,21 +92,23 @@ class TestApiEmployee(unittest.TestCase):
         """Api should return error message if id have wrong format."""
         Employee.get('one')
 
-        mock_abort.assert_called_once_with(404, message=self.wrong_id_format_msg)
+        mock_abort.assert_called_once_with(404, message="No such employee with ID=one")
 
     @patch('department_app.rest.employee.abort')
-    def test_get_employee_wrong_id_case2(self, mock_abort):
+    @patch('department_app.rest.employee.CRUDEmployee.get')
+    def test_get_employee_wrong_id_case2(self, mock_get_employee, mock_abort):
         """Api should return error message if id have wrong format."""
+        mock_get_employee.return_value = None
         Employee.get(1.0)
 
-        mock_abort.assert_called_once_with(404, message=self.wrong_id_format_msg)
+        mock_abort.assert_called_once_with(404, message="No such employee with ID=1.0")
 
     @patch('department_app.rest.employee.abort')
     def test_get_employee_wrong_id_case3(self, mock_abort):
         """Api should return error message if id have wrong format."""
         Employee.get(-1)
 
-        mock_abort.assert_called_once_with(404, message=self.wrong_id_format_msg)
+        mock_abort.assert_called_once_with(404, message="No such employee with ID=-1")
 
     @patch('department_app.rest.employee.abort')
     @patch('department_app.rest.employee.CRUDEmployee.get')
@@ -110,86 +120,61 @@ class TestApiEmployee(unittest.TestCase):
         mock_abort.assert_called_once_with(404, message="No such employee with ID=1")
 
     @patch('department_app.rest.employee.CRUDEmployee.update')
-    @patch('department_app.rest.employee.Employee.get_json')
-    def test_put_employee_success(self, mok_get_json, mock_update):
+    def test_put_employee_success(self, mock_update):
         """Api should return information about employee."""
-        mok_get_json.return_value = self.put_valid_data
-        mock_update.return_value = True
-        response = Employee.put(1)
+        with app.test_request_context(json=self.post_valid_data):
+            mock_update.return_value = True
+            response = Employee.put(1)
 
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.json['message'], self.update_success_msg)
+            self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.json['message'], self.update_success_msg)
 
     @patch('department_app.rest.employee.abort')
     @patch('department_app.rest.employee.CRUDEmployee.update')
-    @patch('department_app.rest.employee.Employee.get_json')
-    def test_put_employee_fail(self, mok_get_json, mock_update, mock_abort):
+    def test_put_employee_fail(self, mock_update, mock_abort):
         """Api should return information about employee."""
-        mok_get_json.return_value = self.put_valid_data
-        mock_update.return_value = False
-        Employee.put(1)
+        with app.test_request_context(json=self.post_valid_data):
+            mock_update.return_value = False
+            Employee.put(1)
 
-        mock_abort.assert_called_once_with(404, message=self.update_fail_msg)
+            mock_abort.assert_called_once_with(404, message=self.update_fail_msg)
 
     @patch('department_app.rest.employee.abort')
-    @patch('department_app.rest.employee.Employee.get_json')
-    def test_put_employee_not_valid(self, mok_get_json, mock_abort):
+    def test_put_employee_not_valid(self, mock_abort):
         """Api should return information about employee."""
-        mok_get_json.return_value = self.post_invalid_data
-        Employee.put(1)
+        with app.test_request_context(json=self.post_invalid_data):
+            Employee.put(1)
 
-        mock_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
+            mock_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
 
-    @patch('department_app.rest.employee.abort')
-    @patch('department_app.rest.employee.Employee.get_json')
-    def test_put_employee_wrong_json(self, mok_get_json, mock_abort):
-        """Api should return information about employee."""
-        mok_get_json.return_value = False
-        Employee.put(1)
-
-        mock_abort.assert_called_once_with(404, message=self.wrong_json_msg)
-
-    @patch('department_app.rest.employee.Employee.get_json')
     @patch('department_app.rest.employee.CRUDEmployee.create')
-    def test_post_employee(self, mock_create_employee, mok_get_json):
+    def test_post_employee(self, mock_create_employee):
         """Api should return information about employee."""
-        mok_get_json.return_value = self.post_valid_data
-        mock_create_employee.return_value = self.post_valid_data
-        response = EmployeeList.post()
+        with app.test_request_context(json=self.post_valid_data):
+            mock_create_employee.return_value = self.post_valid_data
+            response = EmployeeList.post()
 
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.json['name'], self.post_valid_data['name'])
-        self.assertEqual(response.json['surname'], self.post_valid_data['surname'])
-        self.assertEqual(response.json['date_of_birth'], self.post_valid_data['date_of_birth'])
-        self.assertEqual(response.json['salary'], self.post_valid_data['salary'])
-        self.assertEqual(response.json['email'], self.post_valid_data['email'])
-        self.assertEqual(response.json['phone'], self.post_valid_data['phone'])
-        self.assertEqual(response.json['date_of_joining'], self.post_valid_data['date_of_joining'])
-        self.assertEqual(response.json['department'], self.post_valid_data['department'])
-        self.assertEqual(response.json['location'], self.post_valid_data['location'])
-        self.assertEqual(response.json['work_address'], self.post_valid_data['work_address'])
-        self.assertEqual(response.json['key_skill'], self.post_valid_data['key_skill'])
-        self.assertEqual(response.json['permission'], self.post_valid_data['permission'])
+            self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.json['name'], self.post_valid_data['name'])
+            self.assertEqual(response.json['surname'], self.post_valid_data['surname'])
+            self.assertEqual(response.json['date_of_birth'], self.post_valid_data['date_of_birth'])
+            self.assertEqual(response.json['salary'], self.post_valid_data['salary'])
+            self.assertEqual(response.json['email'], self.post_valid_data['email'])
+            self.assertEqual(response.json['phone'], self.post_valid_data['phone'])
+            self.assertEqual(response.json['date_of_joining'], self.post_valid_data['date_of_joining'])
+            self.assertEqual(response.json['department'], self.post_valid_data['department'])
+            self.assertEqual(response.json['location'], self.post_valid_data['location'])
+            self.assertEqual(response.json['work_address'], self.post_valid_data['work_address'])
+            self.assertEqual(response.json['key_skill'], self.post_valid_data['key_skill'])
+            self.assertEqual(response.json['permission'], self.post_valid_data['permission'])
 
     @patch('department_app.rest.employee.abort')
-    @patch('department_app.rest.employee.Employee.get_json')
-    def test_post_employee_not_valid(self, mok_get_json, mok_abort):
+    def test_post_employee_not_valid(self, mok_abort):
         """Api should return information about employee."""
-        mok_get_json.return_value = self.post_invalid_data
+        with app.test_request_context(json=self.post_invalid_data):
+            EmployeeList.post()
 
-        EmployeeList.post()
-
-        mok_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
-
-    @patch('department_app.rest.employee.abort')
-    @patch('department_app.rest.employee.Employee.get_json')
-    def test_post_employee_wrong_json(self, mok_get_json, mock_abort):
-        """Api should return information about employee."""
-        mok_get_json.return_value = False
-
-        EmployeeList.post()
-
-        mock_abort.assert_called_once_with(404, message=self.wrong_json_msg)
+            mok_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
 
     @patch('department_app.rest.employee.CRUDEmployee.get_employee_list')
     def test_get_all_employee(self, mock_get_all_employee):

@@ -14,23 +14,6 @@ api = Api(skill_api)
 
 class Skill(Resource):
     """Skill API class"""
-    @staticmethod
-    def get_json():
-        """Get address json, if json have wrong format - return abort """
-        try:
-            skill_json = {'name': request.json['name']}
-        except KeyError:
-            return False
-        return skill_json
-
-    @staticmethod
-    def json_is_valid(json) -> bool:
-        """Validate address json data, if json data not valid - return abort"""
-        try:
-            SkillSchema(**json)
-        except ValidationError:
-            return False
-        return True
 
     @staticmethod
     def get(skill_id):
@@ -53,10 +36,7 @@ class Skill(Resource):
           200:
             description: skill information returned
         """
-        if str(skill_id).isdigit() and int(skill_id) > 0:
-            skill = CRUDSkill.get(skill_id)
-        else:
-            return abort(404, message="Invalid ID format!")
+        skill = CRUDSkill.get(skill_id)
         if not skill:
             return abort(404, message=f"No such skill with ID={skill_id}")
         return make_response(jsonify(skill), 200)
@@ -93,16 +73,15 @@ class Skill(Resource):
           204:
             description: Skill information successful update
         """
-        skill_json = Skill.get_json()
-        if not skill_json:
-            return abort(404, message="Wrong JSON fields names.")
+        skill_json = request.json
 
-        if not Skill.json_is_valid(skill_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDSkill.update(skill_id, name=skill_json['name'])
+            valid_skill_json = SkillSchema(**skill_json).dict(exclude_unset=True)
+            result = CRUDSkill.update(skill_id, **valid_skill_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Skill {exception}")
+        except ValidationError as exception:
+            return abort(404, message=f"Skill {exception}")
         if not result:
             return abort(404, message="Skill not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -134,16 +113,15 @@ class SkillList(Resource):
           201:
             description: The skill was successfully created
         """
-        skill_json = Skill.get_json()
-        if not skill_json:
-            return abort(404, message="Wrong JSON fields names.")
+        skill_json = request.json
 
-        if not Skill.json_is_valid(skill_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            skill = CRUDSkill.create(**skill_json)
+            valid_skill_json = SkillSchema(**skill_json).dict(exclude_unset=True)
+            skill = CRUDSkill.create(**valid_skill_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Skill {exception}")
+        except ValidationError as exception:
+            return abort(404, message=f"Skill {exception}")
         return make_response(jsonify(skill), 201)
 
     @staticmethod

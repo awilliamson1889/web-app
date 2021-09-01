@@ -24,9 +24,9 @@ class CRUDLocation:
             result = LocationModel.query.where(LocationModel.id == location_id). \
                 update({LocationModel.name: name})
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Location with name=%s already exist.", name)
-            raise exception
+            raise
         return bool(result)
 
     @staticmethod
@@ -49,7 +49,7 @@ class CRUDLocation:
         try:
             db.session.add(location)
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Location with name=%s already exist.", name)
-            raise exception
+            raise
         return location

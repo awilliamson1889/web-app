@@ -38,15 +38,21 @@ class CRUDDepartment:
                         DepartmentModel.date_of_creation: date_of_creation,
                         DepartmentModel.manager: manager})
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Department with name=%s already exist.", name)
-            raise exception
+            raise
         return bool(result)
 
     @staticmethod
+    # def get_department_list(filters=None):
     def get_department_list():
         """Get department func"""
         department_list = []
+        # if filters:
+        #     departments = DepartmentModel.query.filter(DepartmentModel.name.
+        #                                                like(str('%' + filters.get('department_name_f') + '%')))
+        # else:
+        #     departments = DepartmentModel.query.all()
         departments = DepartmentModel.query.all()
         if len(departments) > 0:
             for department in departments:
@@ -72,7 +78,7 @@ class CRUDDepartment:
         try:
             db.session.add(department)
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Department with name=%s already exist.", name)
-            raise exception
+            raise
         return department

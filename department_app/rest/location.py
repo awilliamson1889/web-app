@@ -15,24 +15,6 @@ api = Api(location_api)
 class Location(Resource):
     """Location API class"""
     @staticmethod
-    def get_json():
-        """Get location json, if json have wrong format - return false """
-        try:
-            location_json = {'name': request.json['name']}
-        except KeyError:
-            return False
-        return location_json
-
-    @staticmethod
-    def json_is_valid(json) -> bool:
-        """Validate location json data, if json data not valid - return false"""
-        try:
-            LocationSchema(**json)
-        except ValidationError:
-            return False
-        return True
-
-    @staticmethod
     def get(location_id):
         """
         This is the location API
@@ -53,10 +35,7 @@ class Location(Resource):
           200:
             description: Location information returned
         """
-        if str(location_id).isdigit() and int(location_id) > 0:
-            location = CRUDLocation.get(location_id)
-        else:
-            return abort(404, message="Invalid ID format!")
+        location = CRUDLocation.get(location_id)
         if not location:
             return abort(404, message=f"No such location with ID={location_id}")
         return make_response(jsonify(location), 200)
@@ -93,16 +72,15 @@ class Location(Resource):
           204:
             description: Location information successful update
         """
-        location_json = Location.get_json()
-        if not location_json:
-            return abort(404, message="Wrong JSON fields names.")
+        location_json = request.json
 
-        if not Location.json_is_valid(location_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDLocation.update(location_id, name=location_json['name'])
+            valid_location_json = LocationSchema(**location_json).dict(exclude_unset=True)
+            result = CRUDLocation.update(location_id, **valid_location_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Location {exception}")
+        except ValidationError as exception:
+            return abort(404, message=f"Location {exception}")
         if not result:
             return abort(404, message="Location not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -134,16 +112,15 @@ class LocationList(Resource):
           201:
             description: The location was successfully created
         """
-        location_json = Location.get_json()
-        if not location_json:
-            return abort(404, message="Wrong JSON fields names.")
+        location_json = request.json
 
-        if not Location.json_is_valid(location_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            location = CRUDLocation.create(**location_json)
+            valid_location_json = LocationSchema(**location_json).dict(exclude_unset=True)
+            location = CRUDLocation.create(**valid_location_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Location {exception}")
+        except ValidationError as exception:
+            return abort(404, message=f"Location {exception}")
         return make_response(jsonify(location), 201)
 
     @staticmethod

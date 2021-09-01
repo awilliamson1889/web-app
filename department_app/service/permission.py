@@ -24,9 +24,9 @@ class CRUDPermission:
             result = PermissionModel.query.where(PermissionModel.id == permission_id). \
                 update({PermissionModel.name: name})
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Permission with name=%s already exist.", name)
-            raise exception
+            raise
         return bool(result)
 
     @staticmethod
@@ -49,7 +49,7 @@ class CRUDPermission:
         try:
             db.session.add(permission)
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Permission with name=%s already exist.", name)
-            raise exception
+            raise
         return permission

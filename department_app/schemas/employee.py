@@ -47,9 +47,6 @@ class EmployeeSchema(BaseModel):
 
     @validator('phone')
     def phone_check(cls, v):
-        # emp = Employee.query.all()
-        # if v in [x.phone for x in emp] and 'phone' in request.json:
-        #     raise ValueError('This number is already in use!')
         if not v.isdigit():
             raise ValueError('The number must contain only digits!')
         return v.title()
@@ -57,47 +54,9 @@ class EmployeeSchema(BaseModel):
     @validator('email')
     def email_check(cls, v):
         regex = r'^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$'
-        # emp = Employee.query.all()
-        # if v.lower() in [x.email.lower() for x in emp] and 'email' in request.json:
-        #     raise ValueError('This email is already in use!')
         if not re.match(regex, v) and 'email' in request.json:
             raise ValueError('Check the correctness of the email!')
         return v.title()
-
-    # @validator('department')
-    # def department_check(cls, v):
-    #     dep = Department.query.all()
-    #     if v not in [x.id for x in dep]:
-    #         raise ValueError('There is no such department! See the list of departments: .../swagger/#/Department32API')
-    #     return v
-    #
-    # @validator('location')
-    # def location_check(cls, v):
-    #     location = Location.query.all()
-    #     if v not in [x.id for x in location]:
-    #         raise ValueError('There is no such department! See the list of departments: .../swagger/#/Location32API')
-    #     return v
-    #
-    # @validator('work_address')
-    # def work_address_check(cls, v):
-    #     address = Address.query.all()
-    #     if v not in [x.id for x in address]:
-    #         raise ValueError('There is no such department! See the list of departments: .../swagger/#/Address32API')
-    #     return v
-    #
-    # @validator('key_skill')
-    # def key_skill_check(cls, v):
-    #     skill = Skill.query.all()
-    #     if v not in [x.id for x in skill]:
-    #         raise ValueError('There is no such department! See the list of departments: .../swagger/#/Skill32API')
-    #     return v
-    #
-    # @validator('permission')
-    # def permission_check(cls, v):
-    #     permission = Permission.query.all()
-    #     if v not in [x.id for x in permission]:
-    #         raise ValueError('There is no such department! See the list of departments: .../swagger/#/Permission32API')
-    #     return v
 
     @validator('date_of_joining')
     def date_of_joining_check(cls, v):

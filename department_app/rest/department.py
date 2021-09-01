@@ -16,26 +16,6 @@ api = Api(department_api)
 class Department(Resource):
     """Department API class"""
     @staticmethod
-    def get_json():
-        """Get address json, if json have wrong format - return abort """
-        try:
-            department_json = {'name': request.json['name'],
-                               'date_of_creation': request.json['date_of_creation'],
-                               'manager': request.json['manager']}
-        except KeyError:
-            return False
-        return department_json
-
-    @staticmethod
-    def json_is_valid(json) -> bool:
-        """Validate address json data, if json data not valid - return abort"""
-        try:
-            DepartmentSchema(**json)
-        except ValidationError:
-            return False
-        return True
-
-    @staticmethod
     def get(department_id):
         """
         This is the Department API
@@ -56,10 +36,7 @@ class Department(Resource):
           200:
             description: Department information returned
         """
-        if str(department_id).isdigit() and int(department_id) > 0:
-            department = CRUDDepartment.get(department_id)
-        else:
-            return abort(404, message="Invalid ID format!")
+        department = CRUDDepartment.get(department_id)
         if not department:
             return abort(404, message=f"No such department with ID={department_id}")
         return make_response(jsonify(department), 200)
@@ -104,18 +81,15 @@ class Department(Resource):
           204:
             description: Department information successful update
         """
-        department_json = Department.get_json()
-        if not department_json:
-            return abort(404, message="Wrong JSON fields names.")
+        department_json = request.json
 
-        if not Department.json_is_valid(department_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDDepartment.update(department_id, name=department_json['name'],
-                                           date_of_creation=department_json['date_of_creation'],
-                                           manager=department_json['manager'])
+            valid_department_json = DepartmentSchema(**department_json).dict(exclude_unset=True)
+            result = CRUDDepartment.update(department_id, **valid_department_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Department {exception}")
+        except ValidationError as exception:
+            return abort(404, message=f"Department {exception}")
         if not result:
             return abort(404, message="Department not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -155,16 +129,15 @@ class DepartmentList(Resource):
           201:
             description: The department was successfully created
         """
-        department_json = Department.get_json()
-        if not department_json:
-            return abort(404, message="Wrong JSON fields names.")
+        department_json = request.json
 
-        if not Department.json_is_valid(department_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            department = CRUDDepartment.create(**department_json)
+            valid_department_json = DepartmentSchema(**department_json).dict(exclude_unset=True)
+            department = CRUDDepartment.create(**valid_department_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Department {exception}")
+        except ValidationError as exception:
+            return abort(404, message=f"Department {exception}")
         return make_response(jsonify(department), 201)
 
     @staticmethod
@@ -179,6 +152,8 @@ class DepartmentList(Resource):
           200:
             description: All department returned
         """
+        # filters = {'department_name_f': request.form.get('department_name_f') or ''}
+        # departments = CRUDDepartment.get_department_list(filters=filters)
         departments = CRUDDepartment.get_department_list()
         return make_response(jsonify(departments), 200)
 

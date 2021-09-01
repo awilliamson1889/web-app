@@ -9,19 +9,20 @@ app.app_context().push()
 
 
 class TestApiLocation(unittest.TestCase):
+    """Test location api class"""
     update_success_msg = "Data successful updated."
     update_fail_msg = "Location not updated."
     wrong_id_format_msg = "Invalid ID format!"
-    wrong_json_msg = "Wrong JSON fields names."
-    not_valid_json_msg = "JSON is not valid."
+    wrong_json_msg = "Location 1 validation error for LocationSchema\nname\n  field required (type=value_error.missing)"
+    not_valid_json_msg = "Location 1 validation error for LocationSchema\nname\n  Name length too big! (type=value_error)"
 
     wrong_json = {"name_field": "Some Location1"}
 
-    post_valid_data = {"name": "POST LOCATION"}
-    put_valid_data = {"name": "PUT LOCATION"}
-    post_invalid_data = {"name": "Some Location1 Some Location1 Some Location1 Some Location1 Some Location1 "
-                                 "Some Location1 Some Location1 Some Location1 Some Location1 Some Location1"
-                                 "Some Location1 Some Location1 Some Location1 Some Location1 Some Location1"}
+    post_valid_data = {"name": "POST ADDRESS"}
+    put_valid_data = {"name": "PUT ADDRESS"}
+    post_invalid_data = {"name": "Some Location1 Some Location1 Some Location1 Some Location1 Some Location1 Some Location1"
+                                 "Some Location1 Some Location1 Some Location1 Some Location1 Some Location1 Some Location1"
+                                 "Some Location1 Some Location1 Some Location1 Some Location1 Some Location1 Some Location1"}
 
     valid_test_data = [
             {
@@ -48,24 +49,26 @@ class TestApiLocation(unittest.TestCase):
 
     @patch('department_app.rest.location.abort')
     def test_get_location_wrong_id_case1(self, mock_abort):
-        """Api should return error message if id have wrong format."""
+        """Api should return information about location."""
         Location.get('one')
 
-        mock_abort.assert_called_once_with(404, message=self.wrong_id_format_msg)
+        mock_abort.assert_called_once_with(404, message="No such location with ID=one")
 
     @patch('department_app.rest.location.abort')
     def test_get_location_wrong_id_case2(self, mock_abort):
-        """Api should return error message if id have wrong format."""
-        Location.get(1.0)
-
-        mock_abort.assert_called_once_with(404, message=self.wrong_id_format_msg)
-
-    @patch('department_app.rest.location.abort')
-    def test_get_location_wrong_id_case3(self, mock_abort):
-        """Api should return error message if id have wrong format."""
+        """Api should return information about location."""
         Location.get(-1)
 
-        mock_abort.assert_called_once_with(404, message=self.wrong_id_format_msg)
+        mock_abort.assert_called_once_with(404, message="No such location with ID=-1")
+
+    @patch('department_app.rest.location.abort')
+    @patch('department_app.rest.location.CRUDLocation.get')
+    def test_get_location_wrong_id_case3(self, mock_get_location, mock_abort):
+        """Api should return information about location."""
+        mock_get_location.return_value = None
+        Location.get(1.0)
+
+        mock_abort.assert_called_once_with(404, message="No such location with ID=1.0")
 
     @patch('department_app.rest.location.abort')
     @patch('department_app.rest.location.CRUDLocation.get')
@@ -77,77 +80,69 @@ class TestApiLocation(unittest.TestCase):
         mock_abort.assert_called_once_with(404, message="No such location with ID=1")
 
     @patch('department_app.rest.location.CRUDLocation.update')
-    @patch('department_app.rest.location.Location.get_json')
-    def test_put_location_success(self, mok_get_json, mock_update):
+    def test_put_location_success(self,  mock_update):
         """Api should return information about location."""
-        mok_get_json.return_value = self.put_valid_data
-        mock_update.return_value = True
-        response = Location.put(1)
+        with app.test_request_context(json=self.post_valid_data):
 
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.json['message'], self.update_success_msg)
+            mock_update.return_value = True
+            response = Location.put(1)
+
+            self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.json['message'], self.update_success_msg)
 
     @patch('department_app.rest.location.abort')
     @patch('department_app.rest.location.CRUDLocation.update')
-    @patch('department_app.rest.location.Location.get_json')
-    def test_put_location_fail(self, mok_get_json, mock_update, mock_abort):
+    def test_put_location_fail(self, mock_update, mock_abort):
         """Api should return information about location."""
-        mok_get_json.return_value = self.put_valid_data
-        mock_update.return_value = False
-        Location.put(1)
+        with app.test_request_context(json=self.post_valid_data):
+            mock_update.return_value = False
+            Location.put(1)
 
-        mock_abort.assert_called_once_with(404, message=self.update_fail_msg)
+            mock_abort.assert_called_once_with(404, message=self.update_fail_msg)
 
     @patch('department_app.rest.location.abort')
-    @patch('department_app.rest.location.Location.get_json')
-    def test_put_location_not_valid(self, mok_get_json, mock_abort):
+    def test_put_location_not_valid(self, mock_abort):
         """Api should return information about location."""
-        mok_get_json.return_value = self.post_invalid_data
-        Location.put(1)
+        with app.test_request_context(json=self.post_invalid_data):
+            Location.put(1)
 
-        mock_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
+            mock_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
 
     @patch('department_app.rest.location.abort')
-    @patch('department_app.rest.location.Location.get_json')
-    def test_put_location_wrong_json(self, mok_get_json, mock_abort):
+    def test_put_location_wrong_json(self, mock_abort):
         """Api should return information about location."""
-        mok_get_json.return_value = False
-        Location.put(1)
+        with app.test_request_context(json=self.wrong_json):
+            Location.put(1)
 
-        mock_abort.assert_called_once_with(404, message=self.wrong_json_msg)
+            mock_abort.assert_called_once_with(404, message=self.wrong_json_msg)
 
-    @patch('department_app.rest.location.Location.get_json')
     @patch('department_app.rest.location.CRUDLocation.create')
-    def test_post_location(self, mock_create_location, mok_get_json):
+    def test_post_location(self, mock_create_location):
         """Api should return information about location."""
-        mok_get_json.return_value = self.post_valid_data
-        mock_create_location.return_value = {'id': 1,
-                                            'name': self.post_valid_data['name']}
-        response = LocationList.post()
+        with app.test_request_context(json=self.post_valid_data):
+            mock_create_location.return_value = {'id': 1,
+                                                'name': self.post_valid_data['name']}
+            response = LocationList.post()
 
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.json['id'], 1)
-        self.assertEqual(response.json['name'], self.post_valid_data['name'])
+            self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.json['id'], 1)
+            self.assertEqual(response.json['name'], self.post_valid_data['name'])
 
     @patch('department_app.rest.location.abort')
-    @patch('department_app.rest.location.Location.get_json')
-    def test_post_location_not_valid(self, mok_get_json, mok_abort):
+    def test_post_location_not_valid(self, mok_abort):
         """Api should return information about location."""
-        mok_get_json.return_value = self.post_invalid_data
+        with app.test_request_context(json=self.post_invalid_data):
+            LocationList.post()
 
-        LocationList.post()
-
-        mok_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
+            mok_abort.assert_called_once_with(404, message=self.not_valid_json_msg)
 
     @patch('department_app.rest.location.abort')
-    @patch('department_app.rest.location.Location.get_json')
-    def test_post_location_wrong_json(self, mok_get_json, mock_abort):
+    def test_post_location_wrong_json(self, mock_abort):
         """Api should return information about location."""
-        mok_get_json.return_value = False
+        with app.test_request_context(json=self.wrong_json):
+            LocationList.post()
 
-        LocationList.post()
-
-        mock_abort.assert_called_once_with(404, message=self.wrong_json_msg)
+            mock_abort.assert_called_once_with(404, message=self.wrong_json_msg)
 
     @patch('department_app.rest.location.CRUDLocation.get_location_list')
     def test_get_all_location(self, mock_get_all_location):
@@ -168,5 +163,3 @@ class TestApiLocation(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json), 0)
-
-        

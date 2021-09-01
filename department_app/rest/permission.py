@@ -15,24 +15,6 @@ api = Api(permission_api)
 class Permission(Resource):
     """Permission API class"""
     @staticmethod
-    def get_json():
-        """Get permission json, if json have wrong format - return false """
-        try:
-            permission_json = {'name': request.json['name']}
-        except KeyError:
-            return False
-        return permission_json
-
-    @staticmethod
-    def json_is_valid(json) -> bool:
-        """Validate permission json data, if json data not valid - return abort"""
-        try:
-            PermissionSchema(**json)
-        except ValidationError:
-            return False
-        return True
-
-    @staticmethod
     def get(permission_id):
         """
         This is the Permission API
@@ -53,10 +35,7 @@ class Permission(Resource):
           200:
             description: Permission information returned
         """
-        if str(permission_id).isdigit() and int(permission_id) > 0:
-            permission = CRUDPermission.get(permission_id)
-        else:
-            return abort(404, message="Invalid ID format!")
+        permission = CRUDPermission.get(permission_id)
         if not permission:
             return abort(404, message=f"No such permission with ID={permission_id}")
         return make_response(jsonify(permission), 200)
@@ -93,16 +72,15 @@ class Permission(Resource):
           204:
             description: Permission information successful update
         """
-        permission_json = Permission.get_json()
-        if not permission_json:
-            return abort(404, message="Wrong JSON fields names.")
+        permission_json = request.json
 
-        if not Permission.json_is_valid(permission_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            result = CRUDPermission.update(permission_id, name=permission_json['name'])
+            valid_permission_json = PermissionSchema(**permission_json).dict(exclude_unset=True)
+            result = CRUDPermission.update(permission_id, **valid_permission_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Permission {exception}")
+        except ValidationError as exception:
+            return abort(404, message=f"Permission {exception}")
         if not result:
             return abort(404, message="Permission not updated.")
         return make_response(jsonify({'message': 'Data successful updated.'}), 201)
@@ -134,16 +112,15 @@ class PermissionList(Resource):
           201:
             description: The permission was successfully created
         """
-        permission_json = Permission.get_json()
-        if not permission_json:
-            return abort(404, message="Wrong JSON fields names.")
+        permission_json = request.json
 
-        if not Permission.json_is_valid(permission_json):
-            return abort(404, message="JSON is not valid.")
         try:
-            permission = CRUDPermission.create(**permission_json)
+            valid_permission_json = PermissionSchema(**permission_json).dict(exclude_unset=True)
+            permission = CRUDPermission.create(**valid_permission_json)
         except IntegrityError as exception:
-            return abort(404, message=f"{exception}")
+            return abort(404, message=f"Permission {exception}")
+        except ValidationError as exception:
+            return abort(404, message=f"Permission {exception}")
         return make_response(jsonify(permission), 201)
 
     @staticmethod

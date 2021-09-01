@@ -13,11 +13,8 @@ class DepartmentSchema(BaseModel):
     @validator('name')
     def name_length(cls, v):
         """Name length validator"""
-        # dep = Department.query.all()
         if len(v) > 100:
             raise ValueError('Name length too big!')
-        # if v in [x.name for x in dep] and 'name' in request.json:
-        #     raise ValueError('This department is already in use!')
         return v.title()
 
     @validator('date_of_creation')

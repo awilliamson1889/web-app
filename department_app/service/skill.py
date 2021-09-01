@@ -24,9 +24,9 @@ class CRUDSkill:
             result = SkillModel.query.where(SkillModel.id == skill_id). \
                 update({SkillModel.name: name})
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Skill with name=%s already exist.", name)
-            raise exception
+            raise
         return bool(result)
 
     @staticmethod
@@ -49,7 +49,7 @@ class CRUDSkill:
         try:
             db.session.add(skill)
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Skill with name=%s already exist.", name)
-            raise exception
+            raise
         return skill
