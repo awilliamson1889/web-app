@@ -24,9 +24,9 @@ class CRUDAddress:
             result = AddressModel.query.where(AddressModel.id == address_id). \
                 update({AddressModel.name: name})
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Address with name=%s already exist.", name)
-            raise exception
+            raise
         return bool(result)
 
     @staticmethod
@@ -49,7 +49,7 @@ class CRUDAddress:
         try:
             db.session.add(address)
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Address with name=%s already exist.", name)
-            raise exception
+            raise
         return address

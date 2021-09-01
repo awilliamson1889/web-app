@@ -38,9 +38,9 @@ class CRUDDepartment:
                         DepartmentModel.date_of_creation: date_of_creation,
                         DepartmentModel.manager: manager})
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Department with name=%s already exist.", name)
-            raise exception
+            raise
         return bool(result)
 
     @staticmethod
@@ -78,7 +78,7 @@ class CRUDDepartment:
         try:
             db.session.add(department)
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("Department with name=%s already exist.", name)
-            raise exception
+            raise
         return department

@@ -56,9 +56,9 @@ class CRUDEmployee:
                         EmployeeModel.key_skill: key_skill,
                         EmployeeModel.permission: permission})
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("The employee contain fields already in use.")
-            raise exception
+            raise
         return bool(result)
 
     @staticmethod
@@ -73,9 +73,9 @@ class CRUDEmployee:
         try:
             db.session.add(employee)
             db.session.commit()
-        except IntegrityError as exception:
+        except IntegrityError:
             logging.info("The employee contain fields already in use.")
-            raise exception
+            raise
 
         return employee
 
