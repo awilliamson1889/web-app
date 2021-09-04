@@ -5,10 +5,13 @@
 {% block content %}
 <div id="confirm-modal1" class="modalbackground">
     <div class="modalwindow">
-        <h3>Please confirm delete employee!</h3>
-        <br>
-        <a class="my_button" href="/delete/employee/{{emp_id}}">Delete</a>
-        <a class="my_button" href="/manage/employee ">Cancle</a>
+        <form method = "POST">
+            <h3>Please confirm delete employee!</h3>
+            <br>
+            <button type="submit" class="my_button" style="height: 50px; width:150px"><i class="save"></i>Delete</button>
+            <br>
+            <a class="my_button" href="/manage/employee ">Cancle</a>
+        </form>
     </div>
 </div>
 {% endblock %}

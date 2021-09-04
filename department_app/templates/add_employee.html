@@ -5,81 +5,52 @@
 {% block content %}
 <div class="bg-add-employe">
     <h2>Create Employee</h2>
-    <form action="/create/new/employee" method = "POST">
+    <form method = "POST">
         <div class="add-employee">
-            <p>Name</p>
-            <input type="text" placeholder="Name" name="name" class="edit"> <br>
-            <p>Surname</p>
-            <input type="text" placeholder="Surname" name="surname" class="edit"> <br>
-            <p>Department</p>
-            <select class="select-css" name="department">
-                {% if departments_data %}
-                    {% for department in departments_data %}
-                        <option value="{{department.dep_id}}">{{department.name}}</option>
-                    {% endfor %}
-                {% else %}
-                    <option value="0"></option>
-                {% endif %}
-            </select>
+            <p>{{ form.name.label }}</p>
+                {{ form.name(class="edit") }}
+            <p>{{ form.surname.label }}</p>
+                {{ form.surname(class="edit") }}
+            <p>{{ form.department.label }}</p>
+                {{ form.department(class="edit") }}
             <a href="/add/department">New</a> <br>
-            <p>Date of Birth</p>
-            <input type="date" name="date_of_birth" class="edit" required>
-            <p>Salary</p>
-            <input type="text" placeholder="Salary" name="salary" class="edit"> <br>
-            <p>Work phone</p>
-            <input type="text" placeholder="Work phone" name="phone" class="edit"><br>
+            <p> {{ form.date_of_birth.label }}</p>
+                {{ form.date_of_birth(class="edit") }}
+            <p> {{ form.salary.label }}</p>
+                {{ form.salary(class="edit") }}
+            <br>
+            <p> {{ form.phone.label }}</p>
+                {{ form.phone(class="edit") }}
             <br>
             <a class="my_button" href="/manage/employee">Cancle</a>
             <button type="submit" class="my_button"><i class="save"></i>Save</button>
+            <p> </p>
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
+            {% for field, errors in form.errors.items() %}
+                <small class="form-text text-muted ">
+                    {{ ', '.join(errors) }}
+                    <br>
+                </small>
+            {% endfor %}
         </div>
         <div class="add-employee">
-            <p>Email</p>
-            <input type="email" placeholder="Email" name="email" class="edit" > <br>
-            <p>Location</p>
-            <select class="select-css" name="location">
-                {% if locations_data %}
-                    {% for location in locations_data %}
-                        <option value="{{location.location_id}}">{{location.name}}</option>
-                    {% endfor%}
-                {% else %}
-                    <option value="0"></option>
-                {% endif %}
-            </select>
+            <p> {{ form.email.label }}</p>
+                {{ form.email(class="edit") }}
+            <p>{{ form.location.label }}</p>
+                {{ form.location(class="edit") }}
             <a href="/add/location">New</a> <br>
-            <p>Work address</p>
-            <select class="select-css" name="work_address">
-                {% if addresses_data %}
-                    {% for address in addresses_data %}
-                        <option value="{{address.address_id}}">{{address.name}}</option>
-                    {% endfor %}
-                {% else %}
-                    <option value="0"></option>
-                {% endif %}
-            </select>
+            <p> {{ form.work_address.label }}</p>
+                {{ form.work_address(class="edit") }}
             <a href="/add/address">New</a> <br>
-            <p>Key skill</p>
-            <select class="select-css" name="key_skill">
-                {% if skills_data %}
-                    {% for skill in skills_data %}
-                        <option value="{{skill.skill_id}}">{{skill.name}}</option>
-                    {% endfor%}
-                {% else %}
-                    <option value="0"></option>
-                {% endif %}
-            </select>
+            <p>{{ form.key_skill.label }}</p>
+                {{ form.key_skill(class="edit") }}
             <a href="/add/skill">New</a> <br>
-            <p>Date of joining</p>
-            <input type="date" name="date_of_joining" class="edit">
-            <p>Permission</p>
-            <select class="select-css" name="permission">
-                {% if permissions_data %}
-                    {% for permission in permissions_data %}
-                        <option value="{{permission.permission_id}}">{{permission.name}}</option>
-                    {% endfor%}
-                {% else %}
-                    <option value="0"></option>
-                {% endif %}
-            </select>
+            <p> {{ form.date_of_joining.label }}</p>
+                {{ form.date_of_joining(class="edit") }}
+            <p>{{ form.permission.label }}</p>
+                {{ form.permission(class="edit") }}
             <a href="/add/permission">New</a> <br>
         </div>
     </form>

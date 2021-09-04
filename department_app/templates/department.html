@@ -26,19 +26,24 @@
     <ul>
         {% if employees_data %}
             {% for employee in employees_data %}
-            <li>
-                <div class="user">
-                    <div class="user-info-image">
-                        <img src="../static/img/image1.jpg" width="150" height="150" class="image" id="img">
-                    </div>
-                    <div class="user-info">
-                        <p>{{employee.name}} {{employee.surname}}</p>
-                        <p>{{employee.key_skill}}</p>
-                        <p>{{employee.location}} {{employee.work_address}}</p>
-                        <p>{{employee.email}}</p>
-                    </div>
-                </div>
-            </li>
+                {% if employee.department_id == department_data.department_id%}
+                    <li>
+                        <div class="user">
+                            <div class="user-info-image">
+                                <img src="../static/img/image1.jpg" width="150" height="150" class="image" id="img">
+                            </div>
+                            <div class="user-info">
+                                <p>{{employee.name}} {{employee.surname}}</p>
+                                <p>{{employee.key_skill}}</p>
+                                <p>{{employee.location}} {{employee.work_address}}</p>
+                                <p>{{employee.email}}</p>
+                            </div>
+                        </div>
+                    </li>
+                {% else %}
+                    <p>No employees in this department</p>
+                    <br>
+                {% endif %}
             {% endfor %}
         {% else %}
             <p>No employees in this department</p>

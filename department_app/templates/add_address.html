@@ -6,11 +6,25 @@
 <div class="bg-add-employe">
     <h2>Create Address</h2>
     <div class="add-employee">
-        <form action="/create/new/address" method = "POST">
-            <p>Address</p>
-            <input type="text" placeholder="Address" name="name" class="edit"> <br>
-            <a class="my_button" href="/add/address">Cancle</a>
-            <button type="submit" class="my_button"><i class="save"></i>Save</button>
+        <form method = "POST">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for=""> {{ form.name.label }}</label>
+                    {{ form.name(class="edit") }}
+                </div>
+                <div class="form-group">
+                    {{ form.submit}}
+                </div>
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% endif %}
+                {% for field, errors in form.errors.items() %}
+                    <small class="form-text text-muted ">
+                        {{ ', '.join(errors) }}
+                        <br>
+                    </small>
+                {% endfor %}
+            </div>
         </form>
     </div>
 </div>
