@@ -23,31 +23,6 @@
     </form>
     <a class="my_button" href="/add/employee">Add Employee</a>
 </div>
-{% extends 'base.html' %}
-
-{% block title%}Manage employees{% endblock %}
-
-{% block content %}
-<div class="filters">
-    <p>MANAGE EMPLOYEES</p>
-    <form action="/manage/employee" method="POST">
-        <br>
-        <p>Department</p>
-        <select class="select-css" name="department">
-            <option value="No" selected hidden>Select department</option>
-            {% for department in departments_data%}
-                <option value="{{department.dep_id}}">{{department.name}}</option>
-            {% endfor %}
-        </select>
-        Filter by date of birth: from
-        <input type="date" name="date1" class="edit">
-        by
-        <input type="date" name="date2" class="edit">
-        <button type="submit" class="my_button"><i class="save"></i>Filter</button>
-        <a class="my_button" href="/manage/employee">X</a>
-    </form>
-    <a class="my_button" href="/add/employee">Add Employee</a>
-</div>
 <div class="table_dark">
     {% if employees_data %}
         <table>
