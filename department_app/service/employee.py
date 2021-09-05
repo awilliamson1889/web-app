@@ -108,7 +108,7 @@ class CRUDEmployee:
             query_join = query_join.filter(EmployeeModel.date_of_birth.between(filters.get('date1', ''),
                                                                                filters.get('date2', '9999-12-12')))
             for attr, value in filters.items():
-                if value != '' and attr.isinstance(str):
+                if value != '' and isinstance(attr, str):
                     query_join = query_join.filter(attr == value)
 
         employee_list = []
