@@ -5,19 +5,19 @@
 {% block content %}
 <div class="filters">
     <p>MANAGE EMPLOYEES</p>
-    <form action="/manage/employee" method="POST">
+    <form action="" method="POST">
         <br>
         <p>Department</p>
         <select class="select-css" name="department">
-            <option value="No" selected hidden>Select department</option>
+            <option value="" selected hidden>Select department</option>
             {% for department in departments_data%}
-                <option value="{{department.dep_id}}">{{department.name}}</option>
+                <option value="{{department.department_id}}">{{department.name}}</option>
             {% endfor %}
         </select>
         Filter by date of birth: from
-        <input type="date" name="date1" class="edit">
+        <input type="date" name="date1" class="edit" value="">
         by
-        <input type="date" name="date2" class="edit">
+        <input type="date" name="date2" class="edit" value="">
         <button type="submit" class="my_button"><i class="save"></i>Filter</button>
         <a class="my_button" href="/manage/employee">X</a>
     </form>

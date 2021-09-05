@@ -12,13 +12,8 @@
                     {{ form.name(class="edit", value=employee_data.name) }}
                 <p>{{ form.surname.label }}</p>
                     {{ form.surname(class="edit", value=employee_data.surname) }}
-                <p>Department</p>
-                <select class="select-css" name="department">
-                    <option value="{{employee_data.department_id}}" selected hidden>{{employee_data.department}}</option>
-                    {% for department in departments_data%}
-                        <option value="{{department.dep_id}}">{{department.name}}</option>
-                    {% endfor%}
-                </select>
+                <p>{{ form.department.label }}</p>
+                {{ form.department(class="edit") }}
                 <a href="/add/department">New</a> <br>
                 <p>{{ form.date_of_birth.label }}</p>
                     {{ form.date_of_birth(class="edit", value=employee_data.date_of_birth) }}
@@ -40,39 +35,19 @@
             <div class="add-employee">
                 <p>{{ form.email.label }}</p>
                     {{ form.email(class="edit", value=employee_data.email) }}
-                <p>Location</p>
-                <select class="select-css" name="location">
-                    <option value="{{employee_data.location_id}}" selected hidden>{{employee_data.location}}</option>
-                        {% for location in locations_data %}
-                            <option value="{{location.location_id}}">{{location.name}}</option>
-                        {% endfor%}
-                </select>
+                <p>{{ form.location.label }}</p>
+                {{ form.location(class="edit") }}
                 <a href="/add/location">New</a> <br>
-                <p>Work address</p>
-                <select class="select-css" name="work_address">
-                    <option value="{{employee_data.address_id}}" selected hidden>{{employee_data.work_address}}</option>
-                        {% for address in addresses_data %}
-                            <option value="{{address.address_id}}">{{address.name}}</option>
-                        {% endfor %}
-                </select>
+                <p>{{ form.work_address.label }}</p>
+                {{ form.work_address(class="edit") }}
                 <a href="/add/address">New</a> <br>
-                <p>Key skill</p>
-                <select class="select-css" name="key_skill">
-                    <option value="{{employee_data.skill_id}}" selected hidden>{{employee_data.key_skill}}</option>
-                    {% for skill in skills_data %}
-                        <option value="{{skill.skill_id}}">{{skill.name}}</option>
-                    {% endfor%}
-                </select>
+                <p>{{ form.key_skill.label }}</p>
+                {{ form.key_skill(class="edit") }}
                 <a href="/add/skill">New</a> <br>
                 <p>{{ form.date_of_joining.label }}</p>
-                    {{ form.date_of_joining(class="edit", value=employee_data.date_of_joining) }}
-                <p>Permission</p>
-                <select class="select-css" name="permission">
-                    <option value="{{employee_data.permission_id}}" selected hidden>{{employee_data.permission}}</option>
-                    {% for permission in permissions_data %}
-                        <option value="{{permission.permission_id}}">{{permission.name}}</option>
-                    {% endfor%}
-                </select>
+                {{ form.date_of_joining(class="edit", value=employee_data.date_of_joining) }}
+                <p>{{ form.permission.label }}</p>
+                {{ form.permission(class="edit") }}
                 <a href="/add/permission">New</a> <br>
             </div>
         </form>

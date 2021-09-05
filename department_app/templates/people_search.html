@@ -3,30 +3,33 @@
 {% block title%}People search{% endblock %}
 
 {% block content %}
-<div class="search-panel">
-    <div class="search-center">
-        <input type="text" placeholder="Search employee by surname" name="search" class="searchhh">
-        <button type="submit" class="my_button"><i class="search"  ></i>Search</button>
+<form action="" method="POST">
+    <div class="search-panel">
+        <div class="search-center">
+            <input type="text" placeholder="Search employee by surname" name="employee_surname" class="searchhh">
+            <button type="submit" class="my_button"><i class="search"></i>Search</button>
+        </div>
     </div>
-</div>
-<div class="profile-line"></div>
-<div class="department-info-cont-u730">
-    <div class="filters-left-people">
+    <div class="profile-line"></div>
+    <div class="department-info-cont-u730">
+        <div class="filters-left-people">
         <p>Location</p>
         <select class="select-css" name="location">
             <option value="" selected hidden>Select location</option>
             {% for location in locations_data%}
-                <option value="{{location.location_id}}">{{location.name}}</option>
+                <option value="{{location.id}}">{{location.name}}</option>
             {% endfor %}
         </select>
         <p>Skill</p>
         <select class="select-css" name="key_skill">
             <option value="" selected hidden>Select skill</option>
             {% for skill in skills_data%}
-                <option value="{{skill.skill_id}}">{{skill.name}}</option>
+                <option value="{{skill.id}}">{{skill.name}}</option>
             {% endfor %}
         </select>
+        </div>
     </div>
+</form>
     <ul>
         {% if employees_data %}
             {% for employee in employees_data%}
@@ -36,7 +39,7 @@
                         <img src="../static/img/image1.jpg" width="150" height="150" class="image" id="img">
                     </div>
                     <div class="user-info">
-                        <p><a href="/employee/{{employee.emp_id}}">{{employee.name}} {{employee.surname}} </a>| {{employee.location}}</p>
+                        <p><a href="/employee/{{employee.employee_id}}">{{employee.name}} {{employee.surname}} </a>| {{employee.location}}</p>
                         <p>{{employee.department}}</p>
                         <p>{{employee.email}} | {{employee.phone}}</p>
                         <br>
