@@ -15,11 +15,6 @@ ADD TEMPLATES
 """
 
 
-@frontend.route('/')
-def test():
-    return 'Hello World'
-
-
 @frontend.route('/add/address', methods=['POST', 'GET'])
 def add_address():
     form = AddressForm(request.form)

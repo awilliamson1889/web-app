@@ -23,6 +23,18 @@ class ViewsTestCase(unittest.TestCase):
 
             assert '<title>Add address</title>' in str(rv.data)
 
+    @patch('department_app.views.routes.CRUDAddress.create')
+    def test_add_address_page_post(self, mock_create_address):
+        mock_create_address.return_value = {'id': 1,
+                                            'name': 'name'}
+        with app.test_request_context():
+            rv = self.app.post('/add/address', data={'name': 'name'})
+            self.assertEqual(rv.request.path, '/add/address')
+            self.assertEqual(rv.request.method, 'POST')
+            self.assertEqual(rv.status_code, 302)
+
+            assert '<title>Redirecting...</title>' in str(rv.data)
+
     def test_add_address_page_post_empty_name_field(self):
         with app.test_request_context():
             rv = self.app.post('/add/address')
@@ -60,6 +72,18 @@ class ViewsTestCase(unittest.TestCase):
             self.assertEqual(rv.status_code, 200)
 
             assert '<title>Add location</title>' in str(rv.data)
+
+    @patch('department_app.views.routes.CRUDLocation.create')
+    def test_add_location_page_post(self, mock_create):
+        mock_create.return_value = {'id': 1,
+                                    'name': 'name'}
+        with app.test_request_context():
+            rv = self.app.post('/add/location', data={'name': 'name'})
+            self.assertEqual(rv.request.path, '/add/location')
+            self.assertEqual(rv.request.method, 'POST')
+            self.assertEqual(rv.status_code, 302)
+
+            assert '<title>Redirecting...</title>' in str(rv.data)
 
     def test_add_location_page_post_empty_name_field(self):
         with app.test_request_context():
@@ -108,6 +132,18 @@ class ViewsTestCase(unittest.TestCase):
             assert 'This field is required' in str(rv.data)
             assert '<title>Add permission</title>' in str(rv.data)
 
+    @patch('department_app.views.routes.CRUDPermission.create')
+    def test_add_permission_page_post(self, mock_create):
+        mock_create.return_value = {'id': 1,
+                                    'name': 'name'}
+        with app.test_request_context():
+            rv = self.app.post('/add/permission', data={'name': 'name'})
+            self.assertEqual(rv.request.path, '/add/permission')
+            self.assertEqual(rv.request.method, 'POST')
+            self.assertEqual(rv.status_code, 302)
+
+            assert '<title>Redirecting...</title>' in str(rv.data)
+
     def test_add_permission_page_post_very_long_name(self):
         """Api should return information about address."""
         with app.test_request_context():
@@ -134,6 +170,18 @@ class ViewsTestCase(unittest.TestCase):
             self.assertEqual(rv.status_code, 200)
 
             assert '<title>Add skill</title>' in str(rv.data)
+
+    @patch('department_app.views.routes.CRUDSkill.create')
+    def test_add_skill_page_post(self, mock_create):
+        mock_create.return_value = {'id': 1,
+                                    'name': 'name'}
+        with app.test_request_context():
+            rv = self.app.post('/add/skill', data={'name': 'name'})
+            self.assertEqual(rv.request.path, '/add/skill')
+            self.assertEqual(rv.request.method, 'POST')
+            self.assertEqual(rv.status_code, 302)
+
+            assert '<title>Redirecting...</title>' in str(rv.data)
 
     def test_add_skill_page_post_empty_name_field(self):
         with app.test_request_context():
@@ -172,7 +220,7 @@ class ViewsTestCase(unittest.TestCase):
 
             assert '<title>Add department</title>' in str(rv.data)
 
-    def test_add_department_page_post_empty_name_field(self):
+    def test_add_department_post_empty_name_field(self):
         with app.test_request_context():
             rv = self.app.post('/add/department', data={'manager': 'Manager Managerov',
                                                         'date_of_creation': '1999-01-01'})
@@ -182,6 +230,31 @@ class ViewsTestCase(unittest.TestCase):
 
             assert 'This field is required' in str(rv.data)
             assert '<title>Add department</title>' in str(rv.data)
+
+    @patch('department_app.views.routes.CRUDDepartment.create', side_effect=IntegrityError('', '', ''))
+    def test_add_department_post_already_exist(self, mock_create):
+        with app.test_request_context():
+            rv = self.app.post('/add/department', data={'name': 'very long name very long name very long name',
+                                                        'manager': 'Your manager',
+                                                        'date_of_creation': '1999-01-01'})
+
+            assert 'Sorry but this department already exist.' in str(rv.data)
+
+    @patch('department_app.views.routes.CRUDDepartment.create')
+    def test_add_department_page_post(self, mock_create_address):
+        mock_create_address.return_value = {'id': 1,
+                                            'name': 'very long name very long name very long name',
+                                            'manager': 'Your manager',
+                                            'date_of_creation': '1999-01-01'}
+        with app.test_request_context():
+            rv = self.app.post('/add/department', data={'name': 'very long name very long name very long name',
+                                                        'manager': 'Your manager',
+                                                        'date_of_creation': '1999-01-01'})
+            self.assertEqual(rv.request.path, '/add/department')
+            self.assertEqual(rv.request.method, 'POST')
+            self.assertEqual(rv.status_code, 302)
+
+            assert '<title>Redirecting...</title>' in str(rv.data)
 
     def test_add_employee_page_get(self):
         with app.test_request_context():
@@ -201,6 +274,40 @@ class ViewsTestCase(unittest.TestCase):
 
             assert 'This field is required' in str(rv.data)
             assert '<title>Add employee</title>' in str(rv.data)
+
+    @patch('department_app.views.routes.CRUDEmployee.create', side_effect=IntegrityError('', '', ''))
+    def test_add_employee_page_post_already_exist(self, mock_create):
+        with app.test_request_context():
+            rv = self.app.post('/add/employee', data={"name": "POST Name", "surname": "Surname",
+                                                      "date_of_birth": "1998-01-01", "salary": 500,
+                                                      "email": "email@mail.com", "phone": "444444",
+                                                      "date_of_joining": "2021-05-07", "department": 1,
+                                                      "location": 1, "work_address": 1, "key_skill": 1,
+                                                      "permission": 1})
+
+            assert 'Sorry but this employee have same fields with another employee.' in str(rv.data)
+
+    @patch('department_app.views.routes.CRUDEmployee.create')
+    def test_add_employee_page_post(self, mock_create_address):
+        mock_create_address.return_value = {'id': 1,
+                                            "name": "POST Name", "surname": "Surname",
+                                            "date_of_birth": "1998-01-01", "salary": 500,
+                                            "email": "email@mail.com", "phone": "444444",
+                                            "date_of_joining": "2021-05-07", "department": 1,
+                                            "location": 1, "work_address": 1, "key_skill": 1,
+                                            "permission": 1}
+        with app.test_request_context():
+            rv = self.app.post('/add/employee', data={"name": "POST Name", "surname": "Surname",
+                                                      "date_of_birth": "1998-01-01", "salary": 500,
+                                                      "email": "email@mail.com", "phone": "444444",
+                                                      "date_of_joining": "2021-05-07", "department": 1,
+                                                      "location": 1, "work_address": 1, "key_skill": 1,
+                                                      "permission": 1})
+            self.assertEqual(rv.request.path, '/add/employee')
+            self.assertEqual(rv.request.method, 'POST')
+            self.assertEqual(rv.status_code, 302)
+
+            assert '<title>Redirecting...</title>' in str(rv.data)
 
     def test_search_employee_page_get(self):
         with app.test_request_context():
