@@ -105,15 +105,21 @@ class CRUDEmployee:
             .join(DepartmentModel).join(PermissionModel).join(AddressModel).join(LocationModel).join(SkillModel)
 
         if filters:
-            query_join = query_join.filter(EmployeeModel.date_of_birth.
-                                           between(filters.get('date1', ''),
-                                                   filters.get('date2', '9999-11-11')))
+            query_join = query_join.filter(EmployeeModel.date_of_birth.between(filters.get('date1', ''),
+                                                                               filters.get('date2', '9999-12-12')))
+            print(str(len(query_join.all())) + "   len query_join.all")
+            print(filters)
+
             for attr, value in filters.items():
-                if value != '' and attr != ('date1' and 'date2'):
+                if value != '' and type(attr) != str:
+                    print("value", len(value), attr, "TRUE")
                     query_join = query_join.filter(attr == value)
+                else:
+                    print('FALSE')
 
         employee_list = []
         employees = query_join.all()
+        print(str(len(employees)) + "   len")
         for employee, department, permission, address, location, skill in employees:
             user_info = {'name': employee.name, 'surname': employee.surname,
                          'date_of_birth': employee.date_of_birth,
