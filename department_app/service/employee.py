@@ -111,7 +111,7 @@ class CRUDEmployee:
             print(filters)
 
             for attr, value in filters.items():
-                if value != '' and type(attr) != str:
+                if value != '' and attr.isinstance(str):
                     print("value", len(value), attr, "TRUE")
                     query_join = query_join.filter(attr == value)
                 else:
