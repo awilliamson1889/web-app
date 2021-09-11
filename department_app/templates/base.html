@@ -10,21 +10,17 @@
   <body>
      <div class="content">
               <div class="navbar">
-                <a href="{{ url_for('frontend.employee_page', employee_id='1') }}">My Profile</a>
-                <a href="{{ url_for('frontend.departments_page') }}">Departments</a>
-                <a href="{{ url_for('frontend.search_employee_page') }}">People Search</a>
+                <a href="{{ url_for('employee_page', employee_id='1') }}">My Profile</a>
+                <a href="{{ url_for('departments_page') }}">Departments</a>
+                <a href="{{ url_for('search_employee_page') }}">People Search</a>
                 <div class="dropdown">
                 <button class="dropbtn">Management
                     <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                    <a href="{{ url_for('frontend.manage_department_page') }}">Departments</a>
-                    <a href="{{ url_for('frontend.manage_employee_page') }}">Employees</a>
+                    <a href="{{ url_for('manage_department_page') }}">Departments</a>
+                    <a href="{{ url_for('manage_employee_page') }}">Employees</a>
                 </div>
-                </div>
-                <!-- Right-aligned links -->
-                <div class="topnav-right">
-                    <a href="{{ url_for('frontend.logout') }}">Logout</a>
                 </div>
             </div>
     {% block content %}

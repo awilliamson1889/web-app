@@ -78,7 +78,7 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
-disable=wrong-import-position, import-outside-toplevel, unused-import, unused-variable
+disable=wrong-import-position, import-outside-toplevel, unused-import, unused-variable, duplicate-code
 
 
 # Enable the message, report, category or checker with the given id(s). You can
