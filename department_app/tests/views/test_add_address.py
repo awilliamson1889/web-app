@@ -22,7 +22,7 @@ class AddAddressTestCase(unittest.TestCase):
 
             assert '<title>Add address</title>' in str(rv.data)
 
-    @patch('department_app.views.routes.CRUDAddress.create')
+    @patch('department_app.views.add_address.CRUDAddress.create')
     def test_add_address_page_post(self, mock_create_address):
         mock_create_address.return_value = {'id': 1,
                                             'name': 'name'}
@@ -55,7 +55,7 @@ class AddAddressTestCase(unittest.TestCase):
 
             assert 'Address length must be between 3 and 100 characters' in str(rv.data)
 
-    @patch('department_app.views.routes.CRUDAddress.create', side_effect=IntegrityError('', '', ''))
+    @patch('department_app.views.add_address.CRUDAddress.create', side_effect=IntegrityError('', '', ''))
     def test_add_address_page_post_already_exist(self, mock_create):
         """Api should return information about address."""
         with app.test_request_context():

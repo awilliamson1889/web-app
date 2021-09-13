@@ -33,7 +33,7 @@ class AddDepartmentTestCase(unittest.TestCase):
             assert 'This field is required' in str(rv.data)
             assert '<title>Add department</title>' in str(rv.data)
 
-    @patch('department_app.views.routes.CRUDDepartment.create', side_effect=IntegrityError('', '', ''))
+    @patch('department_app.views.add_department.CRUDDepartment.create', side_effect=IntegrityError('', '', ''))
     def test_add_department_post_already_exist(self, mock_create):
         with app.test_request_context():
             rv = self.app.post('/add/department', data={'name': 'very long name very long name very long name',
@@ -42,7 +42,7 @@ class AddDepartmentTestCase(unittest.TestCase):
 
             assert 'Sorry but this department already exist.' in str(rv.data)
 
-    @patch('department_app.views.routes.CRUDDepartment.create')
+    @patch('department_app.views.add_department.CRUDDepartment.create')
     def test_add_department_page_post(self, mock_create_department):
         mock_create_department.return_value = {'id': 1,
                                                'name': 'very long name very long name very long name',

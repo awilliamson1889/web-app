@@ -22,7 +22,7 @@ class AddSkillTestCase(unittest.TestCase):
 
             assert '<title>Add skill</title>' in str(rv.data)
 
-    @patch('department_app.views.routes.CRUDSkill.create')
+    @patch('department_app.views.add_skill.CRUDSkill.create')
     def test_add_skill_page_post(self, mock_create):
         mock_create.return_value = {'id': 1,
                                     'name': 'name'}
@@ -55,7 +55,7 @@ class AddSkillTestCase(unittest.TestCase):
 
             assert 'Skill length must be between 3 and 50 characters' in str(rv.data)
 
-    @patch('department_app.views.routes.CRUDSkill.create', side_effect=IntegrityError('', '', ''))
+    @patch('department_app.views.add_skill.CRUDSkill.create', side_effect=IntegrityError('', '', ''))
     def test_add_skill_page_post_already_exist(self, mock_create):
         with app.test_request_context():
             rv = self.app.post('/add/skill', data={'name': 'very long name very long name very long name'})

@@ -22,7 +22,7 @@ class AddLocationTestCase(unittest.TestCase):
 
             assert '<title>Add location</title>' in str(rv.data)
 
-    @patch('department_app.views.routes.CRUDLocation.create')
+    @patch('department_app.views.add_location.CRUDLocation.create')
     def test_add_location_page_post(self, mock_create):
         mock_create.return_value = {'id': 1,
                                     'name': 'name'}
@@ -55,7 +55,7 @@ class AddLocationTestCase(unittest.TestCase):
 
             assert 'Location length must be between 3 and 100 characters' in str(rv.data)
 
-    @patch('department_app.views.routes.CRUDLocation.create', side_effect=IntegrityError('', '', ''))
+    @patch('department_app.views.add_location.CRUDLocation.create', side_effect=IntegrityError('', '', ''))
     def test_add_location_page_post_already_exist(self, mock_create):
         with app.test_request_context():
             rv = self.app.post('/add/location', data={'name': 'very long name very long name very long name'})

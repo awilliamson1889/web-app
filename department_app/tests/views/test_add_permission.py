@@ -32,7 +32,7 @@ class AddPermissionTestCase(unittest.TestCase):
             assert 'This field is required' in str(rv.data)
             assert '<title>Add permission</title>' in str(rv.data)
 
-    @patch('department_app.views.routes.CRUDPermission.create')
+    @patch('department_app.views.add_permission.CRUDPermission.create')
     def test_add_permission_page_post(self, mock_create):
         mock_create.return_value = {'id': 1,
                                     'name': 'name'}
@@ -55,7 +55,7 @@ class AddPermissionTestCase(unittest.TestCase):
 
             assert 'Permission length must be between 3 and 50 characters' in str(rv.data)
 
-    @patch('department_app.views.routes.CRUDPermission.create', side_effect=IntegrityError('', '', ''))
+    @patch('department_app.views.add_permission.CRUDPermission.create', side_effect=IntegrityError('', '', ''))
     def test_add_permission_page_post_already_exist(self, mock_create):
         with app.test_request_context():
             rv = self.app.post('/add/permission', data={'name': 'very long name very long name very long name'})

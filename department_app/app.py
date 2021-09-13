@@ -12,7 +12,6 @@ from department_app.rest.department import department_api
 from department_app.rest.location import location_api
 from department_app.rest.employee import employee_api
 from department_app.rest.address import address_api
-# from department_app.views.routes import frontend
 from department_app.rest.skill import skill_api
 from department_app.config import Config
 from department_app.views import AddAddress, AddDepartment, AddLocation, AddEmployee, AddSkill, AddPermission, \
