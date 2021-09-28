@@ -1,3 +1,4 @@
+"""Department dataclass module"""
 from dataclasses import dataclass
 
 from department_app.models import EmployeeModel
@@ -5,6 +6,7 @@ from department_app.models import EmployeeModel
 
 @dataclass
 class Department:
+    """Department dataclass"""
     name: str
     manager: str
     date_of_creation: str
@@ -14,6 +16,7 @@ class Department:
 
     @staticmethod
     def convert_db_to_entity(department):
+        """Method to convert db to entity"""
         if not department:
             return None
         employee = EmployeeModel.query.filter_by(department=department.id).all()
