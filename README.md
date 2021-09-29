@@ -52,4 +52,4 @@ export DB_PORT='5432'
 gunicorn --bind 127.0.0.1:5000 department_app.wsgi:app
 ```
 
-Open http://127.0.0.1:5000 in a browser.
+Open http://127.0.0.1:5000/swagger/ or  http://127.0.0.1:5000/employee/1 in a browser.
