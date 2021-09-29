@@ -18,7 +18,7 @@ class UpdateEmployee(BaseView):
     def dispatch_request(self, employee_id):
         form = EmployeeForm(request.form)
         form.work_address.choices = [(address['id'], address['name']) for address in CRUDAddress.get_address_list()]
-        form.department.choices = [(dep['department_id'], dep['name']) for dep in CRUDDepartment.get_department_list()]
+        form.department.choices = [(dep.department_id, dep.name) for dep in CRUDDepartment.get_department_list()]
         form.location.choices = [(loc['id'], loc['name']) for loc in CRUDLocation.get_location_list()]
         form.key_skill.choices = [(skill['id'], skill['name']) for skill in CRUDSkill.get_skill_list()]
         form.permission.choices = [(perm['id'], perm['name']) for perm in CRUDPermission.get_permission_list()]

@@ -100,6 +100,7 @@ class CRUDEmployee:
     @staticmethod
     def get_employee_list(filters=None):
         """Get employee func"""
+        employee_list = []
         query_join = db.session.query(
             EmployeeModel, DepartmentModel, PermissionModel, AddressModel, LocationModel, SkillModel)\
             .join(DepartmentModel).join(PermissionModel).join(AddressModel).join(LocationModel).join(SkillModel)
@@ -108,10 +109,12 @@ class CRUDEmployee:
             query_join = query_join.filter(EmployeeModel.date_of_birth.between(filters.get('date1', ''),
                                                                                filters.get('date2', '9999-12-12')))
             for attr, value in filters.items():
-                if value != '' and isinstance(attr, str):
+                print(value != '')
+                print(attr, value)
+                if value != '' and (attr not in ['date1', 'date2']):
                     query_join = query_join.filter(attr == value)
 
-        employee_list = []
+        print(len(query_join.all()))
         employees = query_join.all()
         for employee, department, permission, address, location, skill in employees:
             user_info = {'name': employee.name, 'surname': employee.surname,
@@ -124,4 +127,5 @@ class CRUDEmployee:
                          'address_id': employee.work_address, 'skill_id': employee.key_skill,
                          'permission_id': employee.permission}
             employee_list.append(user_info)
+
         return tuple(employee_list)
