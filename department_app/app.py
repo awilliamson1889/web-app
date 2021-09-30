@@ -16,7 +16,7 @@ from department_app.rest.skill import skill_api
 from department_app.config import Config
 from department_app.views import AddAddress, AddDepartment, AddLocation, AddEmployee, AddSkill, AddPermission, \
     DeleteEmployee, DepartmentPage, DepartmentsPage, EmployeePage, ManageDepartment, ManageEmployee, SearchEmployee,\
-    UpdateDepartment, UpdateEmployee, DeleteDepartment
+    UpdateDepartment, UpdateEmployee, DeleteDepartment, MainPage
 
 logging.basicConfig(filename="app.log", level=logging.INFO)
 
@@ -59,6 +59,7 @@ def create_app():
     app.register_blueprint(skill_api)
     # app.register_blueprint(frontend)
 
+    app.add_url_rule('/', view_func=MainPage.as_view('main_page'))
     app.add_url_rule('/add/address', view_func=AddAddress.as_view('add_address'))
     app.add_url_rule('/add/department', view_func=AddDepartment.as_view('add_department'))
     app.add_url_rule('/add/employee', view_func=AddEmployee.as_view('add_employee'))

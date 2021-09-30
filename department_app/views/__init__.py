@@ -15,3 +15,4 @@ from department_app.views.search_employee import SearchEmployee
 from department_app.views.update_department import UpdateDepartment
 from department_app.views.update_employee import UpdateEmployee
 from department_app.views.delete_department import DeleteDepartment
+from department_app.views.main_page import MainPage
