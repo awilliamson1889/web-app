@@ -16,7 +16,7 @@ from department_app.rest.skill import skill_api
 from department_app.config import Config
 from department_app.views import AddAddress, AddDepartment, AddLocation, AddEmployee, AddSkill, AddPermission, \
     DeleteEmployee, DepartmentPage, DepartmentsPage, EmployeePage, ManageDepartment, ManageEmployee, SearchEmployee,\
-    UpdateDepartment, UpdateEmployee
+    UpdateDepartment, UpdateEmployee, DeleteDepartment
 
 logging.basicConfig(filename="app.log", level=logging.INFO)
 
@@ -66,6 +66,7 @@ def create_app():
     app.add_url_rule('/add/permission', view_func=AddPermission.as_view('add_permission'))
     app.add_url_rule('/add/skill', view_func=AddSkill.as_view('add_skill'))
     app.add_url_rule('/delete-employee/<string:employee_id>', view_func=DeleteEmployee.as_view('delete_employee'))
+    app.add_url_rule('/delete-department/<string:department_id>', view_func=DeleteDepartment.as_view('delete_department'))
     app.add_url_rule('/departments', view_func=DepartmentsPage.as_view('departments_page'))
     app.add_url_rule('/department/<string:department_id>', view_func=DepartmentPage.as_view('department_page'))
     app.add_url_rule('/employee/<string:employee_id>', view_func=EmployeePage.as_view('employee_page'))

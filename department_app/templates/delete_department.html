@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title%}Delete department{% endblock %}
+
+{% block content %}
+<div id="confirm-modal1" class="modalbackground">
+    <div class="modalwindow">
+        <form method = "POST">
+            <h3>Please confirm delete department!</h3>
+            <br>
+            <button type="submit" class="my_button" style="height: 50px; width:150px"><i class="save"></i>Delete</button>
+            <br>
+            <a class="my_button" href="/manage/department ">Cancle</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

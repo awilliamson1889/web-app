@@ -63,3 +63,13 @@ class CRUDDepartment:
             logging.info("Department with name=%s already exist.", name)
             raise
         return department
+
+    @staticmethod
+    def delete(department_id):
+        """Delete department func"""
+        department = DepartmentModel.query.filter_by(id=department_id).first()
+        if not department:
+            return False
+        db.session.delete(department)
+        db.session.commit()
+        return True

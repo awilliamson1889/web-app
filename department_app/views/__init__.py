@@ -14,3 +14,4 @@ from department_app.views.manage_employee import ManageEmployee
 from department_app.views.search_employee import SearchEmployee
 from department_app.views.update_department import UpdateDepartment
 from department_app.views.update_employee import UpdateEmployee
+from department_app.views.delete_department import DeleteDepartment

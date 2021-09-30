@@ -16,6 +16,31 @@ api = Api(department_api)
 class Department(Resource):
     """Department API class"""
     @staticmethod
+    def delete(department_id):
+        """
+        This is the Department API
+        Call this API passing department_id and delete this department
+        ---
+        tags:
+          - Department API
+        parameters:
+          - name: "department_id"
+            in: "path"
+            description: "ID of department to delete"
+            required: true
+            type: "integer"
+            format: "int64"
+        responses:
+          404:
+            description: Could not find department
+          204:
+            description: Department deleted
+        """
+        if CRUDDepartment.delete(department_id):
+            return make_response(jsonify({'message': 'Data successful deleted.'}), 204)
+        return abort(404, message="Department not deleted.")
+
+    @staticmethod
     def get(department_id):
         """
         This is the Department API
@@ -152,8 +177,6 @@ class DepartmentList(Resource):
           200:
             description: All department returned
         """
-        # filters = {'department_name_f': request.form.get('department_name_f') or ''}
-        # departments = CRUDDepartment.get_department_list(filters=filters)
         departments = CRUDDepartment.get_department_list()
         return make_response(jsonify(departments), 200)
 

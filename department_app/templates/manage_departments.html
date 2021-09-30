@@ -13,7 +13,7 @@
         <table>
             <thead><tr><th>Department</th><th>Manager</th><th>Total Employees</th><th>Date of creation</th><th>Avg salary</th><th>Action</th></tr></thead>
                 {% for department in departments_data%}
-                    <tr><td>{{department.name}}</td><td>{{department.manager}}</td><td>{{department.employees}}</td><td>{{department.date_of_creation}}</td><td>{%if department.employees == 0%} 0 {%else%} {{department.department_avg_salary / department.employees}}{%endif%}</td><td><a href="/update-department/{{department.department_id}}">Edit</a> | <a href="/department/{{department.department_id}}">View</a></td></tr>
+                    <tr><td>{{department.name}}</td><td>{{department.manager}}</td><td>{{department.employees}}</td><td>{{department.date_of_creation}}</td><td>{%if department.employees == 0%} 0 {%else%} {{department.department_avg_salary / department.employees}}{%endif%}</td><td><a href="/update-department/{{department.department_id}}">Edit</a> | <a href="/department/{{department.department_id}}">View</a> | <a href="/delete-department/{{department.department_id}}">Delete</a></td></tr>
                 {% endfor %}
         </table>
     {% else %}

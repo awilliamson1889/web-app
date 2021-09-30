@@ -11,7 +11,7 @@ class DeleteEmployee(BaseView):
     methods = ['GET', 'POST']
 
     def get_template_name(self):
-        return 'delete_employee'
+        return 'delete_employee.html'
 
     def dispatch_request(self, employee_id):
         if request.method == 'POST':
