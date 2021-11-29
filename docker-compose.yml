@@ -10,9 +10,14 @@ services:
       - 5400:5432
 
 
+
   web:
     build: .
     image: awilliamson1998/web:latest
     restart: always
     ports:
       - 8000:8000
+    environment:
+      - DB_HOST=database
+    depends_on:
+      - database
