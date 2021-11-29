@@ -1,72 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-    <title>Departments list</title>
-</head>
-<body>
-    <div class="container">
-        <div class="content">
-            <div class="navbar">
-                <a href="/employee/1">My Profile</a>
-                <a href="/departments" class="active">Departments</a>
-                <a href="/employee/search">People Search</a>
-                <div class="dropdown">
-                <button class="dropbtn">Management
-                    <i class="fa fa-caret-down"></i>
-                </button> 
-                <div class="dropdown-content">
-                    <a href="/manage/department">Departments</a>
-                    <a href="/manage/employee">Employees</a>
-                </div>
-                </div>
-                <!-- Right-aligned links -->
-                <div class="topnav-right">
-                    <a href="login.html">Logout</a>
-                </div>
-            </div>
+{% extends 'base.html' %}
 
-            <div class="search-panel">
+{% block title%}Departments{% endblock %}
 
-                <div class="search-center">
-                    <input type="text" placeholder="Search department" name="search" class="searchhh">
-                    <button type="submit" class="my_button"><i class="search"  ></i>Search</button>
-                </div>
- 
-            </div>
-            <div class="profile-line"></div>
-            <!---<div class="filters-left-depart">
-                <p>Country</p>
-                <select class="select-css">
-                    <option value="0">Belarus</option>
-                    <option value="1">Russia</option>
-                    <option value="2">Ukraine</option>
-                </select>
-            </div>!--->
-            <div class="prof-info-cont-u">
-                <ul>
-                    {% for department in departments_data %}
-                    <li>
-                        <div class="department">
-                            <div class="department-info-image">
-                                <img src="static/img/image1.jpg" width="150" height="150" class="image" id="img">
-                                    
-                            </div>
-                            <div class="department-info">
-                                <p><a href="/department/{{department.dep_id}}">{{ department.name }}</a></p>
-                                <p>Total employees {{ department.emp_count }}</p>
-                                <p>Manager {{ department.manager }}</p>
-                                <br>
-                            </div>
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
+{% block content %}
+<div class="search-panel">
+    <form action="" method="POST">
+        <div class="search-center">
+            <input type="text" placeholder="Search department" name="department_name" class="searchhh">
+            <button type="submit" class="my_button"><i class="search"  ></i>Search</button>
         </div>
-    </div>
-</body>
-</html>
+    </form>
+</div>
+<div class="profile-line">
+
+</div>
+<div class="prof-info-cont-u">
+    <ul>
+        {% if departments_data %}
+            {% for department in departments_data %}
+                <li>
+                    <div class="department">
+                        <div class="department-info-image">
+                            <img src="static/img/image1.jpg" width="150" height="150" class="image" id="img">
+                        </div>
+                        <div class="department-info">
+                            <p><a href="/department/{{department.department_id}}">{{ department.name }}</a></p>
+                            <p>Total employees {{ department.employees }}</p>
+                            <p>Manager {{ department.manager }}</p>
+                            <br>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            {% else %}
+                <p>No departments here!</p>
+                <br>
+        {% endif %}
+    </ul>
+</div>
+</div>
+{% endblock %}

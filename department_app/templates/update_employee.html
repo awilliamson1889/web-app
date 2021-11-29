@@ -1,100 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../../static/css/style.css">
-    <title>Manage employees</title>
-</head>
-<body>
-    <div class="container">
-        <div class="content">
-            <div class="navbar">
-                <a href="/employee/1">My Profile</a>
-                <a href="/departments">Departments</a>
-                <a href="/employee/search">People Search</a>
-                <div class="dropdown">
-                <button class="dropbtn">Management
-                    <i class="fa fa-caret-down"></i>
-                </button>
-                <div class="dropdown-content">
-                    <a href="/manage/department">Departments</a>
-                    <a href="/manage/employee">Employees</a>
-                </div>
-                </div>
-                <div class="topnav-right">
-                    <a href="login.html">Logout</a>
-                </div>
-            </div>
+{% extends 'base.html' %}
 
-            <div class="bg-add-employe">
-                <h2>Update Employee</h2>
-                <form action="/update/employee/data/{{employee_data.emp_id}}" method="POST">
-                <div class="add-employee">
-                        <p>Name</p>
-                        <input type="text" placeholder="Name" name="name" class="edit" value="{{employee_data.name}}"> <br>
-                        <p>Surname</p>
-                        <input type="text" placeholder="Surname" name="surname" class="edit" value="{{employee_data.surname}}"> <br>
-                        <p>Department</p>
-                        <select class="select-css" name="department">
-                            <option value="{{employee_data.department_id}}" selected hidden>{{employee_data.department}}</option>
-                            {% for department in departments_data%}
-                            <option value="{{department.dep_id}}">{{department.name}}</option>
-                            {% endfor%}
-                        </select>
-                        <a href="/add/department">New</a> <br>
-                        <p>Date of Birth</p>
-                        <input type="date" name="date_of_birth" class="edit" required value="{{employee_data.date_of_birth}}">
-                        <p>Salary</p>
-                        <input type="text" placeholder="Salary" name="salary" class="edit" value="{{employee_data.salary}}"> <br>
-                        <p>Work phone</p>
-                        <input type="text" placeholder="Work phone" name="phone" class="edit" value="{{employee_data.phone}}"><br>
+{% block title%}Add location{% endblock %}
+
+{% block content %}
+<div class="bg-add-employe">
+    <h2>Update Employee</h2>
+    {% if employee_data %}
+        <form method="POST">
+            <div class="add-employee">
+                <p>{{ form.name.label }}</p>
+                    {{ form.name(class="edit", value=employee_data.name) }}
+                <p>{{ form.surname.label }}</p>
+                    {{ form.surname(class="edit", value=employee_data.surname) }}
+                <p>{{ form.department.label }}</p>
+                {{ form.department(class="edit") }}
+                <a href="/add/department">New</a> <br>
+                <p>{{ form.date_of_birth.label }}</p>
+                    {{ form.date_of_birth(class="edit", value=employee_data.date_of_birth) }}
+                <p>{{ form.salary.label }}</p>
+                    {{ form.salary(class="edit", value=employee_data.salary) }}
+                <p>{{ form.phone.label }}</p>
+                    {{ form.phone(class="edit", value=employee_data.phone) }}
+                <br>
+                <a class="my_button" href="/manage/employee">Cancle</a>
+                <button type="submit" class="my_button"><i class="save"></i>Save</button>
+                <p> </p>
+                {% for field, errors in form.errors.items() %}
+                    <small class="form-text text-muted ">
+                        {{ ', '.join(errors) }}
                         <br>
-                        <a class="my_button" href="/manage/employee">Cancle</a>
-                        <button type="submit" class="my_button"><i class="save"></i>Save</button>
-                    </div>
-                    <div class="add-employee">
-                        <p>Email</p>
-                        <input type="email" placeholder="Email" name="email" class="edit" value="{{employee_data.email}}"> <br>
-                        <p>Location</p>
-                        <select class="select-css" name="location">
-                            <option value="{{employee_data.location_id}}" selected hidden>{{employee_data.location}}</option>
-                            {% for location in locations_data %}
-                            <option value="{{location.location_id}}">{{location.name}}</option>
-                            {% endfor%}
-                        </select>
-                        <a href="/add/location">New</a> <br>
-                        <p>Work address</p>
-                        <select class="select-css" name="work_address">
-                            <option value="{{employee_data.address_id}}" selected hidden>{{employee_data.work_address}}</option>
-                            {% for address in addresses_data %}
-                            <option value="{{address.address_id}}">{{address.name}}</option>
-                            {% endfor %}
-                        </select>
-                        <a href="/add/address">New</a> <br>
-                        <p>Key skill</p>
-                        <select class="select-css" name="key_skill">
-                            <option value="{{employee_data.skill_id}}" selected hidden>{{employee_data.key_skill}}</option>
-                            {% for skill in skills_data %}
-                            <option value="{{skill.skill_id}}">{{skill.name}}</option>
-                            {% endfor%}
-                        </select>
-                        <a href="/add/skill">New</a> <br>
-                        <p>Date of joining</p>
-                        <input type="date" name="date_of_joining" class="edit" value="{{employee_data.date_of_joining}}">
-                        <p>Permission</p>
-                        <select class="select-css" name="permission">
-                            <option value="{{employee_data.permission_id}}" selected hidden>{{employee_data.permission}}</option>
-                            {% for permission in permissions_data %}
-                            <option value="{{permission.permission_id}}">{{permission.name}}</option>
-                            {% endfor%}
-                        </select>
-                        <a href="/add/permission">New</a> <br>
-                </div>
-                </form>
+                    </small>
+                {% endfor %}
             </div>
+            <div class="add-employee">
+                <p>{{ form.email.label }}</p>
+                    {{ form.email(class="edit", value=employee_data.email) }}
+                <p>{{ form.location.label }}</p>
+                {{ form.location(class="edit") }}
+                <a href="/add/location">New</a> <br>
+                <p>{{ form.work_address.label }}</p>
+                {{ form.work_address(class="edit") }}
+                <a href="/add/address">New</a> <br>
+                <p>{{ form.key_skill.label }}</p>
+                {{ form.key_skill(class="edit") }}
+                <a href="/add/skill">New</a> <br>
+                <p>{{ form.date_of_joining.label }}</p>
+                {{ form.date_of_joining(class="edit", value=employee_data.date_of_joining) }}
+                <p>{{ form.permission.label }}</p>
+                {{ form.permission(class="edit") }}
+                <a href="/add/permission">New</a> <br>
+            </div>
+        </form>
+    {% else %}
+        <div class="add-employee">
+            <p>Ops something going wrong...</p>
         </div>
-    </div>
-</body>
-</html>
+    {% endif %}
+</div>
+{% endblock %}

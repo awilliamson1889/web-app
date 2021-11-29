@@ -34,7 +34,7 @@ class Department(db.Model):
     manager = db.Column(db.String(100), nullable=False)
     date_of_creation = db.Column(db.String(50), default=datetime.date.today())
     department = db.relationship('Employee', backref='Department',
-                                 lazy='dynamic')
+                                 lazy='dynamic', cascade="all, delete-orphan")
 
     def __init__(self, name, manager, date_of_creation):
         self.name = name

@@ -1,79 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-    <title>Manage employees</title>
-</head>
-<body>
-    <script src="../static/js/sort_table.js"></script>
-    <div class="container">
-        <div class="content">
-            <div class="navbar">
-                <a href="/employee/1">My Profile</a>
-                <a href="/departments">Departments</a>
-                <a href="/employee/search">People Search</a>
-                <div class="dropdown">
-                <button class="dropbtn">Management
-                    <i class="fa fa-caret-down"></i>
-                </button>
-                <div class="dropdown-content">
-                    <a href="/manage/department">Departments</a>
-                    <a href="/manage/employee">Employees</a>
-                </div>
-                </div>
-                <!-- Right-aligned links -->
-                <div class="topnav-right">
-                    <a href="login.html">Logout</a>
-                </div>
-            </div>
+{% extends 'base.html' %}
 
+{% block title%}Delete employee{% endblock %}
 
-            <div class="filters">
-                <p>MANAGE EMPLOYEES</p>
-                <form action="/manage/employee" method="POST">
-                <br>
-                <p>Department</p>
-                <select class="select-css" name="department">
-                    <option value="No" selected hidden>Select department</option>
-                    {% for department in departments_data%}
-                    <option value="{{department.dep_id}}">{{department.name}}</option>
-                    {% endfor %}
-                </select>
-                     Filter by date of birth: from
-                    <input type="date" name="date1" class="edit">
-                     by
-                    <input type="date" name="date2" class="edit">
-                    <button type="submit" class="my_button"><i class="save"></i>Filter</button>
-                    <a class="my_button" href="/manage/employee">X</a>
-                </form>
-                <a class="my_button" href="/add/employee">Add Employee</a>
-            </div>
-
-            <div class="table_dark">
-                <table>
-                    <thead><tr><th>Name</th><th>Surname</th><th>Department</th><th>Date of Birth</th><th>Salary</th><th>Phone</th><th>Email</th><th>Location</th><th>Address</th><th>Key skill</th><th>Date of joining</th><th>Permission</th><th>Action</th></tr></thead>
-                    {% for employee in employees_data%}
-                    <tr><td>{{employee.name}}</td><td>{{employee.surname}}</td><td>{{employee.department}}</td><td>{{employee.date_of_birth}}</td><td>{{employee.salary}}</td><td>{{employee.phone}}</td><td>{{employee.email}}</td><td>{{employee.location}}</td> <td>{{employee.work_address}}</td><td>{{employee.key_skill}}</td><td>{{employee.date_of_joining}}</td><td>{{employee.permission}}</td><td><a href="/update/employee/{{employee.emp_id}}">Edit</a> | <a href="/employee/{{employee.emp_id}}">View</a> | <a href="#confirm-modal1">Delete</a></td></tr>
-                    {% endfor %}
-                </table>
-            </div>
-
-            <div class="pagination employee">
-                <span class="footer_part-span">Page <span class="first">1</span> of <span class="second">1</span></span>
-            </div>
-
-            <div id="confirm-modal1" class="modalbackground">
-                <div class="modalwindow">
-                    <h3>Please confirm delete employee!</h3>
-                    <br>
-                    <a class="my_button" href="/delete/employee/{{emp_id}}">Delete</a>
-                    <a class="my_button" href="/manage/employee ">Cancle</a>
-                </div>
-            </div>
-        </div>
+{% block content %}
+<div id="confirm-modal1" class="modalbackground">
+    <div class="modalwindow">
+        <form method = "POST">
+            <h3>Please confirm delete employee!</h3>
+            <br>
+            <button type="submit" class="my_button" style="height: 50px; width:150px"><i class="save"></i>Delete</button>
+            <br>
+            <a class="my_button" href="/manage/employee ">Cancle</a>
+        </form>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

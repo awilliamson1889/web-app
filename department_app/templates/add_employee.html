@@ -1,101 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-    <title>Manage employees</title>
-</head>
-<body>
-    <div class="container">
-        <div class="content">
-            <div class="navbar">
-                <a href="/employee/1">My Profile</a>
-                <a href="/departments">Departments</a>
-                <a href="/employee/search">People Search</a>
-                <div class="dropdown">
-                <button class="dropbtn">Management
-                    <i class="fa fa-caret-down"></i>
-                </button> 
-                <div class="dropdown-content">
-                    <a href="/manage/department">Departments</a>
-                    <a href="/manage/employee">Employees</a>
-                </div>
-                </div>
-                <!-- Right-aligned links -->
-                <div class="topnav-right">
-                    <a href="login.html">Logout</a>
-                </div>
-            </div>
+{% extends 'base.html' %}
 
-            <div class="bg-add-employe">
-                <h2>Create Employee</h2>
-                <form action="/create/new/employee" method = "POST">
-                <div class="add-employee">
-                        <p>Name</p>
-                        <input type="text" placeholder="Name" name="name" class="edit"> <br>
-                        <p>Surname</p>
-                        <input type="text" placeholder="Surname" name="surname" class="edit"> <br>
-                        <p>Department</p>
-                        <select class="select-css" name="department">
-                            <option value="0"></option>
-                            {% for department in departments_data%}
-                            <option value="{{department.dep_id}}">{{department.name}}</option>
-                            {% endfor%}
-                        </select>
-                        <a href="/add/department">New</a> <br>
-                        <p>Date of Birth</p>
-                        <input type="date" name="date_of_birth" class="edit" required>
-                        <p>Salary</p>
-                        <input type="text" placeholder="Salary" name="salary" class="edit"> <br>
-                        <p>Work phone</p>
-                        <input type="text" placeholder="Work phone" name="phone" class="edit"><br>
-                        <br>
-                        <a class="my_button" href="/manage/employee">Cancle</a>
-                        <button type="submit" class="my_button"><i class="save"></i>Save</button>
-                    </div>
-                    <div class="add-employee">
-                        <p>Email</p>
-                        <input type="email" placeholder="Email" name="email" class="edit" > <br>
-                        <p>Location</p>
-                        <select class="select-css" name="location">
-                            <option value="0"></option>
-                            {% for location in locations_data %}
-                            <option value="{{location.location_id}}">{{location.name}}</option>
-                            {% endfor%}
-                        </select>
-                        <a href="/add/location">New</a> <br>
-                        <p>Work address</p>
-                        <select class="select-css" name="work_address">
-                            <option value="0"></option>
-                            {% for address in addresses_data %}
-                            <option value="{{address.address_id}}">{{address.name}}</option>
-                            {% endfor %}
-                        </select>
-                        <a href="/add/address">New</a> <br>
-                        <p>Key skill</p>
-                        <select class="select-css" name="key_skill">
-                            <option value="0"></option>
-                            {% for skill in skills_data %}
-                            <option value="{{skill.skill_id}}">{{skill.name}}</option>
-                            {% endfor%}
-                        </select>
-                        <a href="/add/skill">New</a> <br>
-                        <p>Date of joining</p>
-                        <input type="date" name="date_of_joining" class="edit">
-                        <p>Permission</p>
-                        <select class="select-css" name="permission">
-                            <option value="0"></option>
-                            {% for permission in permissions_data %}
-                            <option value="{{permission.permission_id}}">{{permission.name}}</option>
-                            {% endfor%}
-                        </select>
-                        <a href="/add/permission">New</a> <br>
-                </div>
-                </form>
-            </div>
+{% block title%}Add employee{% endblock %}
+
+{% block content %}
+<div class="bg-add-employe">
+    <h2>Create Employee</h2>
+    <form method = "POST">
+        <div class="add-employee">
+            <p>{{ form.name.label }}</p>
+                {{ form.name(class="edit") }}
+            <p>{{ form.surname.label }}</p>
+                {{ form.surname(class="edit") }}
+            <p>{{ form.department.label }}</p>
+                {{ form.department(class="edit") }}
+            <a href="/add/department">New</a> <br>
+            <p> {{ form.date_of_birth.label }}</p>
+                {{ form.date_of_birth(class="edit") }}
+            <p> {{ form.salary.label }}</p>
+                {{ form.salary(class="edit") }}
+            <br>
+            <p> {{ form.phone.label }}</p>
+                {{ form.phone(class="edit") }}
+            <br>
+            <a class="my_button" href="/manage/employee">Cancle</a>
+            <button type="submit" class="my_button"><i class="save"></i>Save</button>
+            <p> </p>
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
+            {% for field, errors in form.errors.items() %}
+                <small class="form-text text-muted ">
+                    {{ ', '.join(errors) }}
+                    <br>
+                </small>
+            {% endfor %}
         </div>
-    </div>
-</body>
-</html>
+        <div class="add-employee">
+            <p> {{ form.email.label }}</p>
+                {{ form.email(class="edit") }}
+            <p>{{ form.location.label }}</p>
+                {{ form.location(class="edit") }}
+            <a href="/add/location">New</a> <br>
+            <p> {{ form.work_address.label }}</p>
+                {{ form.work_address(class="edit") }}
+            <a href="/add/address">New</a> <br>
+            <p>{{ form.key_skill.label }}</p>
+                {{ form.key_skill(class="edit") }}
+            <a href="/add/skill">New</a> <br>
+            <p> {{ form.date_of_joining.label }}</p>
+                {{ form.date_of_joining(class="edit") }}
+            <p>{{ form.permission.label }}</p>
+                {{ form.permission(class="edit") }}
+            <a href="/add/permission">New</a> <br>
+        </div>
+    </form>
+</div>
+{% endblock %}

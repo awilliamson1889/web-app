@@ -1,65 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-    <title>My Profile</title>
-</head>
-<body>
-    <div class="container">
-        <div class="content">
-            <div class="navbar">
-                <a href="/employee/1" class="active">My Profile</a>
-                <a href="/departments">Departments</a>
-                <a href="/employee/search">People Search</a>
-                <div class="dropdown">
-                <button class="dropbtn">Management
-                    <i class="fa fa-caret-down"></i>
-                </button> 
-                <div class="dropdown-content">
-                    <a href="/manage/department">Departments</a>
-                    <a href="/manage/employee">Employees</a>
-                </div>
-                </div>
-                <!-- Right-aligned links -->
-                <div class="topnav-right">
-                    <a href="login.html">Logout</a>
-                </div>
-            </div>
+{% extends 'base.html' %}
 
-            <div class="profile-background">
-                <div class="profile-right">
-                    <h3>DEPARTMENT</h3>
-                    <p><a href="/department/{{employee_data['department_id']}}">{{ employee_data['department'] }}</a></p>
-                    <h3>KEY SKILLS</h3>
-                    <p>{{ employee_data['key_skill'] }}</p>
-                    <h3>YEARS IN COMPANY</h3>
-                    <p>6 years</p>
-                </div>
-                <div class="profile-center">
-                    <img src="../static/img/image1.jpg" width="150" height="150" class="image" id="img">
-                    <b><p>{{ employee_data['name'] }} {{ employee_data['surname'] }}</p>
-                    <p>{{ employee_data['department'] }}</p></b>
-                </div>
-            </div>
-            <div class="profile-line"></div>
-            <div class="prof-info-cont">
-                <div class="profile-information">
-                    <h3>Work E-mail</h3>
-                    <p>{{ employee_data['email'] }}</p>
-                    <h3>Work Phone</h3>
-                    <p>{{ employee_data['phone'] }}</p>
-                </div>
-                <div class="profile-information">
-                    <h3>Location</h3>
-                    <p>{{ employee_data['location'] }}</p>
-                    <h3>Work Address</h3>
-                    <p>{{ employee_data['work_address'] }}</p>
-                </div>
-            </div>
-        </div>
+{% block title%}Employee page{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="profile-background">
+    {% if employee_data %}
+    <div class="profile-right">
+        <h3>DEPARTMENT</h3>
+        <p><a href="/department/{{employee_data['department_id']}}">{{ employee_data['department'] }}</a></p>
+        <h3>KEY SKILLS</h3>
+        <p>{{ employee_data['key_skill'] }}</p>
+        <h3>YEARS IN COMPANY</h3>
+        <p>6 years</p>
     </div>
-</body>
-</html>
+    <div class="profile-center">
+        <img src="../static/img/image1.jpg" width="150" height="150" class="image" id="img">
+        <b><p>{{ employee_data['name'] }} {{ employee_data['surname'] }}</p>
+           <p>{{ employee_data['department'] }}</p></b>
+    </div>
+</div>
+<div class="profile-line"></div>
+<div class="prof-info-cont">
+    <div class="profile-information">
+        <h3>Work E-mail</h3>
+        <p>{{ employee_data['email'] }}</p>
+        <h3>Work Phone</h3>
+        <p>{{ employee_data['phone'] }}</p>
+    </div>
+    <div class="profile-information">
+        <h3>Location</h3>
+        <p>{{ employee_data['location'] }}</p>
+        <h3>Work Address</h3>
+        <p>{{ employee_data['work_address'] }}</p>
+    </div>
+    {% else %}
+        <div class="profile-center">
+            <h1><b>No information about this employee!</b></h1>
+        </div>
+    {% endif %}
+</div>
+</div>
+{% endblock %}

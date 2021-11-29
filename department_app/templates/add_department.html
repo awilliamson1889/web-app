@@ -1,51 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-    <title>Manage employees</title>
-</head>
-<body>
-    <div class="container">
-        <div class="content">
-            <div class="navbar">
-                <a href="/employee/1">My Profile</a>
-                <a href="/departments">Departments</a>
-                <a href="/employee/search">People Search</a>
-                <div class="dropdown">
-                <button class="dropbtn">Management
-                    <i class="fa fa-caret-down"></i>
-                </button> 
-                <div class="dropdown-content">
-                    <a href="/manage/department">Departments</a>
-                    <a href="/manage/employee">Employees</a>
-                </div>
-                </div>
-                <!-- Right-aligned links -->
-                <div class="topnav-right">
-                    <a href="login.html">Logout</a>
-                </div>
-            </div>
+{% extends 'base.html' %}
 
-            <div class="bg-add-employe">
-                <h2>Create Department</h2>
-                <div class="add-employee">
-                    <form action="/create/new/department" method = "POST">
-                        <p>Department</p>
-                        <input type="text" placeholder="Name" name="name" class="edit"> <br>
-                        <p>Manager</p>
-                        <input type="text" placeholder="Surname" name="manager" class="edit"> <br>
-                        <p>Date of creation</p>
-                        <input type="date" name="date_of_creation" class="edit">
+{% block title%}Add department{% endblock %}
+
+{% block content %}
+<div class="bg-add-employe">
+    <h2>Create Department</h2>
+    <div class="add-employee">
+        <form method = "POST">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for=""> {{ form.name.label }}</label>
+                        {{ form.name(class="edit") }}
+                    <br>
+                    <label for=""> {{ form.manager.label }}</label>
+                        {{ form.manager(class="edit") }}
+                    <br>
+                    <label for=""> {{ form.date_of_creation.label }}</label>
+                        {{ form.date_of_creation(class="edit") }}
+                </div>
+                <div class="form-group">
+                    {{ form.submit}}
+                </div>
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% endif %}
+                {% for field, errors in form.errors.items() %}
+                    <small class="form-text text-muted ">
+                        {{ ', '.join(errors) }}
                         <br>
-                        <a class="my_button" href="/manage/department">Cancle</a>
-                        <button type="submit" class="my_button"><i class="save"></i>Save</button>
-                    </form>
+                    </small>
+                {% endfor %}
             </div>
-        </div>
+        </form>
     </div>
-    </div>
-</body>
-</html>
+</div>
+{% endblock %}
